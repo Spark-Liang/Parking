@@ -7,6 +7,7 @@ public class ParkingLot {
 	private String name;
 	private String location;
 	private Double cost;
+	private ParkingLotState state;
 	private Set<ParkingPosition> parkingPositions;
 	
 	public ParkingLot() {}
@@ -33,10 +34,19 @@ public class ParkingLot {
 	public void setCost(Double cost) {
 		this.cost = cost;
 	}
-	public Set<ParkingPosition> getlocations() {
+	
+	public ParkingLotState getState() {
+		return state;
+	}
+
+	public void setState(ParkingLotState state) {
+		this.state = state;
+	}
+
+	public Set<ParkingPosition> getparkingPositions() {
 		return parkingPositions;
 	}
-	public void setLocations(Set<ParkingPosition> parkingPositions) {
+	public void setparkingPositions(Set<ParkingPosition> parkingPositions) {
 		this.parkingPositions = parkingPositions;
 	}
 

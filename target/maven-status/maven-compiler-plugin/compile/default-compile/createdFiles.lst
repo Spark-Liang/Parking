@@ -1,2 +1,16 @@
+com\park\ssm\entity\ParkingPositionState$TypeHandler.class
 com\park\ssm\controller\DemoController.class
+com\park\ssm\entity\User.class
+com\park\ssm\dao\AccountDao.class
+com\park\ssm\entity\ParkingPosition.class
+com\park\ssm\entity\ParkingPositionState.class
+com\park\ssm\entity\AccountState$TypeHandler.class
+com\park\ssm\entity\AccountState.class
+com\park\ssm\entity\ParkingLotState$TypeHandler.class
+com\park\ssm\entity\ParkingLotState.class
+com\park\ssm\dao\ParkingPositionDao.class
+com\park\ssm\entity\ParkingLot.class
+com\park\ssm\entity\Account.class
+com\park\ssm\dao\UserDao.class
+com\park\ssm\dao\ParkingLotDao.class
 com\park\ssm\dao\DemoDao.class

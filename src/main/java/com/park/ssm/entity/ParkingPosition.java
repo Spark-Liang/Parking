@@ -5,7 +5,7 @@ public class ParkingPosition {
 	private Long id;
 	private ParkingLot parkingLot;
 	private Account account;
-	private boolean usedFlag;
+	private ParkingPositionState state;
 	
 	public ParkingPosition() {}
 	
@@ -24,11 +24,20 @@ public class ParkingPosition {
 	public void setAccountId(Account account) {
 		this.account = account;
 	}
-	public boolean isUsedFlag() {
-		return usedFlag;
+
+	public ParkingPositionState getState() {
+		return state;
 	}
-	public void setUsedFlag(boolean usedFlag) {
-		this.usedFlag = usedFlag;
+
+	public void setState(ParkingPositionState state) {
+		this.state = state;
 	}
+
+	@Override
+	public String toString() {
+		return "ParkingPosition [id=" + id + ", parkingLot=" + parkingLot + ", account=" + account + ", state=" + state
+				+ "]";
+	}
+	
 	
 }

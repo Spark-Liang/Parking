@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.park.ssm.dao.AccountDao">
+
+
+<resultMap type="Account" id="accountRoughResult">
+	<id property="id"/>
+	<result property="state"  typeHandler="com.park.ssm.entity.AccountState.TypeHandler"/>
+	<result property="billStartDate"/>
+	<result property="billEndDate"/>
+	<association property="user" column="userId" javaType="User" fetchType="lazy" select="com.park.ssm.dao.UserDao.loadUserById" />
+	<association property="parkingLot" column="parkingLotId" javaType="ParkingLot"  
+		fetchType="lazy" select="com.park.ssm.dao.ParkingLotDao.loadParkingLotById"></association>
+	<association property="parkingPosition" column="parkingPositionId" javaType="ParkingPosition"  
+		fetchType="lazy" select="com.park.ssm.dao.ParkingPositionDao.loadParkingPositionById"></association>
+</resultMap>
+
+
+
+<select id="loadAccountByLotId" parameterType="long">
+	select 
+		*
+	from Account
+	where id=#{_parameter}
+</select>
+
+
+</mapper>

@@ -4,47 +4,37 @@
 <mapper namespace="com.park.ssm.dao.ParkingLotDao">
 
 
+
 <resultMap type="ParkingLot" id="parkingLotRoughResult">
-	<id property="id" column="id"></id>
-	<result property="name" column="name"></result>
-	<result property="location" column="location"/>
-	<result property="cost" column="cost"/>
-	<collection property="parkingPositions" ofType="ParkingPosition">
-		<id property="id" column="parkingLotId"/>
-		<association property="parkingLot" column="id" resultMap="com.park.ssm.dao.ParkingPositionDao.loadparkingPositionById"></association>
-		<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.getAccountById" ></association>
-		<result property="usedFlag" column="usedFlag"/>
+	<id property="id" />
+	<result property="name" />
+	<result property="location" />
+	<result property="cost" />
+	<result property="state" typeHandler="com.park.ssm.entity.ParkingLotState.TypeHandler"/>
+	<collection property="parkingPositions" column="id" fetchType="lazy" ofType="ParkingPosition" select="com.park.ssm.dao.ParkingPositiontDao.loadParkPositionByLotId">
 	</collection>
 </resultMap>
 
 
 <resultMap type="ParkingLot" id="parkingLotDetailResult">
-	<id property="id" column="parkingLotId"></id>
-	<result property="name" column="name"></result>
-	<result property="location" column="location"/>
-	<result property="cost" column="cost"/>
-	<collection property="parkingPositions" ofType="ParkingPosition">
-		<id property="id" column="parkingLotId"/>
-		<association property="parkingLot" column="parkingLotId" resultMap="parkingLotDetailResult"></association>
-		<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.getAccountById" ></association>
-		<result property="usedFlag" column="usedFlag"/>
+	<id property="id" column="parkingLotId"/>
+	<result property="name" />
+	<result property="location"  />
+	<result property="cost"  />
+	<result property="state" column="parkingLotIdState"  typeHandler="com.park.ssm.entity.ParkingLotState.TypeHandler"/>
+	<collection property="parkingPositions">
+		<id property="id" column="id"/>
+		<result property="state" column="state"/>
+		<association property="parkingLot" column="parkingLotId" resultMap="parkingLotDetailResult"/>
+		<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.getAccountById" />
 	</collection>
 </resultMap>
 
 
-
-
-<select id="loadParkingLot" parameterType="int" resultType="ParkingLot">
+<select id="getParkingLotById" parameterType="int" resultMap="parkingLotDetailResult">
 	select 
-		Id,name,location,cost
-	from ParkingLot
-	where id=#{_parameter}
-</select>
-
-<select id="getParkingLot" parameterType="int" resultMap="parkingLotDetailResult">
-	select 
-		a.id as parkingLotId,name,location,cost
-		b.id,parkingLotId,accountId,usedFlag
+		a.id as parkingLotId,name,location,cost,a.state as parkingLotIdState 
+		b.id,accountId,b.state
 	from 
 		(select id,name,location,cost  
 		from ParkingLot
@@ -55,8 +45,21 @@
 		on a.id=b.id
 </select>
 
+<select id="loadParkingLotById" parameterType="int" resultType="ParkingLot">
+	select 
+		Id,name,location,cost,state
+	from ParkingLot
+	where id=#{_parameter}
+</select>
+<select id="loadParkingLotByIdForUpdate" parameterType="int" resultType="ParkingLot">
+	select 
+		Id,name,location,cost,state
+	from ParkingLot
+	where id=#{_parameter}
+	for update
+</select>
 
-<select id="listParkingLot" parameterType="Map">
+<select id="listParkingLot"  resultMap="parkingLotRoughResult">
 	select 
 		Id,name,location,cost
 	from ParkingLot
@@ -76,18 +79,34 @@
 		<if test="cost_lt != null">
 			and cost &lt; cost_lt
 		</if>
+		and state in
+			<foreach collection="states" open="(" close=")" separator="," item="state">
+				#{state.getInd()}
+			</foreach>
 	</where>
 	<if test="pageNum != null and pageSize != null">
 		limit (#{(pageNum-1)*pageSize },#{pageSize})
 	</if>
 </select>
 
-<insert id="loadParkingLot"  parameterType="ParkingLot" keyColumn="id" useGeneratedKeys="true">
-	insert into ParkingLot(name,location,cost)
-	values (#{name},#{location},#{cost})
+<insert id="insertParkingLot"  parameterType="ParkingLot" keyColumn="id" useGeneratedKeys="true">
+	insert into ParkingLot(name,location,cost,state)
+	values (#{name},#{location},#{cost},#{state})
+</insert>
+<insert id="listInsertParkingLot"  parameterType="List" keyColumn="id" useGeneratedKeys="true">
+	insert into ParkingLot(name,location,cost,state)
+	values 
+	<trim suffixOverrides=",">
+		<foreach collection="list" item="tmp">
+			(#{tmp.name},#{tmp.location},#{tmp.cost},#{tmp.state}),
+		</foreach>
+	</trim>
 </insert>
 
-<update id="updateParkingLot" parameterType="ParkingLot">
+
+
+
+<update id="updateParkingLot" parameterType="ParkingLot" >
 	update 
 		<set>
 			<if test="name!=null and !&quot;&quot;.equals(name.trim())">
@@ -99,9 +118,26 @@
 			<if test="cost != null">
 				cost=#{cost},
 			</if>
+			<if test="state != null">
+				state=#{state.getInd()},
+			</if>
 		</set>
 	where id=#{id}
 </update>
 
- 
+<update id="deleteParkingLot" parameterType="int" >
+	update ParkingLot 
+		set state=-1
+	where id=#{_parameter}
+</update>
+<update id="listDeleteParkingLot" parameterType="List" >
+	update ParkingLot 
+		set state=-1
+	where id in
+	<foreach collection="list" open="(" close=")" separator=",">
+		#{_parameter}
+	</foreach>
+</update>
+
+
 </mapper>
