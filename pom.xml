@@ -220,6 +220,7 @@
                     <username>admin</username>
                     <password>admin</password>
                     <path>/park</path>
+                    <update>true</update>
                 </configuration>
             </plugin>
         </plugins>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.park.ssm.dao.ParkingLotDao">
+
+
+<resultMap type="ParkingLot" id="parkingLotRoughResult">
+	<id property="id" column="id"></id>
+	<result property="name" column="name"></result>
+	<result property="location" column="location"/>
+	<result property="cost" column="cost"/>
+	<collection property="parkingPositions" ofType="ParkingPosition">
+		<id property="id" column="parkingLotId"/>
+		<association property="parkingLot" column="id" resultMap="com.park.ssm.dao.ParkingPositionDao.loadparkingPositionById"></association>
+		<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.getAccountById" ></association>
+		<result property="usedFlag" column="usedFlag"/>
+	</collection>
+</resultMap>
+
+
+<resultMap type="ParkingLot" id="parkingLotDetailResult">
+	<id property="id" column="parkingLotId"></id>
+	<result property="name" column="name"></result>
+	<result property="location" column="location"/>
+	<result property="cost" column="cost"/>
+	<collection property="parkingPositions" ofType="ParkingPosition">
+		<id property="id" column="parkingLotId"/>
+		<association property="parkingLot" column="parkingLotId" resultMap="parkingLotDetailResult"></association>
+		<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.getAccountById" ></association>
+		<result property="usedFlag" column="usedFlag"/>
+	</collection>
+</resultMap>
+
+
+
+
+<select id="loadParkingLot" parameterType="int" resultType="ParkingLot">
+	select 
+		Id,name,location,cost
+	from ParkingLot
+	where id=#{_parameter}
+</select>
+
+<select id="getParkingLot" parameterType="int" resultMap="parkingLotDetailResult">
+	select 
+		a.id as parkingLotId,name,location,cost
+		b.id,parkingLotId,accountId,usedFlag
+	from 
+		(select id,name,location,cost  
+		from ParkingLot
+		where id=#{_parameter}
+		)a
+		left join
+		ParkingPosition b
+		on a.id=b.id
+</select>
+
+
+<select id="listParkingLot" parameterType="Map">
+	select 
+		Id,name,location,cost
+	from ParkingLot
+	<where>
+		<if test="example.id!=null">
+			and id=#{example.id}
+		</if>
+		<if test="example.name!=null and !&quot;&quot;.equals(example.name.trim())">
+			and name like '%'#{example.name.trim()}'%'
+		</if>
+		<if test="example.location!=null and !&quot;&quot;.equals(example.location.trim())">
+			and location like '%'#{example.location.trim()}'%'
+		</if>
+		<if test="cost_gt != null">
+			and cost &gt; cost_gt
+		</if>
+		<if test="cost_lt != null">
+			and cost &lt; cost_lt
+		</if>
+	</where>
+	<if test="pageNum != null and pageSize != null">
+		limit (#{(pageNum-1)*pageSize },#{pageSize})
+	</if>
+</select>
+
+<insert id="loadParkingLot"  parameterType="ParkingLot" keyColumn="id" useGeneratedKeys="true">
+	insert into ParkingLot(name,location,cost)
+	values (#{name},#{location},#{cost})
+</insert>
+
+<update id="updateParkingLot" parameterType="ParkingLot">
+	update 
+		<set>
+			<if test="name!=null and !&quot;&quot;.equals(name.trim())">
+				name=#{name},
+			</if>
+			<if test="location!=null and !&quot;&quot;.equals(location.trim())">
+				location=#{location},
+			</if>
+			<if test="cost != null">
+				cost=#{cost},
+			</if>
+		</set>
+	where id=#{id}
+</update>
+
+ 
+</mapper>

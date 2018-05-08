@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.park.ssm.dao.ParkingPositionDao">
+
+<resultMap type="ParkingPosition" id="parkingPositionResult">
+	<id property="id" column="parkingLotId"/>
+	<association property="parkingLot" column="parkingLotId" resultMap="parkingLotDetailResult"></association>
+	<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.getAccountById" ></association>
+	<result property="usedFlag" column="usedFlag"/>
+</resultMap>
+
+
+
+<select id="getParkingLot" parameterType="int">
+	select 
+		a.Id parkingLotId,name,location,cost
+		,b.id,b.parkingLotId
+	from ParkingLot
+	where id=#{_parameter}
+</select>
+
+
+
+ 
+</mapper>
