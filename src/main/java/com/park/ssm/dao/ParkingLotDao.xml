@@ -6,52 +6,22 @@
 
 
 <resultMap type="ParkingLot" id="parkingLotRoughResult">
-	<id property="id" />
-	<result property="name" />
-	<result property="location" />
-	<result property="cost" />
-	<result property="state" typeHandler="com.park.ssm.entity.ParkingLotState.TypeHandler"/>
-	<collection property="parkingPositions" column="id" fetchType="lazy" ofType="ParkingPosition" select="com.park.ssm.dao.ParkingPositiontDao.loadParkPositionByLotId">
-	</collection>
+	<id property="id" column="id" />
+	<result property="name" column="name" />
+	<result property="location" column="location" />
+	<result property="cost" column="cost" />
+	<result property="state" column="state" typeHandler="com.park.ssm.entity.type.ParkingLotStateHandler"/>
+	<collection property="parkingPositions" column="id" fetchType="lazy" javaType="java.util.HashSet" ofType="ParkingPosition" 
+		select="com.park.ssm.dao.ParkingPositiontDao.loadParkingPositionByLotId"/>
 </resultMap>
 
-
-<resultMap type="ParkingLot" id="parkingLotDetailResult">
-	<id property="id" column="parkingLotId"/>
-	<result property="name" />
-	<result property="location"  />
-	<result property="cost"  />
-	<result property="state" column="parkingLotIdState"  typeHandler="com.park.ssm.entity.ParkingLotState.TypeHandler"/>
-	<collection property="parkingPositions">
-		<id property="id" column="id"/>
-		<result property="state" column="state"/>
-		<association property="parkingLot" column="parkingLotId" resultMap="parkingLotDetailResult"/>
-		<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.getAccountById" />
-	</collection>
-</resultMap>
-
-
-<select id="getParkingLotById" parameterType="int" resultMap="parkingLotDetailResult">
-	select 
-		a.id as parkingLotId,name,location,cost,a.state as parkingLotIdState 
-		b.id,accountId,b.state
-	from 
-		(select id,name,location,cost  
-		from ParkingLot
-		where id=#{_parameter}
-		)a
-		left join
-		ParkingPosition b
-		on a.id=b.id
-</select>
-
-<select id="loadParkingLotById" parameterType="int" resultType="ParkingLot">
+<select id="loadParkingLotById" parameterType="int" resultMap="parkingLotRoughResult">
 	select 
 		Id,name,location,cost,state
 	from ParkingLot
 	where id=#{_parameter}
 </select>
-<select id="loadParkingLotByIdForUpdate" parameterType="int" resultType="ParkingLot">
+<select id="loadParkingLotByIdForUpdate" parameterType="int" resultMap="parkingLotRoughResult">
 	select 
 		Id,name,location,cost,state
 	from ParkingLot
@@ -88,6 +58,7 @@
 		limit (#{(pageNum-1)*pageSize },#{pageSize})
 	</if>
 </select>
+
 
 <insert id="insertParkingLot"  parameterType="ParkingLot" keyColumn="id" useGeneratedKeys="true">
 	insert into ParkingLot(name,location,cost,state)

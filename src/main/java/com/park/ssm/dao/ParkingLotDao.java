@@ -6,18 +6,18 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
 import com.park.ssm.entity.ParkingLot;
-import com.park.ssm.entity.ParkingLotState;
+import com.park.ssm.entity.type.ParkingLotState;
 
 /**
  * @author LZH
  *
  */
+
 @MapperScan
 public interface ParkingLotDao {
 	
-	
 	/**加载所有的属性，包括加载parkingposition的bean信息，但是parkingposition中的bean不加载*/
-	public abstract ParkingLot getParkingLotById(int id);
+	//public abstract ParkingLot getParkingLotById(int id);
 	
 	/**所有的bean属性都不进行加载，只是生成代理类*/
 	public abstract ParkingLot loadParkingLotById(int id);

@@ -1,5 +1,6 @@
 package com.park.ssm.entity;
 
+import com.park.ssm.entity.type.ParkingPositionState;
 
 public class ParkingPosition {
 	private Long id;
@@ -9,26 +10,31 @@ public class ParkingPosition {
 	
 	public ParkingPosition() {}
 	
+	
 	public Long getId() {
 		return id;
 	}
-	public ParkingLot getParkingLotId() {
+
+
+	public ParkingLot getParkingLot() {
 		return parkingLot;
 	}
-	public void setParkingLotId(ParkingLot parkingLot) {
+
+	public void setParkingLot(ParkingLot parkingLot) {
 		this.parkingLot = parkingLot;
 	}
+
 	public Account getAccount() {
 		return account;
 	}
-	public void setAccountId(Account account) {
+
+	public void setAccount(Account account) {
 		this.account = account;
 	}
 
 	public ParkingPositionState getState() {
 		return state;
 	}
-
 	public void setState(ParkingPositionState state) {
 		this.state = state;
 	}

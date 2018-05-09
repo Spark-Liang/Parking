@@ -3,73 +3,26 @@
 <!--客户映射 指定到dao接口 -->
 <mapper namespace="com.park.ssm.dao.ParkingPositionDao">
 
+
 <resultMap type="ParkingPosition" id="parkingPositionRoughResult">
-	<id property="id"/>
-	<result property="state"  typeHandler="com.park.ssm.entity.ParkingPositionState.TypeHandler"/>
-	<association property="parkingLot" column="parkingLotId" javaType="ParkingLot" select="com.park.ssm.dao.ParkingLotDao.loadParkingLotById"/>
+	<id property="id" column="id"/>
+	<result property="state" column="state"  typeHandler="com.park.ssm.entity.type.ParkingPositionStateHandler"/>
+	<association property="parkingLot" column="parkingLotId" javaType="ParkingLot" fetchType="lazy" select="com.park.ssm.dao.ParkingLotDao.loadParkingLotById"/>
 	<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.AccountDao.loadAccountById" />
 </resultMap>
 
-<resultMap type="ParkingPosition" id="parkingPositionDetailResult">
-	<id property="id"/>
-	<result property="state" column="positionState"  typeHandler="com.park.ssm.entity.ParkingPositionState.TypeHandler"/>
-	<association property="parkingLot" column="parkingLotId" javaType="ParkingLot" >
-		<id property="id" column="LotId"/>
-		<result property="location"/>
-		<result property="cost"/>
-		<result property="state" column="lotState"  typeHandler="com.park.ssm.entity.ParkingLotState.TypeHandler"/>
-		<collection property="parkingPositions" resultMap="parkingPositionDetailResult"/>
-	</association>
-	<association property="account">
-		<id property="id" column="accountId"/>
-		<result property="state" typeHandler="com.park.ssm.entity.ParkingPositionState.TypeHandler"/>
-		<result property="billStartDate"/>
-		<result property="billEndDate"/>
-		<association property="user" column="userId" javaType="User" fetchType="lazy" select="com.park.ssm.dao.UserDao.loadUserById"/>
-		<association property="parkingLot" >
-			<id property="id" column="lotId"/>
-			<result property="location"/>
-			<result property="cost"/>
-			<result property="state" column="lotState"  typeHandler="com.park.ssm.entity.ParkingLotState.TypeHandler"/>
-			<collection property="parkingPositions" resultMap="parkingPositionDetailResult"/>
-		</association>
-		<association property="parkingPosition" resultMap="parkingPositionDetailResult"/>
-	</association>
-</resultMap>
 
 
 <!-- 加载的ParkingPosition中所有的bean属性为代理对象 -->
-<select id="loadParkPositionByLotId" parameterType="int" resultMap="parkingPositionRoughResult">
+<select id="loadParkingPositionByLotId" parameterType="int" resultMap="parkingPositionRoughResult">
 	select 
 		id,state,parkingLotId,accountId
 	from ParkingPosition
-	where id=#{_parameter}
+	where parkingLotId=#{_parameter}
 </select>
 
-<!-- 加载的ParkingPosition中所有的bean属性为实际代理对象，但是bean属性内的bean属性为代理对象 -->
-<select id="listParkPositionByLotId" parameterType="int" resultMap="parkingPositionRoughResult">
-	select 
-		a.id as lotId,name,location,cost,a.state as lotState
-		,b.id as positionId,b.state positionState
-		,c.id as accountId,userId,c.state accountState,billStartDate,billEndDate
-	from 
-		(select * 
-		from ParkingLot
-		where id=#{_parameter}
-		)a
-		left join
-		(select *
-		from ParkingPosition
-		)b
-		on a.id=b.parkingLotid
-		left join
-		(select *
-		from Account
-		)c
-		on b.accountId=c.id
-</select>
 
-<select id="loadParkingPositionById" parameterType="long" resultMap="parkingPositionRoughResult">
+<select id="loadParkingPositionById"  parameterType="long" resultMap="parkingPositionRoughResult" >
 	select * from ParkingPosition	
 	where id=#{_parameter}
 </select>
@@ -79,27 +32,7 @@
 	for update
 </select>
 
-<select id="getParkingPositionById" parameterType="long"  resultMap="parkingPositionDetailResult">
-	select 
-		a.id as lotId,name,location,cost,a.state as lotState
-		,b.id as positionId,b.state positionState
-		,c.id as accountId,userId,c.state accountState,billStartDate,billEndDate
-	from 
-		(select * 
-		from ParkingPosition
-		where id=#{_parameter}
-		)a
-		left join
-		(select *
-		from ParkingLot
-		)b
-		on a.parkingLotid=b.id
-		left join
-		(select *
-		from Account
-		)c
-		on a.accountId=c.id
-</select>
+
 
 
  

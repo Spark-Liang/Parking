@@ -2,6 +2,8 @@ package com.park.ssm.entity;
 
 import java.util.Date;
 
+import com.park.ssm.entity.type.AccountState;
+
 public class Account {
 	private Long id;
 	private User user;

@@ -8,7 +8,12 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     <!--配置mybatis的log实现为LOG4J  -->
     <!-- 配置后，后台就会有sql语句的输出 -->
     <settings>
-        <setting name="logImpl" value="LOG4J"/>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        
+        <!--打开延迟加载的开关  -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--将积极加载改为消极加载及按需加载  -->
+        <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
     <!-- 设置类的别名 -->
     <typeAliases>

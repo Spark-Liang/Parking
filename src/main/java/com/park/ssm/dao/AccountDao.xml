@@ -5,10 +5,10 @@
 
 
 <resultMap type="Account" id="accountRoughResult">
-	<id property="id"/>
-	<result property="state"  typeHandler="com.park.ssm.entity.AccountState.TypeHandler"/>
-	<result property="billStartDate"/>
-	<result property="billEndDate"/>
+	<id property="id" column="id"/>
+	<result property="state" column="state" typeHandler="com.park.ssm.entity.type.AccountStateHandler"/>
+	<result property="billStartDate" column="billStartDate"/>
+	<result property="billEndDate" column="billEndDate"/>
 	<association property="user" column="userId" javaType="User" fetchType="lazy" select="com.park.ssm.dao.UserDao.loadUserById" />
 	<association property="parkingLot" column="parkingLotId" javaType="ParkingLot"  
 		fetchType="lazy" select="com.park.ssm.dao.ParkingLotDao.loadParkingLotById"></association>
@@ -18,7 +18,7 @@
 
 
 
-<select id="loadAccountByLotId" parameterType="long">
+<select id="loadAccountById" parameterType="long" resultMap="accountRoughResult">
 	select 
 		*
 	from Account
