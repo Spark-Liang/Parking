@@ -6,6 +6,16 @@ import org.mybatis.spring.annotation.MapperScan;
 
 import com.park.ssm.entity.ParkingPosition;
 
+/**
+ * 
+ * @author ASNPHXJ
+ * 主要包含的操作：<br>
+ * 查询相关：<br>
+ * 1.通过停车场id查询
+ * 2.通过停车位id查询
+ * 与更新相关：
+ * 
+ */
 @MapperScan
 public interface ParkingPositionDao {
 	
@@ -22,7 +32,7 @@ public interface ParkingPositionDao {
 	//public abstract ParkingPosition getParkingPositionById(long id);
 	
 	
-	//public abstract int updateParkingPosition(ParkingPosition parkingPosition);
+	public int insertParkingPosition(List<Integer> list);
 	
 	
 }

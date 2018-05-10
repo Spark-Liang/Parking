@@ -7,79 +7,128 @@
 
 <resultMap type="ParkingLot" id="parkingLotRoughResult">
 	<id property="id" column="id" />
+	
+	<result property="totalPositionNum" column=""/>
+	<result property="currentPrice" column="currentPrice" />
+	<result property="state" column="state" typeHandler="com.park.ssm.entity.type.ParkingLotStateHandler"/>
+	
 	<result property="name" column="name" />
 	<result property="location" column="location" />
 	<result property="cost" column="cost" />
-	<result property="state" column="state" typeHandler="com.park.ssm.entity.type.ParkingLotStateHandler"/>
-	<collection property="parkingPositions" column="id" fetchType="lazy" javaType="java.util.HashSet" ofType="ParkingPosition" 
-		select="com.park.ssm.dao.ParkingPositiontDao.loadParkingPositionByLotId"/>
+	
+	<collection property="parkingPositions" column="id" javaType="java.util.HashSet" ofType="ParkingPosition" fetchType="lazy" select="loadParkingPosition">
+	</collection>
 </resultMap>
 
+<resultMap type="ParkingPosition" id="parkingPosition">
+	<id property="id" column="id"/>
+	<result property="state" column="state"  typeHandler="com.park.ssm.entity.type.ParkingPositionStateHandler"/>
+	<association property="account" javaType="Account">
+		<id property="id" column="accountId"/>
+	</association>
+</resultMap>
+
+
+<!-- 所有的bean属性都不进行加载，只是生成代理类 -->
 <select id="loadParkingLotById" parameterType="int" resultMap="parkingLotRoughResult">
 	select 
-		Id,name,location,cost,state
+		*
 	from ParkingLot
 	where id=#{_parameter}
 </select>
-<select id="loadParkingLotByIdForUpdate" parameterType="int" resultMap="parkingLotRoughResult">
+<!-- 所有的bean属性都不进行加载，只是生成代理类,并且在存在事物的前提下加锁 -->
+<select id="loadParkingLotByIdForUpdate" parameterType="int" resultMap="parkingLotRoughResult" flushCache="true">
 	select 
-		Id,name,location,cost,state
+		*
 	from ParkingLot
 	where id=#{_parameter}
 	for update
 </select>
 
+<!-- 返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类 -->
 <select id="listParkingLot"  resultMap="parkingLotRoughResult">
 	select 
-		Id,name,location,cost
+		*
 	from ParkingLot
 	<where>
-		<if test="example.id!=null">
-			and id=#{example.id}
+		<!-- totalPositionNum部分 -->
+		<if test="map.totalPositionNum_min != null">
+			and totalPositionNum &gt; #{map.totalPositionNum_min}
 		</if>
-		<if test="example.name!=null and !&quot;&quot;.equals(example.name.trim())">
-			and name like '%'#{example.name.trim()}'%'
+		<if test="map.totalPositionNum_max != null">
+			and totalPositionNum &lt; #{map.totalPositionNum_max}
 		</if>
-		<if test="example.location!=null and !&quot;&quot;.equals(example.location.trim())">
-			and location like '%'#{example.location.trim()}'%'
+		<!-- price部分 -->
+		<if test="map.price_min != null">
+			and currentPrice &gt; #{map.price_min}
 		</if>
-		<if test="cost_gt != null">
-			and cost &gt; cost_gt
+		<if test="map.price_max != null">
+			and currentPrice &lt; #{map.price_max}
 		</if>
-		<if test="cost_lt != null">
-			and cost &lt; cost_lt
-		</if>
-		and state in
-			<foreach collection="states" open="(" close=")" separator="," item="state">
-				#{state.getInd()}
+		<!-- state部分 -->
+		<if test="map.states != null">
+			and state in
+			<foreach collection="map.states" open="(" close=")" separator="," item="state">
+				${state.getInd()}
 			</foreach>
+		</if>
+		
+		<if test="map.name!=null and !&quot;&quot;.equals(map.name.trim())">
+			and name like ${"\'%"+map.name.trim()+"%\'"}
+		</if>
+		<if test="map.location!=null and !&quot;&quot;.equals(map.location.trim())">
+			and location like ${"\'%"+map.location.trim()+"%\'"}
+		</if>
+		<!-- cost部分 -->
+		<if test="map.cost_min != null">
+			and cost &gt; #{map.cost_min}
+		</if>
+		<if test="map.cost_max != null">
+			and cost &lt; #{map.cost_max}
+		</if>
 	</where>
-	<if test="pageNum != null and pageSize != null">
-		limit (#{(pageNum-1)*pageSize },#{pageSize})
-	</if>
+</select>
+
+<!-- 加载ParkingPosition -->
+<select id="loadParkingPosition" parameterType="int" resultMap="parkingPosition" >
+	select 
+		id,state,accountId
+	from ParkingPosition
+	where parkingLotId=#{_parameter}
+</select>
+
+<select id="listActiveLotByIdList" parameterType="List" flushCache="true" resultMap="parkingLotRoughResult">
+	select *
+	from ParkingLot
+	where id in <foreach collection="list" item="tmpId" open="(" close=")" separator=",">#{tmpId}</foreach>
 </select>
 
 
-<insert id="insertParkingLot"  parameterType="ParkingLot" keyColumn="id" useGeneratedKeys="true">
-	insert into ParkingLot(name,location,cost,state)
-	values (#{name},#{location},#{cost},#{state})
+<insert id="insertParkingLot"  parameterType="ParkingLot" keyProperty="id" useGeneratedKeys="true">
+	insert into ParkingLot(totalPositionNum,currentPrice,cost,name,location)
+	values (#{totalPositionNum},#{currentPrice},#{cost},#{name},#{location})
 </insert>
-<insert id="listInsertParkingLot"  parameterType="List" keyColumn="id" useGeneratedKeys="true">
-	insert into ParkingLot(name,location,cost,state)
+<insert id="listInsertParkingLot"  parameterType="List" keyProperty="id" useGeneratedKeys="true">
+	insert into ParkingLot(totalPositionNum,currentPrice,cost,name,location)
 	values 
-	<trim suffixOverrides=",">
-		<foreach collection="list" item="tmp">
-			(#{tmp.name},#{tmp.location},#{tmp.cost},#{tmp.state}),
-		</foreach>
-	</trim>
+	<foreach collection="list" item="tmp" separator=",">
+		(#{totalPositionNum},#{currentPrice},#{cost},#{name},#{location})
+	</foreach>
 </insert>
 
 
 
 
 <update id="updateParkingLot" parameterType="ParkingLot" >
-	update 
+	update ParkingLot
 		<set>
+			<if test="currentPrice != null">
+				currentPrice=#{currentPrice},
+			</if>
+			<if test="state != null">
+				state=${state.getInd()},
+			</if>
+			
 			<if test="name!=null and !&quot;&quot;.equals(name.trim())">
 				name=#{name},
 			</if>
@@ -89,12 +138,10 @@
 			<if test="cost != null">
 				cost=#{cost},
 			</if>
-			<if test="state != null">
-				state=#{state.getInd()},
-			</if>
 		</set>
 	where id=#{id}
 </update>
+
 
 <update id="deleteParkingLot" parameterType="int" >
 	update ParkingLot 
@@ -103,7 +150,7 @@
 </update>
 <update id="listDeleteParkingLot" parameterType="List" >
 	update ParkingLot 
-		set state=-1
+		set state=${ParkingLotState.INACTIVE}
 	where id in
 	<foreach collection="list" open="(" close=")" separator=",">
 		#{_parameter}

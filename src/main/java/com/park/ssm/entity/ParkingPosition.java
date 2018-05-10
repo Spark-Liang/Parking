@@ -9,7 +9,9 @@ public class ParkingPosition {
 	private ParkingPositionState state;
 	
 	public ParkingPosition() {}
-	
+	public ParkingPosition(long id) {
+		this.id=id;
+	}
 	
 	public Long getId() {
 		return id;

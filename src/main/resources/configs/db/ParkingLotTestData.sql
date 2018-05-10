@@ -3,17 +3,21 @@ drop table if exists ParkingLot;
 create table ParkingLot
 (
 	id int primary key auto_increment
+	
+	,totalPositionNum int not null
+	,currentPrice decimal(10,4) not null 
+	,state tinyint default 0
+	
 	,name varchar(32) not null unique
 	,location varchar(128)
-	,cost double
-	,state tinyint default 0
+	,cost decimal(20,4)
 )engine=innodb auto_increment=1 charset='utf8';
 
-insert into ParkingLot(name,location,cost)
+insert into ParkingLot(totalPositionNum,currentPrice,cost,name,location)
 values
-('A','CC',100)
-,('B','CC',100)
-,('C','CC',100)
+ (100,1.33,100,'A','CC')
+,(100,233,100,'B','CC')
+,(100,3.33,100,'C','CC')
 ;
 
 

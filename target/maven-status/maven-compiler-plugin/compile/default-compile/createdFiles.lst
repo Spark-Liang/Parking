@@ -7,9 +7,11 @@ com\park\ssm\entity\ParkingLot.class
 com\park\ssm\entity\Account.class
 com\park\ssm\dao\UserDao.class
 com\park\ssm\dao\ParkingLotDao.class
+com\park\ssm\service\ParkingLotService.class
 com\park\ssm\controller\DemoController.class
 com\park\ssm\entity\ParkingPosition.class
 com\park\ssm\entity\type\ParkingPositionStateHandler.class
 com\park\ssm\entity\type\AccountState.class
 com\park\ssm\entity\type\ParkingLotState.class
 com\park\ssm\dao\ParkingPositionDao.class
+com\park\ssm\service\impl\ParkingLotServiceImpl.class

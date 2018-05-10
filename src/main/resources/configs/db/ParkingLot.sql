@@ -1,11 +1,16 @@
 create table ParkingLot
 (
 	id int primary key auto_increment
+	
+	,totalPositionNum int not null
+	,currentPrice decimal(10,4) not null 
+	,state tinyint default 0
+	
 	,name varchar(32) not null unique
 	,location varchar(128)
-	,cost double
-	,state tinyint default 0
+	,cost decimal(20,4)
 )engine=innodb auto_increment=1 charset='utf8';
+
 
 
 create table ParkingPosition

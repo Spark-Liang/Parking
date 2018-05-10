@@ -33,6 +33,10 @@
 </select>
 
 
+<insert id="insertParkingPosition" parameterType="List" >
+insert into ParkingPosition(parkingLotId) values
+<foreach collection="list" item="parkingLotId" separator=",">(#{parkingLotId})</foreach>
+</insert>
 
 
  
