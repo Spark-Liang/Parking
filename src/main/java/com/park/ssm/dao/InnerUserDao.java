@@ -1,5 +1,7 @@
 package com.park.ssm.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.park.ssm.entity.InnerUser;
 
 /**
@@ -14,9 +16,9 @@ public interface InnerUserDao {
 
 	public int addInnerUser(InnerUser innerUser);//增加用户，admin才具有此权限
 
-	public InnerUser getInnerUser(String nickname, String password);//根据用户名和密码查找，主要用于用户登陆验证
+	public InnerUser getInnerUser(@Param("nickname")String nickname, @Param("password")String password);//根据用户名和密码查找，主要用于用户登陆验证
 
 	public int deleteInnerUserByNickname(String nickname);//删除用户，admin才具有此权限
 
-	public int updateInnerUserByNickname(InnerUser innerUser,String nickname);//修改用户，admin才具有此权限
+	public int updateInnerUserByNickname(@Param("password")InnerUser innerUser,@Param("nickname")String nickname);//修改用户，admin才具有此权限
 }

@@ -23,16 +23,16 @@
 		InnerUser(nickname,password,typeflag,name,sex,phone,address)
 		values(#{nickname},#{password},#{typeflag},#{name},#{sex},#{phone},#{address})
 	</insert>
-	<update id="updateInnerUserByNickname">
+	<update id="updateInnerUserByNickname" >
 		update InnerUser set
-		nickname=#{nickname},password=#{password},typeflag=#{typeflag},
+		password=#{password},typeflag=#{typeflag},
 		name=#{name},sex=#{sex},phone=#{phone},address=#{address}
 		<where>
 			nickname=#{nickname}
 		</where>
 	</update>
 	<delete id="deleteInnerUserByNickname">
-		delete * from InnerUser
+		delete  from InnerUser
 		<where>
 			nickname=#{nickname}
 		</where>

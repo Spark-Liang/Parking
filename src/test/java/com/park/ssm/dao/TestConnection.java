@@ -56,7 +56,7 @@ public class TestConnection {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String sql="insert into test values(\'阿呆发生非典\')";
+		String sql="insert into test values(\'你很皮\')";
 		try {
 			Statement statement=connection.createStatement();
 			System.out.println(statement.execute(sql));

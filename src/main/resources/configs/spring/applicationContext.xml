@@ -120,7 +120,8 @@
     <context:component-scan base-package="com.park.ssm.aop"></context:component-scan>
 
     <!-- 开启aop注解方式 -->
-    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+    
+   <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
     
 
