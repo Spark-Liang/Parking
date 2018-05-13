@@ -18,8 +18,9 @@ public class ParkingLot {
 	private Set<ParkingPosition> parkingPositions;
 	
 	public ParkingLot() {}
-	public ParkingLot(int id) {
+	public ParkingLot(Integer id,int totalPositionNum) {
 		this.id=id;
+		this.totalPositionNum=totalPositionNum;
 	}
 	
 
@@ -30,9 +31,7 @@ public class ParkingLot {
 	public int getTotalPositionNum() {
 		return totalPositionNum;
 	}
-	public void setTotalPositionNum(int totalPositionNum) {
-		this.totalPositionNum = totalPositionNum;
-	}
+
 	public double getCurrentPrice() {
 		return currentPrice;
 	}

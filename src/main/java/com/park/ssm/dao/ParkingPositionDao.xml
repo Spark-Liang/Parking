@@ -40,4 +40,11 @@ insert into ParkingPosition(parkingLotId) values
 
 
  
+<update id="deleteParkingPositionByLotId" parameterType="int">
+update ParkingPosition
+	set state=${ParkingPositionState.INACTIVE}
+where parkingLotId=#{_parameter}
+</update>
+ 
+
 </mapper>

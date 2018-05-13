@@ -22,7 +22,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 	private ParkingPositionDao parkingPositionDao;
 	
 	@Override
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
+	@Transactional(propagation=Propagation.REQUIRED)
 	public boolean saveParkingLot(ParkingLot parkingLot) {
 		if(1==parkingLotDao.insertParkingLot(parkingLot)) {
 			Integer totalPositionNum=parkingLot.getTotalPositionNum();
@@ -41,11 +41,22 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 	
 
 	@Override
+	@Transactional
 	public boolean deleteParkingLot(ParkingLot parkingLot) {
-		return 1==parkingLotDao.deleteParkingLot(parkingLot.getId());
+		if(parkingLot.getTotalPositionNum()==0) {
+			parkingLot=parkingLotDao.loadParkingLotById(parkingLot.getId());
+		}
+		int totalPosition=parkingLot.getTotalPositionNum();
+		if(1==parkingLotDao.deleteParkingLot(parkingLot.getId())) {
+			if(totalPosition==parkingPositionDao.deleteParkingPositionByLotId(parkingLot.getId())) {
+				return true;
+			}
+		}
+		throw new RuntimeException("error in deleteParkingLot");
 	}
 
 	@Override
+	@Transactional
 	public List<ParkingLot> listDeleteParkingLot(List<ParkingLot> parkingLots) {
 		ArrayList<Integer> ids=new ArrayList<>(parkingLots.size());
 		for(ParkingLot parkingLot:parkingLots) {

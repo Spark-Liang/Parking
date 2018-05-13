@@ -25,7 +25,7 @@ public class TestParkingLotDao extends BaseTest {
 	}
 	
 	@SuppressWarnings("serial")
-	//@Test
+	@Test
 	public void testListParkingLot() {
 		Map<String, Object> conditions=new HashMap<>();
 		conditions.put("name", "A");
@@ -52,7 +52,7 @@ public class TestParkingLotDao extends BaseTest {
 		System.out.println(1==dao.updateParkingLot(parkingLot));
 	}
 	
-	@Test
+	//@Test
 	public void testDeleteParkingLot() {
 		ParkingLot parkingLot=dao.loadParkingLotById(1);
 		System.out.println(parkingLot);

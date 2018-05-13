@@ -1,8 +1,6 @@
 package com.park.ssm.service;
 
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.stereotype.Service;
 
 import com.park.ssm.entity.ParkingLot;
