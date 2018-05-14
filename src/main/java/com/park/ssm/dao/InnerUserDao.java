@@ -20,5 +20,5 @@ public interface InnerUserDao {
 
 	public int deleteInnerUserByNickname(String nickname);//删除用户，admin才具有此权限
 
-	public int updateInnerUserByNickname(@Param("password")InnerUser innerUser,@Param("nickname")String nickname);//修改用户，admin才具有此权限
+	public int updateInnerUserByNickname(InnerUser innerUser);//修改用户，admin才具有此权限
 }

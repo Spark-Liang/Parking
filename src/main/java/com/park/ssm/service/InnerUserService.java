@@ -11,5 +11,5 @@ public interface InnerUserService {
 
 	public int dropInnerUserByNickname(String nickname);//删除用户，admin才具有此权限
 
-	public int changeInnerUserByNickname(InnerUser innerUser,String nickname);//修改用户，admin才具有此权限
+	public int changeInnerUserByNickname(InnerUser innerUser);//修改用户，admin才具有此权限
 }

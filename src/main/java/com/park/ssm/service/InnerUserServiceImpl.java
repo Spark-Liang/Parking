@@ -48,9 +48,9 @@ public class InnerUserServiceImpl implements InnerUserService {
 	}
 
 	@Override
-	public int changeInnerUserByNickname(InnerUser innerUser, String nickname) {//修改成功则返回修改的记录总数，否则返回0
+	public int changeInnerUserByNickname(InnerUser innerUser) {//修改成功则返回修改的记录总数，否则返回0
 		// TODO Auto-generated method stub
-		int result=innerUserDao.updateInnerUserByNickname(innerUser, nickname);
+		int result=innerUserDao.updateInnerUserByNickname(innerUser);
 		if(result>0) {
 			return result;
 		}else {
