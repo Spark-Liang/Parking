@@ -33,14 +33,14 @@ public class TestInnerUserService extends MainTest{
    @Rollback(false)
    public void testChangeInnerUserByNickname() {
 	   InnerUser innerUser=new InnerUser();
-	   innerUser.setNickname("Mesi");
+	   innerUser.setNickname("Meisi");
 	   innerUser.setPassword("9876+54321");
 	   innerUser.setTypeflag(1);
-	   innerUser.getNickname();
+	   innerUser.setName("Messi");
 	   innerUser.setSex(1);
 	   innerUser.setPhone(123456789);
 	   innerUser.setAddress("Basaluona");
-	   System.out.println("----------------------------------"+innerUser.getAddress());
+	  // System.out.println("----------------------------------"+innerUser.getAddress());
 	   Assert.assertTrue(innerUserService.changeInnerUserByNickname(innerUser)>0);
    }
    

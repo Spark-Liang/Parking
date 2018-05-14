@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import com.park.ssm.dao.InnerUserDao;
 import com.park.ssm.entity.InnerUser;
 
-@Service
+@Service("innerUserService")
 public class InnerUserServiceImpl implements InnerUserService {
 	@Autowired
 	private InnerUserDao innerUserDao;

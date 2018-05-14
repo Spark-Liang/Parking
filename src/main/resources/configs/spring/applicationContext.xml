@@ -16,10 +16,10 @@
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop.xsd
     http://www.springframework.org/schema/util
-    http://www.springframework.org/schema/util/spring-util.xsd">
+        http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- 自动扫描业务包,排除Controller -->
-    <context:component-scan base-package="com.park.ssm" >
+    <context:component-scan base-package="com.park" >
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
@@ -117,12 +117,18 @@
 
     <!-- 开启注解扫描 -->
     <!--需要把Aop控制的但是没有注册的类都要通过base-package包含-->
-    <context:component-scan base-package="com.park.ssm.aop"></context:component-scan>
-
+    <context:component-scan base-package="com.park"/>
     <!-- 开启aop注解方式 -->
-    
-   <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
-    
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <bean id="logAspect" class="com.park.ssm.aop.LoggerAop"/>
+
+    <!-- <aop:config>
+    	<aop:aspect id="logAspect" ref="logAspect">
+    		<aop:pointcut expression="execution(* com.park..*(..))" id="execptionPointCut"/>
+    		<aop:after-throwing method="logExecption" pointcut-ref="execptionPointCut" throwing="e"/>
+    	</aop:aspect>
+    </aop:config> -->
 
 </beans>
