@@ -1,6 +1,7 @@
 package com.park.ssm.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -35,5 +36,12 @@ public class DemoController {
 		//Integer id=Integer.valueOf(idStr[0]);
 		ParkingLot parkingLot=dao.loadParkingLotById(idStr[0]);
 		return JSON.toJSONString(parkingLot);
+	}
+	
+	@RequestMapping("testParameter")
+	@ResponseBody
+	public String testParameter(HttpServletRequest request) {
+		
+		return JSON.toJSONString(request.getParameterMap());
 	}
 }

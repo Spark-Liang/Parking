@@ -6,7 +6,7 @@ create table ParkingLot
 	,currentPrice decimal(10,4) not null 
 	,state tinyint default 0
 	
-	,name varchar(32) not null unique
+	,name varchar(32) not null unique key
 	,location varchar(128)
 	,cost decimal(20,4)
 )engine=innodb auto_increment=1 charset='utf8';

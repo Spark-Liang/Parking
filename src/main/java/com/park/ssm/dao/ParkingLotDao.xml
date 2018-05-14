@@ -128,13 +128,6 @@
 			<if test="currentPrice != null">
 				currentPrice=#{currentPrice},
 			</if>
-			<if test="state != null">
-				state=${state.getInd()},
-			</if>
-			
-			<if test="name!=null and !&quot;&quot;.equals(name.trim())">
-				name=#{name},
-			</if>
 			<if test="location!=null and !&quot;&quot;.equals(location.trim())">
 				location=#{location},
 			</if>
@@ -151,14 +144,7 @@
 		set state=-1
 	where id=#{_parameter}
 </update>
-<update id="listDeleteParkingLot" parameterType="List" >
-	update ParkingLot 
-		set state=${ParkingLotState.INACTIVE}
-	where id in
-	<foreach collection="list" open="(" close=")" separator=",">
-		#{_parameter}
-	</foreach>
-</update>
+
 
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.park.ssm.service;
 
+import java.sql.SQLException;
 import java.util.Set;
 
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class TestParkingLotService extends AutoRollBackTest{
 	private ParkingPositionDao parkingPositionDao;
 	
 	@Test
-	public void  testsaveParkingLot() {
+	public void  testsaveParkingLot() throws SQLException {
 		
 		int test_totNum=100;
 		
