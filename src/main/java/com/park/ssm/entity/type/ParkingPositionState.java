@@ -1,14 +1,5 @@
 package com.park.ssm.entity.type;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.apache.ibatis.type.BaseTypeHandler;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.MappedJdbcTypes;
-
 public enum ParkingPositionState {
 	INACTIVE(-1),UNOCCUPIED(0),OCCUPIED(1);
 	
