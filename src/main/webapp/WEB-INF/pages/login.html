@@ -89,6 +89,7 @@ body{
     function login(a){
         var username = $('.login input:eq(0)').val();
         var password = $('.login input:eq(1)').val();
+        var typeflag=$('.login select:eq(0)').val();
         console.log(password);
         var obj = /^\d{8,14}$/g;
         // alert(obj.test(password.value))
@@ -107,8 +108,19 @@ body{
             var hre = "manger.html?id";
             $(a).attr("href",hre);
         }else if(va == 2){
-
         }
+        $.ajax({
+        	data:{username:'username',password:'password',typeflag:'typeflag'},
+        	type:post,
+        	url:'../innerUserController/login',
+        	datatype:json,
+        	success: function(data){
+                
+             }
+        	error:function(data){
+        		
+        	}
+        });
     }
 </script>
 </body>

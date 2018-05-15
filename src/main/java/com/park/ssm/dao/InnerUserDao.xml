@@ -9,6 +9,7 @@
 			nickname=#{nickname}
 		</where>
 	</select>
+	<!-- 登陆验证 -->
 	<select id="getInnerUser" resultType="com.park.ssm.entity.InnerUser">
 		select nickname,password,typeflag,name,sex,phone,address from
 		InnerUser
@@ -16,6 +17,8 @@
 			nickname=#{nickname}
 			and
 			password=#{password}
+			and
+			typeflag=#{typeflag}
 		</where>
 	</select>
 	<insert id="addInnerUser" parameterType="com.park.ssm.entity.InnerUser">

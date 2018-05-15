@@ -34,7 +34,7 @@ public class TestInnerUserService extends MainTest{
    public void testChangeInnerUserByNickname() {
 	   InnerUser innerUser=new InnerUser();
 	   innerUser.setNickname("Meisi");
-	   innerUser.setPassword("9876+54321");
+	   innerUser.setPassword("9876/-74321");
 	   innerUser.setTypeflag(1);
 	   innerUser.setName("Messi");
 	   innerUser.setSex(1);
@@ -52,7 +52,7 @@ public class TestInnerUserService extends MainTest{
    
    @Test
    public void testFindInnerUser() {
-	   InnerUser innerUser=innerUserService.findInnerUser("Meixi", "123678");
+	   InnerUser innerUser=innerUserService.findInnerUser("Meixi", "123678",1);
 	   Assert.assertEquals(98267654, innerUser.getPhone());
    }
    
