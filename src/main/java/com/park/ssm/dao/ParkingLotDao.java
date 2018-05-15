@@ -20,7 +20,24 @@ import com.park.ssm.entity.ParkingLot;
 
 @MapperScan
 public interface ParkingLotDao {
-
+	public static enum CONDITION{
+		NAME("name"),LOCATION("location"),
+		POSITION_NUM_MAX("totalPositionNum_max"),POSITION_NUM_MIN("totalPositionNum_min"),
+		PRICE_MAX("price_max"),PRICE_MIN("price_min"),
+		COST_MAX("cost_max"),COST_MIN("cost_min"),
+		STATES("states")
+		;
+		
+		private String name;
+		
+		private CONDITION(String name) {
+			this.name=name;
+		}
+		
+		public String getName() {
+			return name;
+		}
+	};
 
 	
 	/**所有的bean属性都不进行加载，只是生成代理类*/
@@ -31,12 +48,12 @@ public interface ParkingLotDao {
 	
 	/**返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类
 	 * @param conditions 
-	 * 	输入数字类型的条件Map
+	 * 	输入数字类型的条件Map,对应的condition名字有CONDITION 类对应
 	 * “name”,“location”
 	 * "totalPositionNum_max","totalPositionNum_min" 表示totalPositionNum的边界
 	 * “price_max”“price_min”表示currentPrice的边界
 	 * “cost_max”“cost_min”表示cost的边界
-	 * “states” 表示所有存在的state的list
+	 * “states” 表示所有存在的state的list 即List &lt;ParkingLot&gt;
 	 * @param pageNum 页数
 	 * @param pageSize 每页行数
 	 * */
@@ -52,7 +69,9 @@ public interface ParkingLotDao {
 	
 	public abstract int updateParkingLot(ParkingLot parkingLot);
 	
-	/**删除停车场方法，数据库操作为改变标志位为INACTIVE*/
+	/**
+	 * 删除停车场方法，数据库操作为改变标志位为INACTIVE
+	 * @param id 停车场id
+	 * */
 	public abstract int deleteParkingLot(int id);
-	public abstract int listDeleteParkingLot(List<Integer> ids);
 }

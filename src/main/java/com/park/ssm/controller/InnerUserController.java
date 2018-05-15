@@ -33,7 +33,11 @@ public class InnerUserController {
 		innerUser.setTypeflag(intTypeflag);
 		if(null!=nickname.trim()&&""!=nickname.trim()&&1==checkNickname(nickname)) {
 			if(null!=password&&""!=password) {
+				try {
 				innerUser=innerUserService.findInnerUser(nickname.trim(), password.trim(), intTypeflag);
+				}catch(Exception e) {
+					return null;
+				}
 			}
 		}
 		if(null!=innerUser) {
@@ -51,11 +55,16 @@ public class InnerUserController {
 	 */
 	@RequestMapping("/checkNickname")
 	public int checkNickname(String nickname) {
-		if(null!=innerUserService.findInnerUserByNickname(nickname.trim())) {
-			return 1;
-		}else {
-			return 0;
+		try {
+			if(null!=innerUserService.findInnerUserByNickname(nickname.trim())) {
+				return 1;
+			}else {
+				return 0;
+			}
+		}catch(Exception e) {
+			return -1;
 		}
+		
 	}
 	
 	public int addInnerUser() {

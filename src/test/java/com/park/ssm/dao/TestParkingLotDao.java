@@ -6,14 +6,14 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.park.BaseTest;
+import com.park.AutoRollBackTest;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.type.ParkingLotState;
 
 import junit.framework.Assert;
 
 @Component
-public class TestParkingLotDao extends BaseTest {
+public class TestParkingLotDao extends AutoRollBackTest {
 	@Autowired
 	private ParkingLotDao dao;
 	
@@ -25,7 +25,7 @@ public class TestParkingLotDao extends BaseTest {
 	}
 	
 	@SuppressWarnings("serial")
-	@Test
+	//@Test
 	public void testListParkingLot() {
 		Map<String, Object> conditions=new HashMap<>();
 		conditions.put("name", "A");
@@ -65,5 +65,9 @@ public class TestParkingLotDao extends BaseTest {
 		System.out.println(parkingLot);
 	}
 	
-	
+	@Test
+	public void testUpdateFail() {
+		ParkingLot parkingLot=new ParkingLot(10, 200);
+		dao.updateParkingLot(parkingLot);
+	}
 }
