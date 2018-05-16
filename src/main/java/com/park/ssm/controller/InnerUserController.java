@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
 import com.park.ssm.entity.InnerUser;
 import com.park.ssm.service.InnerUserService;
 
@@ -14,6 +16,13 @@ import com.park.ssm.service.InnerUserService;
 public class InnerUserController {
 	@Autowired
 	private InnerUserService innerUserService;
+	
+	@RequestMapping("/page")
+	public String loginPage() {
+		System.out.println("here");
+		//return new ModelAndView("login.html");
+		return "logon.jsp";
+	}
 	
 	/**
 	 * 登陆控制器
@@ -42,14 +51,14 @@ public class InnerUserController {
 		}
 		if(null!=innerUser) {
 			session.setAttribute("innerUser", innerUser);
-			return "admin.html";
+			return JSON.toJSONString(innerUser);
 		}else {
-			return "login.html";
+			return JSON.toJSONString(null);
 		}	
 	}
 	
 	/**
-	 * 检查nickname控制 器
+	 * 检查nickname控制器
 	 * @param nickname
 	 * @return
 	 */

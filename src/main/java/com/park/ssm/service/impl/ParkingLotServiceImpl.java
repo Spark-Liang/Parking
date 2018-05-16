@@ -42,6 +42,12 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 		throw new SQLException("error in saveParkingLot.");
 	}
 	
+	@Override
+	public boolean isExistingName(String name) {
+		// TODO Auto-generated method stub
+		return null==parkingLotDao.loadParkingLotByName(name);
+	}
+
 	
 	@SuppressWarnings({ "rawtypes", "unchecked", "serial" })
 	@Override

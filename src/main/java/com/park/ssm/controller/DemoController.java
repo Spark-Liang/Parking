@@ -44,4 +44,9 @@ public class DemoController {
 		
 		return JSON.toJSONString(request.getParameterMap());
 	}
+	
+	@RequestMapping("index")
+	public String testIndex(){
+		return "index";
+	}
 }

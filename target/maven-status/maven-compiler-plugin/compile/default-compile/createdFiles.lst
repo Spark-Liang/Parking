@@ -1,3 +1,5 @@
+com\park\ssm\entity\LoginBean.class
+com\park\ssm\interceptor\LoginInterceptor.class
 com\park\ssm\entity\User.class
 com\park\ssm\dao\AccountDao.class
 com\park\ssm\entity\type\ParkingLotStateHandler.class
@@ -11,6 +13,7 @@ com\park\ssm\entity\Account.class
 com\park\ssm\aop\LoggerAop.class
 com\park\ssm\dao\UserDao.class
 com\park\ssm\dao\ParkingLotDao.class
+com\park\ssm\controller\LoginController.class
 com\park\ssm\controller\ParkingLotController.class
 com\park\ssm\service\ParkingLotService.class
 com\park\ssm\controller\DemoController.class

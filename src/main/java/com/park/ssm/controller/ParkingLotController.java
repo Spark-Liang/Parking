@@ -15,16 +15,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.park.ssm.annotation.Permission;
 import com.park.ssm.dao.ParkingLotDao.CONDITION;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.service.ParkingLotService;
 
-@RequestMapping("ParkingLot")
+@RequestMapping("parkinglot")
 @Controller
+@Permission(value={Permission.Type.ADMIN})
 public class ParkingLotController {
 	@Autowired
 	private ParkingLotService parkingLotService;
 	
+	//显示页面
+	@RequestMapping("admin")
+	public String parkingLotAdmin() {
+		return "parkinglot/admin.html";
+	}
+	@RequestMapping("manager")
+	public String parkingLotManager() {
+		return "parkinglot/manager.html";
+	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping("add")
@@ -60,6 +71,7 @@ public class ParkingLotController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping("list")
 	@ResponseBody
+	@Permission(value= {Permission.Type.ADMIN,Permission.Type.MANAGER})
 	public String listParkingLot(HttpServletRequest request) {
 		Map<String, String[]> params=request.getParameterMap();
 		Map<String, Object> conditions=new HashMap<>();
