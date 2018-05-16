@@ -5,7 +5,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.park.ssm.entity.InnerUser;
 import com.park.ssm.service.InnerUserService;
@@ -15,6 +17,13 @@ public class InnerUserController {
 	@Autowired
 	private InnerUserService innerUserService;
 	
+	@RequestMapping(value="/toLogin")
+	public ModelAndView toLogin() {
+		ModelAndView mv=new ModelAndView();
+		mv.setViewName("/pages/login.html");
+		return mv;
+	}
+	
 	/**
 	 * 登陆控制器
 	 * @param session
@@ -23,7 +32,7 @@ public class InnerUserController {
 	 * @param typeflag
 	 * @return
 	 */
-	@RequestMapping("/login") 
+	@RequestMapping(value="/login",method=RequestMethod.POST) 
 	@ResponseBody
 	public String login(HttpSession session,String nickname,String password,String typeflag) {
 		InnerUser innerUser=new InnerUser();
@@ -54,6 +63,7 @@ public class InnerUserController {
 	 * @return
 	 */
 	@RequestMapping("/checkNickname")
+	@ResponseBody
 	public int checkNickname(String nickname) {
 		try {
 			if(null!=innerUserService.findInnerUserByNickname(nickname.trim())) {

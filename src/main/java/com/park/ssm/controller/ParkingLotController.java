@@ -32,6 +32,10 @@ public class ParkingLotController {
 	public String addParkingLot(ParkingLot parkingLot) {
 		boolean res=false;
 		try {
+			parkingLot.setCost(1.02);
+			parkingLot.setName("name");
+			parkingLot.setCurrentPrice(12.0);
+			
 			parkingLotService.saveParkingLot(parkingLot);
 			res=true;
 		} catch (SQLException e) {
