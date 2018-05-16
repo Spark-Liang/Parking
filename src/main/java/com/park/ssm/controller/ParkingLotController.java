@@ -30,11 +30,11 @@ public class ParkingLotController {
 	//显示页面
 	@RequestMapping("admin")
 	public String parkingLotAdmin() {
-		return "parkinglot/admin.html";
+		return "admin";
 	}
 	@RequestMapping("manager")
 	public String parkingLotManager() {
-		return "parkinglot/manager.html";
+		return "manager";
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

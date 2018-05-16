@@ -21,16 +21,22 @@
 
 	<!--激活基于annotation的handlerMapping -->
 	<mvc:annotation-driven />
-
+	<!-- 对静态资源文件的访问 -->
+	<mvc:resources mapping="/img/**" location="/img/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
 
 	<!-- 拦截器配置 -->
-	<!-- <mvc:interceptors>
+	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/index.jsp" />
+			<mvc:exclude-mapping path="/img/**"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/css/**"/>
 			<bean class="com.park.ssm.interceptor.LoginInterceptor" />
 		</mvc:interceptor>
-	</mvc:interceptors> -->
+	</mvc:interceptors>
 
 
 	<bean id="htmlInternalResourceViewResolver"
@@ -38,13 +44,11 @@
 		<!-- <property name="viewClass"
 			value="org.springframework.web.servlet.view.InternalResourceView" /> -->
 		<property name="prefix" value="/WEB-INF/pages/" />
+		<property name="suffix" value=".jsp"/>
 		<property name="order" value="10" />
 	</bean>
 
-	<!-- 对静态资源文件的访问 -->
-	<!-- <mvc:resources mapping="/WEB-INF/img/**" location="/WEB-INF/img/" />
-	<mvc:resources mapping="/WEB-INF/js/**" location="/WEB-INF/js/" />
-	<mvc:resources mapping="/WEB-INF/css/**" location="/WEB-INF/css/" /> -->
+	
 
 
 

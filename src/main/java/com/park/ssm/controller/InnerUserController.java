@@ -1,10 +1,14 @@
 package com.park.ssm.controller;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,15 +17,16 @@ import com.park.ssm.entity.InnerUser;
 import com.park.ssm.service.InnerUserService;
 
 @Controller("innerUserController")
+@RequestMapping("inneruser")
 public class InnerUserController {
 	@Autowired
 	private InnerUserService innerUserService;
 	
-	@RequestMapping("/page")
+	@RequestMapping("page")
 	public String loginPage() {
 		System.out.println("here");
 		//return new ModelAndView("login.html");
-		return "logon.jsp";
+		return "login";
 	}
 	
 	/**
@@ -32,7 +37,7 @@ public class InnerUserController {
 	 * @param typeflag
 	 * @return
 	 */
-	@RequestMapping("/login") 
+	@RequestMapping(value="login",method= {RequestMethod.POST}) 
 	@ResponseBody
 	public String login(HttpSession session,String nickname,String password,String typeflag) {
 		InnerUser innerUser=new InnerUser();
@@ -40,6 +45,7 @@ public class InnerUserController {
 		innerUser.setNickname(nickname.trim());
 		innerUser.setPassword(password.trim());
 		innerUser.setTypeflag(intTypeflag);
+		
 		if(null!=nickname.trim()&&""!=nickname.trim()&&1==checkNickname(nickname)) {
 			if(null!=password&&""!=password) {
 				try {
@@ -62,7 +68,7 @@ public class InnerUserController {
 	 * @param nickname
 	 * @return
 	 */
-	@RequestMapping("/checkNickname")
+	@RequestMapping("checkNickname")
 	public int checkNickname(String nickname) {
 		try {
 			if(null!=innerUserService.findInnerUserByNickname(nickname.trim())) {

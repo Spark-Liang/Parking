@@ -22,9 +22,6 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({ TYPE, METHOD })
 public @interface Permission {
-	public static final Type ADMIN=Type.ADMIN;
-	public static final Type MANAGER=Type.MANAGER;
-	public static final Type OPERATOR=Type.OPERATOR;
 	
 	Type[] value();
 	

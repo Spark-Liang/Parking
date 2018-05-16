@@ -12,6 +12,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <title>Insert title here</title>
 </head>
 <body>
-<a href="inneruser/page">内部员工登陆</a>
+
 </body>
 </html>
