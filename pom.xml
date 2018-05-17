@@ -186,7 +186,6 @@
       <groupId>log4j</groupId>  
       <artifactId>log4j</artifactId>  
       <version>${log4j.version}</version>  
-      <!-- <scope>runtime</scope> -->
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 	<dependency>
@@ -198,7 +197,6 @@
       <groupId>org.slf4j</groupId>  
       <artifactId>slf4j-api</artifactId>  
       <version>${slf4j.version}</version> 
-      <!-- <scope>runtime</scope>  -->
     </dependency>  
     <!-- 与log4j相冲突，所以不加载 -->
     <!-- <dependency>  
@@ -304,6 +302,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <!-- tomcat运行插件 -->
        		<plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -318,6 +317,36 @@
                     <update>true</update>
                 </configuration>
             </plugin>
+            <!-- jetty插件 -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.11.v20130520</version>
+				<configuration>
+					<webApp>
+						<contextPath>/park</contextPath>
+					</webApp>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<scanTargetPatterns>
+						<scanTargetPattern>
+							<directory>src/main/webapp</directory>
+							<includes>
+								<include>**/*.xml</include>
+								<include>**/*.properties</include>
+							</includes>
+						</scanTargetPattern>
+					</scanTargetPatterns>
+					<webAppConfig>
+						<defaultsDescriptor>src/main/webapp/web.xml</defaultsDescriptor>
+					</webAppConfig>
+					<connectors>
+						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+							<port>9090</port>
+							<maxIdleTime>400000</maxIdleTime>
+						</connector>
+					</connectors>
+				</configuration>
+			</plugin>
             <!-- 使maven支持junit -->
             <plugin>
 		       <groupId>org.apache.maven.plugins</groupId>

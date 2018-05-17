@@ -1,5 +1,8 @@
 package com.park.ssm.service;
 
+
+import java.util.List;
+
 import com.park.ssm.entity.InnerUser;
 
 public interface InnerUserService {
@@ -12,4 +15,6 @@ public interface InnerUserService {
 	public int dropInnerUserByNickname(String nickname);//删除用户，admin才具有此权限
 
 	public int changeInnerUserByNickname(InnerUser innerUser);//修改用户，admin才具有此权限
+	
+	public List<InnerUser> findInnerUserByTypeflag(int typeflag);//根据typeflag查找InnerUser
 }

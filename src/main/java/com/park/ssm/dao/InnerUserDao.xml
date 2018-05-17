@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--客户映射 指定到dao接口 -->
 <mapper namespace="com.park.ssm.dao.InnerUserDao">
+
+	<!-- 根据nickname查找InnerUser -->
 	<select id="getInnerUserByNickname" resultType="com.park.ssm.entity.InnerUser">
 		select nickname,password,typeflag,name,sex,phone,address from
 		InnerUser
@@ -9,6 +11,7 @@
 			nickname=#{nicknadme}
 		</where>
 	</select>
+
 	<!-- 登陆验证 -->
 	<select id="getInnerUser" resultType="com.park.ssm.entity.InnerUser">
 		select nickname,password,typeflag,name,sex,phone,address from
@@ -21,12 +24,16 @@
 			typeflag=#{typeflag}
 		</where>
 	</select>
+
+	<!-- 新增InnerUser -->
 	<insert id="addInnerUser" parameterType="com.park.ssm.entity.InnerUser">
 		insert into
 		InnerUser(nickname,password,typeflag,name,sex,phone,address)
 		values(#{nickname},#{password},#{typeflag},#{name},#{sex},#{phone},#{address})
 	</insert>
-	<update id="updateInnerUserByNickname" >
+
+	<!-- 更新InnerUser信息,nickname不能更改 -->
+	<update id="updateInnerUserByNickname">
 		update InnerUser set
 		password=#{password},typeflag=#{typeflag},
 		name=#{name},sex=#{sex},phone=#{phone},address=#{address}
@@ -34,10 +41,21 @@
 			nickname=#{nickname}
 		</where>
 	</update>
+
+	<!-- 删除InnerUser -->
 	<delete id="deleteInnerUserByNickname">
-		delete  from InnerUser
+		delete from InnerUser
 		<where>
 			nickname=#{nickname}
 		</where>
 	</delete>
+
+	<!-- 根据typeflag查找InnerUser,用于登陆成功时显示 -->
+	<select id="getInnerUserByTypeflag" resultType="com.park.ssm.entity.InnerUser">
+		select nickname,name,sex,phone,address
+		from InnerUser
+		<where>
+			typeflag=#{typefalg}
+		</where>
+	</select>
 </mapper>

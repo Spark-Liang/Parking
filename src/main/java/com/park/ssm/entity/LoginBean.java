@@ -1,11 +1,11 @@
 package com.park.ssm.entity;
 
-public class LogonBean {
+public class LoginBean {
 	private String nickName;
 	private int typeflag;
 	
-	public LogonBean() {}
-	public LogonBean(String nickName, int typeflag) {
+	public LoginBean() {}
+	public LoginBean(String nickName, int typeflag) {
 		super();
 		this.nickName = nickName;
 		this.typeflag = typeflag;

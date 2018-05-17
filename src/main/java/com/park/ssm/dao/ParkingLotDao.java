@@ -40,11 +40,21 @@ public interface ParkingLotDao {
 	};
 
 	
-	/**所有的bean属性都不进行加载，只是生成代理类*/
+	/**
+	 * 通过ParkingLot的id查询
+	 * @return ParkingLot 返回的ParkingLot所有的bean属性都不进行加载，只是生成代理类 
+	 * */
 	public abstract ParkingLot loadParkingLotById(int id);
-	/**所有的bean属性都不进行加载，只是生成代理类,并且在存在事物的前提下加锁*/
+	/**
+	 * 通过ParkingLot的id查询，并且对查询的对应行加锁
+	 * @return ParkingLot 返回的ParkingLot所有的bean属性都不进行加载，只是生成代理类 
+	 * */
 	public abstract ParkingLot loadParkingLotByIdForUpdate(int id);
-
+	/**
+	 * 通过ParkingLot的名称进行查询查询
+	 * @return ParkingLot 返回的ParkingLot所有的bean属性都不进行加载，只是生成代理类 
+	 * */
+	public abstract ParkingLot loadParkingLotByName(String name);
 	
 	/**返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类
 	 * @param conditions 

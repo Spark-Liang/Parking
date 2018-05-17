@@ -44,6 +44,14 @@
 	where id=#{_parameter}
 	for update
 </select>
+<!-- 所有的bean属性都不进行加载，只是生成代理类 -->
+<select id="loadParkingLotByName" parameterType="String" resultMap="parkingLotRoughResult">
+	select 
+		*
+	from ParkingLot
+	where name=#{_parameter}
+</select>
+
 
 <!-- 返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类 -->
 <select id="listParkingLot"  resultMap="parkingLotRoughResult">

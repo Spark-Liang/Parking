@@ -1,5 +1,8 @@
 package com.park.ssm.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -52,13 +55,20 @@ public class TestInnerUserService extends MainTest{
    
    @Test
    public void testFindInnerUser() {
-	   InnerUser innerUser=innerUserService.findInnerUser("Meixi", "123678",1);
-	   Assert.assertEquals(98267654, innerUser.getPhone());
+	   InnerUser innerUser=innerUserService.findInnerUser("Meixi", "123678",2);
+	   Assert.assertEquals(121789, innerUser.getPhone());
    }
    
    @Test
   // @Rollback(false)
    public void testdropInnerUserByNickname() {
 	   Assert.assertTrue(innerUserService.dropInnerUserByNickname("Meixi")>0);
+   }
+   
+   @Test
+   public void testFindInnerUserByTypeflag() {
+	   List<InnerUser> list=new ArrayList<InnerUser>();
+	   list=innerUserService.findInnerUserByTypeflag(2);
+	   Assert.assertEquals("bb", list.get(0).getNickname());
    }
 }

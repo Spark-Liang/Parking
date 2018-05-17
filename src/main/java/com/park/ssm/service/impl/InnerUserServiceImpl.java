@@ -1,5 +1,7 @@
 package com.park.ssm.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +14,20 @@ public class InnerUserServiceImpl implements InnerUserService {
 	@Autowired
 	private InnerUserDao innerUserDao;
 
+	/**
+	 * 根据昵称查询员工
+	 */
 	@Override
-	public InnerUser findInnerUserByNickname(String nickname) {// 根据昵称查询员工
+	public InnerUser findInnerUserByNickname(String nickname) {
 		// TODO Auto-generated method stu
-		return innerUserDao.getInnerUserByNickname(nickname);	
+		return innerUserDao.getInnerUserByNickname(nickname);
 	}
 
+	/**
+	 * 如果插入成功，则返回插入的记录数。否则返回0
+	 */
 	@Override
-	public int insertInnerUser(InnerUser innerUser) {// 如果插入成功，则返回插入的记录数。否则返回0
+	public int insertInnerUser(InnerUser innerUser) {
 		// TODO Auto-generated method stub
 		try {
 			int result = innerUserDao.addInnerUser(innerUser);
@@ -34,14 +42,20 @@ public class InnerUserServiceImpl implements InnerUserService {
 
 	}
 
+	/**
+	 * 登陆时调用这个方法，昵称和用户名匹配才能登陆
+	 */
 	@Override
-	public InnerUser findInnerUser(String nickname, String password, int typeflag) {// 登陆时调用这个方法，昵称和用户名匹配才能登陆
+	public InnerUser findInnerUser(String nickname, String password, int typeflag) {
 		// TODO Auto-generated method stub
 		return innerUserDao.getInnerUser(nickname, password, typeflag);
 	}
 
+	/**
+	 * // 如果删除成功，返回记录数，否则，返回0
+	 */
 	@Override
-	public int dropInnerUserByNickname(String nickname) {// 如果删除成功，返回记录数，否则，返回0
+	public int dropInnerUserByNickname(String nickname) {
 		// TODO Auto-generated method stub
 		try {
 			int result = innerUserDao.deleteInnerUserByNickname(nickname);
@@ -57,8 +71,11 @@ public class InnerUserServiceImpl implements InnerUserService {
 
 	}
 
+	/**
+	 * 修改成功则返回修改的记录总数，否则返回0
+	 */
 	@Override
-	public int changeInnerUserByNickname(InnerUser innerUser) {// 修改成功则返回修改的记录总数，否则返回0
+	public int changeInnerUserByNickname(InnerUser innerUser) {
 		// TODO Auto-generated method stub
 		try {
 			int result = innerUserDao.updateInnerUserByNickname(innerUser);
@@ -70,6 +87,15 @@ public class InnerUserServiceImpl implements InnerUserService {
 		} catch (Exception e) {
 			return -1;
 		}
+	}
+
+	/**
+	 * 根据typeflag查找InnerUser
+	 */
+	@Override
+	public List<InnerUser> findInnerUserByTypeflag(int typeflag) {
+		// TODO Auto-generated method stub
+		return innerUserDao.getInnerUserByTypeflag(typeflag);
 	}
 
 }

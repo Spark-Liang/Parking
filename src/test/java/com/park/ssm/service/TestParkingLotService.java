@@ -20,7 +20,7 @@ public class TestParkingLotService extends AutoRollBackTest{
 	@Autowired
 	private ParkingPositionDao parkingPositionDao;
 	
-	@Test
+	//@Test
 	public void  testsaveParkingLot() throws SQLException {
 		
 		int test_totNum=100;
@@ -40,5 +40,29 @@ public class TestParkingLotService extends AutoRollBackTest{
 		Assert.assertEquals(test_totNum, parkingPositions.size());
 		
 		throw new RuntimeException("test");
+	}
+	
+	@Test
+	public void saveSameName() {
+		ParkingLot parkingLot1=new ParkingLot(null,120),parkingLot2=new ParkingLot(null,100);
+		String name="test_SameName";
+		
+		parkingLot1.setName(name);
+		parkingLot1.setCost(11.0);
+		parkingLot1.setLocation("locaitonA");
+		parkingLot1.setCurrentPrice(33);
+		
+		parkingLot2.setName(name);
+		parkingLot2.setCost(22.0);
+		parkingLot2.setLocation("locaitonB");
+		parkingLot2.setCurrentPrice(44);
+		
+		try {
+			service.saveParkingLot(parkingLot1);
+			service.saveParkingLot(parkingLot2);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

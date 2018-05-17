@@ -26,6 +26,12 @@ public interface ParkingLotService {
 	 * */
 	public abstract void saveParkingLot(ParkingLot parkingLot) throws SQLException;
 	
+	/**
+	 * 查询该停车场名称是否存在
+	 * @param name
+	 * @return boolean
+	 */
+	public abstract boolean isExistingName(String name);
 	
 	/**返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类
 	 * 默认返回未被删除的停车场信息

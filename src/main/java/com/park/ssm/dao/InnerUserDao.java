@@ -1,5 +1,7 @@
 package com.park.ssm.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.park.ssm.entity.InnerUser;
@@ -21,4 +23,6 @@ public interface InnerUserDao {
 	public int deleteInnerUserByNickname(String nickname);//删除用户，admin才具有此权限
 
 	public int updateInnerUserByNickname(InnerUser innerUser);//修改用户，admin才具有此权限
+	
+	public List<InnerUser> getInnerUserByTypeflag(int typeflag);//根据typeflag查找InnerUser
 }
