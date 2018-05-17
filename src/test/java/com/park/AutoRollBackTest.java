@@ -6,7 +6,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
-
+import static junit.framework.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)  
 @TransactionConfiguration(transactionManager="txManager", defaultRollback=true)   
 @ContextConfiguration(locations= {"classpath*:configs/spring/*xml"})

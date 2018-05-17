@@ -76,8 +76,12 @@ public interface ParkingLotDao {
 	/**返回集合中所有状态为ACTIVE的停车场*/
 	public abstract List<ParkingLot> listActiveLotByIdList(List<Integer> ids);
 	
-	
-	public abstract int updateParkingLot(ParkingLot parkingLot);
+	/**
+	 * 传入需要进行更新的属性
+	 * @param parkingLot
+	 * @return
+	 */
+	public abstract int updateParkingLot(Map<String, Object> updateField);
 	
 	/**
 	 * 删除停车场方法，数据库操作为改变标志位为INACTIVE

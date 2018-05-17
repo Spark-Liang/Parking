@@ -1,0 +1,38 @@
+body{
+	background: url(img/welcome.jpg) no-repeat;
+	background-size: 100%;
+}
+.welcome-mid{
+	margin: 20% auto;
+	width: 900px;
+	height: 250px;
+	position: relative;
+	overflow: hidden;
+}
+.welcome-mid button{
+	min-width: 300px;
+}
+.welcome-mid h1{
+	color: white;
+	text-align: center;
+	margin-top: 20px;
+	font-size: 70px;
+	font-weight: 600;
+}
+.welcome-mid p{
+	text-align: center;
+}
+.welcome-mid a{
+	color: white;
+	font-size: 11px;
+}
+.welcome-opacity{
+	position: absolute;
+	background-color: black;
+	opacity: 0.5;
+	width: inherit;
+	height: inherit;
+	border-radius: 5px;
+	z-index: -1;
+	top: 0px;
+}

@@ -51,6 +51,7 @@ public class ParkingLotController {
 		}
 		Map result=new HashMap();
 		result.put("res", res);
+		result.put("parkingLot", parkingLot);
 		return JSON.toJSONString(result);
 	}
 	
@@ -94,12 +95,40 @@ public class ParkingLotController {
 		return JSON.toJSONString(result);
 	}
 	
+	/**返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类
+	 * 默认返回未被删除的停车场信息
+	 * @param conditions 
+	 * 	输入数字类型的条件Map
+	 * “location”
+	 * "totalPositionNum_max","totalPositionNum_min" 表示totalPositionNum的边界
+	 * “price_max”“price_min”表示currentPrice的边界
+	 * “cost_max”“cost_min”表示cost的边界
+	 * 
+	 * @return String JSON ｛"res": true|false "parkingLot":修改成功后的parkingLot｝
+	 * 
+	 * */
+	@RequestMapping("update")
+	@ResponseBody
+	public String updateParkingLotInfo(ParkingLot parkingLot) {
+		Map<String, Object> result=new HashMap<>();
+		try {
+			parkingLotService.updateParkingLot(parkingLot);
+			result.put("res", true);
+			result.put("parkingLot", parkingLot);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			result.put("res", false);
+			e.printStackTrace();
+		}
+		return JSON.toJSONString(result);
+	}
+	
 	/**删除停车场
 	 * 提交一个id时 删除成功返回true，失败返回false
 	 * 提交多个id是，所有删除成功返回null，否则返回失败的id
 	 * 
 	 * @param ids
-	 * @return String JSON ｛"res":结果｝
+	 * @return String JSON ｛"res":结果 "fail":失败的id列表｝ 
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping("delete")
@@ -124,9 +153,24 @@ public class ParkingLotController {
 				list.add(ids[i]);
 			}
 			List<Integer> resultList=parkingLotService.listDeleteParkingLot(list);
-			result.put("res", resultList);
+			result.put("res", false);
+			result.put("fail", resultList);
 		}
 		return JSON.toJSONString(result);
 		
 	}
+	
+	
+	/**	parkingLot名称查重
+	 * @param name
+	 * @return String JSON ｛"res":“true”(存在重复) “false”(不存在重复)｝ 
+	 */
+	@RequestMapping("existname")
+	@ResponseBody
+	public String existName(String name) {
+		Map<String, Object> result=new HashMap<>();
+		result.put("res", parkingLotService.isExistingName(name));
+		return JSON.toJSONString(result);
+	}
+	
 }

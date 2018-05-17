@@ -70,8 +70,9 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 				}
 				//如果访问返回jsp的方法，则跳转到错误页面 
 				request.setAttribute("message", "权限不足无法操作");
+				request.setAttribute("originURL", request.getRequestURL());
 				request.getRequestDispatcher(request.getContextPath()+errorUrl).forward(request, response); 
-				return false;  
+				return false;
 			}
 		}
 	}

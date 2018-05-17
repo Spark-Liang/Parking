@@ -2,11 +2,32 @@ package com.park.ssm.entity;
 
 import java.util.Set;
 
+import com.park.ssm.annotation.UnEditableField;
 import com.park.ssm.entity.type.ParkingLotState;
 
+/**
+ * @param 
+ * <ul> 
+ * <li>id 停车场id
+ * <p>业务相关属性 :
+ * <li> totalPositionNum 停车场总停车位数目（不可修改）
+ * <li> currentPrice 当前停车场停车费用
+ * <li> state 当前停车场状态 ,包含ACTIVE和INACTIVE
+ * <p>业务无关的详细信息:
+ * <li> name 停车场名称（不能重复）
+ * <li> location 停车场位置
+ * <li> cost 停车场成本
+ * <p>其他信息:
+ * <li> parkingPositions 停车场对应停车位的引用
+ * @author ASNPHXJ
+ * 
+ *
+ */
 public class ParkingLot {
+	@UnEditableField
 	private Integer id;
 	//业务相关
+	@UnEditableField
 	private int totalPositionNum;
 	private double currentPrice;
 	private ParkingLotState state;

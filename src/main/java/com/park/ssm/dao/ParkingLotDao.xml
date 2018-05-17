@@ -130,18 +130,14 @@
 
 
 
-<update id="updateParkingLot" parameterType="ParkingLot" >
+<update id="updateParkingLot" parameterType="Map" >
 	update ParkingLot
 		<set>
-			<if test="currentPrice != null">
-				currentPrice=#{currentPrice},
-			</if>
-			<if test="location!=null and !&quot;&quot;.equals(location.trim())">
-				location=#{location},
-			</if>
-			<if test="cost != null">
-				cost=#{cost},
-			</if>
+			<foreach collection="_parameter" index="key" item="value" separator=",">
+				<if test="! key.trim().equals(&quot;id&quot;)">
+				${key}=#{value}
+				</if>
+			</foreach>
 		</set>
 	where id=#{id}
 </update>

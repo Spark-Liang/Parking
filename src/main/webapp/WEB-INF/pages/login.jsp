@@ -117,7 +117,7 @@ body {
 			//用户名和密码格式以及非空验证
 			var uName = $('.userName').val().trim();
 			var nameLength = uName.length;
-			var regex = new RegExp("^[0-9a-zA_Z]+$");
+			var regex = new RegExp("^[0-9a-zA-Z]+$");
 			var tip = document.getElementsByClassName('tip')[0];
 			var select = $('.login select').val();
 			if (nameLength < 1) {
