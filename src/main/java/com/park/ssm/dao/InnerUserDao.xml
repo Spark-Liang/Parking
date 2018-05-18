@@ -58,4 +58,23 @@
 			typeflag=#{typefalg}
 		</where>
 	</select>
+
+	<!-- 条件查询InnerUser -->
+	<select id="getInnerUserByFuzzy" resultType="com.park.ssm.entity.InnerUser">
+		select nickname,name,sex,phone,address
+		from InnerUser
+		<where>
+			<choose>
+				<when test="nickname!=null">
+					nickname=#{nickname}
+				</when>
+				<when test="sex==0 or sex==1">
+					and sex=#{sex}
+				</when>
+				<when test="phone!=0">
+					and phone=#{phone}
+				</when>
+			</choose>
+		</where>
+	</select>
 </mapper>

@@ -98,4 +98,10 @@ public class InnerUserServiceImpl implements InnerUserService {
 		return innerUserDao.getInnerUserByTypeflag(typeflag);
 	}
 
+	@Override
+	public List<InnerUser> findInnerUserByFuzzy(String nickname, int sex, int phone) {
+		// TODO Auto-generated method stub
+		return innerUserDao.getInnerUserByFuzzy(nickname, sex, phone);
+	}
+
 }

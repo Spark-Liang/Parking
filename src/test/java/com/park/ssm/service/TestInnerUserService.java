@@ -71,4 +71,11 @@ public class TestInnerUserService extends MainTest{
 	   list=innerUserService.findInnerUserByTypeflag(2);
 	   Assert.assertEquals("bb", list.get(0).getNickname());
    }
+   
+   @Test
+   public void testFindInnerUserByFuzzy() {
+	   List<InnerUser> list=new ArrayList<InnerUser>();
+	   list=innerUserService.findInnerUserByFuzzy(null, 3, 0);
+	   Assert.assertEquals("bb", list.get(0).getNickname());
+   }
 }
