@@ -93,7 +93,7 @@ body {
 			<form id="formLogin">
 				<div class="form-gorup">
 					<label>用户名</label> <input type="text" class="form-control userName"
-						name="nickname" placeholder="username">
+						name="nickname" placeholder="username" onblur="checkName()">
 				</div>
 				<br />
 				<div class="form-gorup">
@@ -113,6 +113,32 @@ body {
 	</div>
 
 	<script type="text/javascript">
+		function checkName() {
+			//检测用账号
+			var uName = $('.userName').val().trim();
+			var nameLength = uName.length;
+			var regex = new RegExp("^[0-9a-zA_Z]+$");
+			var tip = document.getElementsByClassName('tip')[0];
+			var select = $('.login select').val();
+			if (nameLength < 1) {
+				tip.innerHTML = "请输入账号";
+				$('.userName').focus();
+				return;
+			} else if (nameLength > 16) {
+				tip.innerHTML = '账号长度不能超出16位';
+				$('.userName').focus();
+				return;
+			} else if (uName.indexOf(' ') !== -1) {
+				tip.innerHTML = '账号中间不能有空格';
+				$('.pass').focus();
+				return;
+			} else if (!regex.test(uName)) {
+				tip.innerHTML = "账号只能包含英文和数字";
+				$('.userName').focus();
+				return;
+			}
+		}
+
 		function login(a) {
 			//用户名和密码格式以及非空验证
 			var uName = $('.userName').val().trim();
@@ -156,7 +182,7 @@ body {
 				},
 				success : function(user) {
 					if (user === null) {
-						$('.tip').text('账号或密码错误');
+						$('.tip').text('请检查用户名、密码和角色');
 						$('.userName').val('');
 						$('.pass').val('');
 						return;
@@ -166,11 +192,11 @@ body {
 
 						} else if (select == 1) {
 							var hre = "parkinglot/manager?id=" + user.nickname;
-							
+
 						} else if (select == 2) {
 
 						}
-						$(location).attr('href',hre);
+						$(location).attr('href', hre);
 					}
 				}
 			});

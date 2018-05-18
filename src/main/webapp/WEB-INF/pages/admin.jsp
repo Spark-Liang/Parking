@@ -8,8 +8,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>用户登录</title>
-    <link rel="stylesheet" href="style.css">
+    <title>员工界面</title>
+   <!--   <link rel="stylesheet" href="style.css">-->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="<%=path %>/js/jquery-3.3.1.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -269,7 +269,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             <h4>停车场管理</h4>
             <p class="selectall"><img src="<%=path %>/img/selectall.svg">批量管理</p>
             <div class="admin-block addparking">
-                <img src="admin-add.svg">
+                <img src="<%=path %>/img/admin-add.svg">
             </div>
             <div class="admin-block">
                 <h3>停车场1</h3>

@@ -159,8 +159,7 @@ public class ParkingLotController {
 		return JSON.toJSONString(result);
 		
 	}
-	
-	
+
 	/**	parkingLot名称查重
 	 * @param name
 	 * @return String JSON ｛"res":“true”(存在重复) “false”(不存在重复)｝ 
