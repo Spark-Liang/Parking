@@ -188,10 +188,10 @@ body {
 						return;
 					} else {
 						if (select == 0) {
-							var hre = "parkinglot/admin?id=" + user.nickname;
+							var hre = "<%=basePath%>parkinglot/admin?id=" + user.nickname;
 
 						} else if (select == 1) {
-							var hre = "parkinglot/manager?id=" + user.nickname;
+							var hre = "<%=basePath%>parkinglot/manager?id=" + user.nickname;
 
 						} else if (select == 2) {
 
