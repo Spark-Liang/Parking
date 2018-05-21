@@ -85,7 +85,7 @@ public class ParkingLot {
 	public String toString() {
 		return "ParkingLot [id=" + id + ", totalPositionNum=" + totalPositionNum + ", currentPrice=" + currentPrice
 				+ ", cost=" + cost + ", state=" + state + ", name=" + name + ", location=" + location
-				+ ", parkingPositions=" + parkingPositions.hashCode() + "]";
+				+ ", parkingPositions=" + (parkingPositions!=null?parkingPositions.hashCode():null) + "]";
 	}
 
 }
