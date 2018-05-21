@@ -55,6 +55,28 @@ public class PersistentUtil {
 		return targetSet;
 	}
 	
+	
+	public static <T> T newInstanceByMap(Class<T> clazz,Map<String, ?> map) {
+		T object=null;
+		try {
+			object=clazz.newInstance();
+			Field[] fields=clazz.getDeclaredFields();
+			for(Field field:fields) {
+				String fieldName=field.getName();
+				Object value=map.get(fieldName);
+				if(value!=null && value.getClass().isInstance(field.getType())) {
+					boolean accessible=field.isAccessible();
+					field.setAccessible(true);
+					field.set(object, value);
+					field.setAccessible(accessible);
+				}
+			}
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return object;
+	}
+	
 	/**查找两个对象之间共同的并且可以进行更新的属性Field中，存在的不同的Field
 	 * 
 	 * @param target 需要存储到数据库的对象
