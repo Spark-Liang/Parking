@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.commons.csv.CSVParser;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,15 +20,8 @@ public class TestParkingLotControllerAdd extends ParameterizedSpringTest {
 	
 	@Parameters
 	public static Collection<Map<String, Object>> data(){
-		return new LinkedList<Map<String, Object>>(){
-			{
-				add(new HashMap() {
-					{
-						
-					}
-				});
-			}
-		};
+		//CSVParser
+		return null;
 	}
 	
 	private ParkingLot data;
