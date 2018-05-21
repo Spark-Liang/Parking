@@ -16,7 +16,6 @@ import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.type.ParkingLotState;
 import com.park.ssm.service.ParkingLotService;
-import com.park.ssm.util.PersistentUtil;
 
 
 @Service
@@ -77,31 +76,11 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
 	@Override
 	@Transactional
-	public void updateParkingLot(ParkingLot parkingLot) throws SQLException {	
-		//加载数据库中的parkingLot，替换不同的属性后更新
-		ParkingLot parkingLotInDB=parkingLotDao.loadParkingLotByIdForUpdate(parkingLot.getId());
-		Map<String, Object> different=null;
-		try {
-			different=PersistentUtil.different(parkingLotInDB, parkingLot);
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			throw new SQLException(e);
+	public void updateParkingLot(ParkingLot parkingLot) throws SQLException {
+		// TODO Auto-generated method stub
+		if(1!=parkingLotDao.updateParkingLot(parkingLot)) {
+			throw new SQLException("update ParkingLot failed.ParkingLot :"+parkingLot);
 		}
-		//更新属性到数据库
-		if(different!=null) {
-			if(1!=parkingLotDao.updateParkingLot(different)) {
-				throw new SQLException("update ParkingLot failed.ParkingLot :"+parkingLot);
-			}
-		}else {
-			//把数据库中的数据合并到parkingLot中返回到上一层
-			try {
-				PersistentUtil.merge(parkingLot, parkingLotInDB);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 	}
 
 	
