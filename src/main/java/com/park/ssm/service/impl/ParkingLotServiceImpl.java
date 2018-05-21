@@ -73,6 +73,11 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 		return resList;
 	}
 	
+	@Override
+	public int countParkingLot(Map<String, Object> conditions) {
+		// TODO Auto-generated method stub
+		return parkingLotDao.countParkingLot(conditions);
+	}
 
 	@Override
 	@Transactional
@@ -115,6 +120,8 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 		}
 		return resList;
 	}
+
+
 
 
 }

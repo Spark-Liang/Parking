@@ -53,11 +53,8 @@
 </select>
 
 
-<!-- 返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类 -->
-<select id="listParkingLot"  resultMap="parkingLotRoughResult">
-	select 
-		*
-	from ParkingLot
+<!-- 复杂查询条件 -->
+<sql id="condition" >
 	<where>
 		<!-- totalPositionNum部分 -->
 		<if test="map.totalPositionNum_min != null">
@@ -95,10 +92,30 @@
 			and cost &lt; #{map.cost_max}
 		</if>
 	</where>
+</sql>
+
+<!-- 返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类 -->
+<select id="listParkingLot"  resultMap="parkingLotRoughResult">
+	select 
+		*
+	from ParkingLot
+	<if test="map != null and !map.isEmpty()">
+		<include refid="condition"/>
+	</if>
 	<if test="pageNum != null and pageSize != null">
 		limit ${(pageNum-1)*pageSize},#{pageSize}
 	</if>
 </select>
+<!-- 返回所有符合条件的ParkingLot的行数 -->
+<select id="countParkingLot"  resultType="Integer" >
+	select 
+		count(1) 
+	from ParkingLot
+	<if test="map != null and !map.isEmpty()">
+		<include refid="condition"/>
+	</if>
+</select>
+
 
 <!-- 加载ParkingPosition -->
 <select id="loadParkingPosition" parameterType="int" resultMap="parkingPosition" >

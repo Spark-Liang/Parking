@@ -70,6 +70,12 @@ public interface ParkingLotDao {
 	public abstract List<ParkingLot> listParkingLot(@Param("map") Map<String, Object> conditions
 			,@Param("pageNum")Integer pageNum,@Param("pageSize")Integer pageSize );
 	
+	/**
+	 * 返回查询条件下的所有parkinglot记录行数
+	 * @param conditions {@link com.park.ssm.dao.ParkingLotDao#listParkingLot}
+	 * @return
+	 */
+	public abstract int countParkingLot(@Param("map") Map<String, Object> conditions);
 	
 	public abstract int insertParkingLot(ParkingLot parkingLot);
 	public abstract int listInsertParkingLot(List<ParkingLot> parkingLots);

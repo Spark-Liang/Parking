@@ -20,7 +20,7 @@ import com.park.ssm.dao.ParkingLotDao.CONDITION;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.service.ParkingLotService;
 
-@RequestMapping("ParkingLot")
+@RequestMapping("parkinglot")
 @Controller
 @Permission(value={Permission.Type.ADMIN})
 public class ParkingLotController {
@@ -28,29 +28,30 @@ public class ParkingLotController {
 	private ParkingLotService parkingLotService;
 	
 	/**
-	 * 返回parkingLot模块主页
+	 * 返回parkingLot 的Admin的主页
 	 * @return
 	 */
-	@RequestMapping("")
+	@RequestMapping("admin")
 	public String parkingLotIndex() {
-		return "";
+		return "admin";
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping("add")
 	@ResponseBody
-	public String addParkingLot(ParkingLot parkingLot) {
+	public Map addParkingLot(ParkingLot parkingLot) {
 		boolean res=false;
+		Map result=new HashMap();
 		try {
 			parkingLotService.saveParkingLot(parkingLot);
 			res=true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			result.put("error", e.toString());
 			e.printStackTrace();
 		}
-		Map result=new HashMap();
 		result.put("res", res);
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 	/**返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类
@@ -64,7 +65,7 @@ public class ParkingLotController {
 	 * @param pageNum 页数 default 1
 	 * @param pageSize 每页行数 default 20
 	 * 
-	 * @return String JSON ｛"res":结果｝
+	 * @return String JSON ｛"res":结果 "totalRowNum":符合条件的行数｝
 	 * 
 	 * */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -90,6 +91,7 @@ public class ParkingLotController {
 		List<ParkingLot> res=parkingLotService.listParkingLot(conditions, pageNum, pageSize);
 		Map result=new HashMap();
 		result.put("res", res);
+		result.put("totalRowNum", parkingLotService.countParkingLot(conditions));
 		return JSON.toJSONString(result);
 	}
 	
@@ -113,6 +115,7 @@ public class ParkingLotController {
 				res=true;
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				result.put("error", e.toString());
 				e.printStackTrace();
 			}
 			result.put("res", res);
@@ -128,4 +131,18 @@ public class ParkingLotController {
 		return JSON.toJSONString(result);
 		
 	}
+	
+	/**
+	 *  检查是否存在停车场名字重复
+	 * @param name
+	 * @return JSON ｛"res":结果｝ 结果：true存在重复名字，false不存在重复名字
+	 */
+	@RequestMapping("existname")
+	@ResponseBody
+	public String isExistName(@RequestParam("name")String name) {
+		Map<String, Object> result=new HashMap<>();
+		result.put("res", parkingLotService.isExistingName(name));
+		return JSON.toJSONString(result);
+	}
+	
 }
