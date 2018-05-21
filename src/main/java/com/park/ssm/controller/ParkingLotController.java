@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.dao.ParkingLotDao.CONDITION;
 import com.park.ssm.entity.ParkingLot;
@@ -37,7 +36,8 @@ public class ParkingLotController {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping("add")
+	@RequestMapping(value="add")
+	//@RequestMapping(value="add",produces= {"application/json; charset=UTF-8"})
 	@ResponseBody
 	public Map addParkingLot(ParkingLot parkingLot) {
 		boolean res=false;
@@ -69,10 +69,9 @@ public class ParkingLotController {
 	 * 
 	 * */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping("list")
-	@ResponseBody
+	@RequestMapping(value="list",produces= {"application/json; charset=UTF-8"})
 	@Permission(value= {Permission.Type.ADMIN,Permission.Type.MANAGER})
-	public String listParkingLot(HttpServletRequest request) {
+	public @ResponseBody Map listParkingLot(HttpServletRequest request) {
 		Map<String, String[]> params=request.getParameterMap();
 		Map<String, Object> conditions=new HashMap<>();
 		//提取参数
@@ -92,7 +91,7 @@ public class ParkingLotController {
 		Map result=new HashMap();
 		result.put("res", res);
 		result.put("totalRowNum", parkingLotService.countParkingLot(conditions));
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 	/**删除停车场
@@ -103,9 +102,8 @@ public class ParkingLotController {
 	 * @return String JSON ｛"res":结果｝
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping("delete")
-	@ResponseBody
-	public String deleteParkingLot(@RequestParam("id") Integer[] ids) {
+	@RequestMapping(value="delete",produces= {"application/json; charset=UTF-8"})
+	public @ResponseBody Map deleteParkingLot(@RequestParam("id") Integer[] ids) {
 		Map result=new HashMap();
 		if(ids.length==1) {
 			//单个删除
@@ -128,7 +126,7 @@ public class ParkingLotController {
 			List<Integer> resultList=parkingLotService.listDeleteParkingLot(list);
 			result.put("res", resultList);
 		}
-		return JSON.toJSONString(result);
+		return result;
 		
 	}
 	
@@ -137,12 +135,12 @@ public class ParkingLotController {
 	 * @param name
 	 * @return JSON ｛"res":结果｝ 结果：true存在重复名字，false不存在重复名字
 	 */
-	@RequestMapping("existname")
-	@ResponseBody
-	public String isExistName(@RequestParam("name")String name) {
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value="existname",produces= {"application/json; charset=UTF-8"})
+	public @ResponseBody Map isExistName(@RequestParam("name")String name) {
 		Map<String, Object> result=new HashMap<>();
 		result.put("res", parkingLotService.isExistingName(name));
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 }
