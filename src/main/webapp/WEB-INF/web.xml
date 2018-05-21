@@ -20,11 +20,6 @@ version="3.1"
     	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 
-	  <servlet-mapping>
-         <servlet-name>jsp</servlet-name>
-         <url-pattern>*.html</url-pattern>
-     </servlet-mapping>
-
   <servlet>
     <servlet-name>mvc-dispatcher</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -39,4 +34,7 @@ version="3.1"
     <url-pattern>/</url-pattern>
   </servlet-mapping>
   
+  <welcome-file-list>
+  	<welcome-file>/WEB-INF/pages/welcome.jsp</welcome-file>
+  </welcome-file-list>
 </web-app>
