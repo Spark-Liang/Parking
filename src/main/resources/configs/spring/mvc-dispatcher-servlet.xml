@@ -21,9 +21,9 @@
   	<!--激活基于annotation的handlerMapping-->
     <mvc:annotation-driven/>
 
-	<mvc:resources location="/js" mapping="js/**"/>
-	<mvc:resources location="/css" mapping="css/**"/>
-	<mvc:resources location="/img" mapping="img/**"/>
+	<mvc:resources location="/js/" mapping="js/**"/>
+	<mvc:resources location="/css/" mapping="css/**"/>
+	<mvc:resources location="/img/" mapping="img/**"/>
 
 	<!-- 拦截器配置 -->
     <mvc:interceptors>
