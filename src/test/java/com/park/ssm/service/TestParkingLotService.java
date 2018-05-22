@@ -14,49 +14,71 @@ import com.park.ssm.entity.ParkingPosition;
 import junit.framework.Assert;
 
 @Component
-public class TestParkingLotService extends AutoRollBackTest{
+public class TestParkingLotService extends AutoRollBackTest {
 	@Autowired
 	private ParkingLotService service;
 	@Autowired
 	private ParkingPositionDao parkingPositionDao;
-	
-	//@Test
-	public void  testsaveParkingLot() throws SQLException {
-		
-		int test_totNum=100;
-		
-		ParkingLot parkingLot=new ParkingLot(null,test_totNum);
-		
+
+	@Test
+	public void testsaveParkingLot() throws SQLException {
+
+		int test_totNum = 100;
+
+		ParkingLot parkingLot = new ParkingLot(null, test_totNum);
+
 		parkingLot.setName("TEST");
-		
+
 		parkingLot.setCost(22.0);
 		parkingLot.setCurrentPrice(33.0);
 		parkingLot.setLocation("LOCAL");
-		
+
 		service.saveParkingLot(parkingLot);
 		Assert.assertNotNull(parkingLot.getId());
-		
-		Set<ParkingPosition> parkingPositions=parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
+
+		Set<ParkingPosition> parkingPositions = parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
 		Assert.assertEquals(test_totNum, parkingPositions.size());
-		
-		throw new RuntimeException("test");
+
+		// throw new RuntimeException("test");
 	}
-	
+
 	@Test
+	public void testsaveParkingLotSameTest() throws SQLException {
+
+		int test_totNum = 100;
+
+		ParkingLot parkingLot = new ParkingLot(null, test_totNum);
+
+		parkingLot.setName("TEST");
+
+		parkingLot.setCost(22.0);
+		parkingLot.setCurrentPrice(33.0);
+		parkingLot.setLocation("LOCAL");
+
+		service.saveParkingLot(parkingLot);
+		Assert.assertNotNull(parkingLot.getId());
+
+		Set<ParkingPosition> parkingPositions = parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
+		Assert.assertEquals(test_totNum, parkingPositions.size());
+
+		// throw new RuntimeException("test");
+	}
+
+	// @Test
 	public void saveSameName() {
-		ParkingLot parkingLot1=new ParkingLot(null,120),parkingLot2=new ParkingLot(null,100);
-		String name="test_SameName";
-		
+		ParkingLot parkingLot1 = new ParkingLot(null, 120), parkingLot2 = new ParkingLot(null, 100);
+		String name = "test_SameName";
+
 		parkingLot1.setName(name);
 		parkingLot1.setCost(11.0);
 		parkingLot1.setLocation("locaitonA");
 		parkingLot1.setCurrentPrice(33);
-		
+
 		parkingLot2.setName(name);
 		parkingLot2.setCost(22.0);
 		parkingLot2.setLocation("locaitonB");
 		parkingLot2.setCurrentPrice(44);
-		
+
 		try {
 			service.saveParkingLot(parkingLot1);
 			service.saveParkingLot(parkingLot2);

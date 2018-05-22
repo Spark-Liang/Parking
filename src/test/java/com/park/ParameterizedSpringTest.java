@@ -1,52 +1,51 @@
 package com.park;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContextManager;
-import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+
 @RunWith(Parameterized.class)
-/*@ContextConfiguration(classes= {WebAppConfiguration.class},loader=org.springframework.test.context.web.WebDelegatingSmartContextLoader.class,
-		locations= {"ParameterTest-config.xml"})*/
 @ContextConfiguration(locations= {"classpath*:configs/spring/*xml"})
-@TransactionConfiguration(transactionManager="txManager", defaultRollback=true)   
+@Transactional(transactionManager="txManager")
+@Rollback(true)
 @WebAppConfiguration
-public class ParameterizedSpringTest {
+public class ParameterizedSpringTest extends AbstractTransactionalJUnit4SpringContextTests implements ApplicationContextAware {
+	private static TestContextManager testContextManager;
 	
 	@Autowired
-	private WebApplicationContext webContext;
+	protected WebApplicationContext webContext;
+	@Autowired
+	protected ApplicationContext applicationContext;
 	
-	private TestContextManager testContextManager;
-	private MockMvc mockMvc;
+	protected MockMvc mockMvc;
 	
+	
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		testContextManager=new TestContextManager(ParameterizedSpringTest.class);
+		
+	}
 	
 	@Before
-	public void setUp() throws Exception {
-		testContextManager=new TestContextManager(this.getClass());
+	public void setUp() throws Exception{
 		testContextManager.prepareTestInstance(this);
 		mockMvc=MockMvcBuilders.webAppContextSetup(webContext).build();
 	}
 
 
-	public WebApplicationContext getWebContext() {
-		return webContext;
-	}
-
-
-	public TestContextManager getTestContextManager() {
-		return testContextManager;
-	}
-
-
-	public MockMvc getMockMvc() {
-		return mockMvc;
-	}
 	
 }

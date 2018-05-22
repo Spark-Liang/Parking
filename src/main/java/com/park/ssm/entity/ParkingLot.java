@@ -2,11 +2,14 @@ package com.park.ssm.entity;
 
 import java.util.Set;
 
+import com.park.ssm.annotation.UnEditableField;
 import com.park.ssm.entity.type.ParkingLotState;
 
 public class ParkingLot {
+	@UnEditableField
 	private Integer id;
 	//业务相关
+	@UnEditableField
 	private int totalPositionNum;
 	private double currentPrice;
 	private ParkingLotState state;
@@ -31,7 +34,11 @@ public class ParkingLot {
 	public int getTotalPositionNum() {
 		return totalPositionNum;
 	}
-
+	
+	public void setTotalPositionNum(int totalPositionNum) {
+		this.totalPositionNum = totalPositionNum;
+	}
+	
 	public double getCurrentPrice() {
 		return currentPrice;
 	}
@@ -78,7 +85,7 @@ public class ParkingLot {
 	public String toString() {
 		return "ParkingLot [id=" + id + ", totalPositionNum=" + totalPositionNum + ", currentPrice=" + currentPrice
 				+ ", cost=" + cost + ", state=" + state + ", name=" + name + ", location=" + location
-				+ ", parkingPositions=" + parkingPositions.hashCode() + "]";
+				+ ", parkingPositions=" + (parkingPositions!=null?parkingPositions.hashCode():null) + "]";
 	}
 
 }

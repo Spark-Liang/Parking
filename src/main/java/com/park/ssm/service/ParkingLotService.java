@@ -47,6 +47,12 @@ public interface ParkingLotService {
 	public abstract List<ParkingLot> listParkingLot(Map<String, Object> conditions,Integer pageNum,Integer pageSize);
 	
 	/**
+	 * 查看符合条件的parkinglot总数
+	 * @param conditions {@link com.park.ssm.service.ParkingLotService#listParkingLot}
+	 * @return
+	 */
+	public abstract int countParkingLot(Map<String, Object> conditions);
+	/**
 	 * 更新停车场信息，之可以更新cost，price，location这几个参数
 	 * @param parkingLot 更新的停车场
 	 * */

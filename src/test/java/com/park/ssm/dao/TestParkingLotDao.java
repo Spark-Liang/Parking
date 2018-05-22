@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSON;
 import com.park.AutoRollBackTest;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.type.ParkingLotState;
@@ -28,8 +29,6 @@ public class TestParkingLotDao extends AutoRollBackTest {
 	//@Test
 	public void testListParkingLot() {
 		Map<String, Object> conditions=new HashMap<>();
-		conditions.put("name", "A");
-		conditions.put("location", "C");
 		conditions.put("totalPositionNum_max", Integer.MAX_VALUE);
 		conditions.put("totalPositionNum_min", Integer.MIN_VALUE);
 		conditions.put("cost_min",Double.MIN_VALUE);
@@ -39,10 +38,12 @@ public class TestParkingLotDao extends AutoRollBackTest {
 		conditions.put("states", new LinkedList<ParkingLotState>() {
 			{add(ParkingLotState.ACTIVE);}
 		});
-		List<ParkingLot> list=dao.listParkingLot(conditions, 1, 3);
+		List<ParkingLot> list=dao.listParkingLot(conditions, 1, Integer.MAX_VALUE);
 		for(ParkingLot tmp:list) {
 			System.out.println(tmp);
 		}
+		Assert.assertEquals(list.size(), dao.countParkingLot(conditions));
+		
 	}
 	
 	//@Test
@@ -65,9 +66,18 @@ public class TestParkingLotDao extends AutoRollBackTest {
 		System.out.println(parkingLot);
 	}
 	
-	@Test
+	//@Test
 	public void testUpdateFail() {
 		ParkingLot parkingLot=new ParkingLot(10, 200);
 		dao.updateParkingLot(parkingLot);
+	}
+	
+	@Test
+	public void testJSON() {
+		ParkingLot parkingLot=dao.loadParkingLotById(1);
+		String jsonString=JSON.toJSONString(parkingLot);
+		System.out.println(jsonString);
+		ParkingLot reverse=JSON.parseObject(jsonString, ParkingLot.class);
+		System.out.println(reverse);
 	}
 }
