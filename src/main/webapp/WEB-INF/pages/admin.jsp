@@ -11,28 +11,12 @@
 <base href="<%=basePath%>">
 <meta charset="UTF-8">
 <title>管理员管理页面</title>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<link rel="stylesheet" href="/css/admin.css">
-=======
 <link rel="stylesheet" href="css/admin.css">
->>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
-=======
-<link rel="stylesheet" href="css/admin.css">
->>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
 <link rel="stylesheet"
 	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
 	crossorigin="anonymous">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<script src="/js/jquery-3.3.1.js"></script>
-=======
 <script src="js/jquery-3.3.1.js"></script>
->>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
-=======
-<script src="js/jquery-3.3.1.js"></script>
->>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
 <script
 	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
@@ -100,8 +84,8 @@
 				</div>
 				<div class="form-gorup">
 					<label>*职位</label>
-					<input type="radio" name="position" value="经理">经理
-					<input type="radio" name="position" value="操作员">操作员
+					<input type="radio" name="position" value="1">经理
+					<input type="radio" name="position" value="2">操作员
 				</div>
 				<button class="btn btn-md btn-primary pull-left" type="button">提交</button>
 				<a class="add-block-one-close">关闭</a>
@@ -178,6 +162,7 @@
 			 console.log(adminname);
 			 $('#admin-name span').text(adminname);
 		     getparking();
+		     getworking();
 		 }) 
 		 function getparking(){
 		 	$.ajax({
@@ -195,6 +180,28 @@
 			           	tmpParking.parkingadd();
 		        		
 		        	 }
+		         },error:function(){
+
+		         }
+		     });
+		 }
+
+		 function getworking(){
+		 	$.ajax({
+		         url:'inneruser/selectInnerUser',
+		         type:'GET',
+		         dataType:'json',
+		         data:{
+
+		         },success:function(responce){
+		        	 console.log(responce);
+	        		 var data =responce.msg;
+		        	 var l = data.length;
+		        	 for (var i = 0;i<l;i++){
+		        		 var work = new manger(1,data[i]);
+		        		 work.mangeradd();
+		        	 }
+		        	 
 		         },error:function(){
 
 		         }
@@ -247,33 +254,48 @@
 
 
 
-		//删除停车场
+		//删除停车场或者员工
 		function closeadminblock(a,num){
 			if(num==1){
 				var con = confirm('是否删除停车场');
 				if(con){
 					alert('yes');
 					var id = $(a).data("value");
-					console(id);
-					// $.ajax({
-					// 	url:'parkinglot/delete',
-					// 	type:'GET',
-					// 	dataType:'json',
-					// 	data:{
-					// 		'id':id
-					// 	},success:function(data){
-					//      $(a).parent().parent().remove();
-					// 	},error:function(){
-					// 		console.log('error');
-					// 	}
-					// })
+					console.log(id);
+					$.ajax({
+						url:'parkinglot/delete',
+						type:'GET',
+						dataType:'json',
+						data:{
+							'id':id
+						},success:function(data){
+					     $(a).parent().parent().remove();
+						},error:function(){
+							console.log('error');
+						}
+					})
 				}else{
 					alert('no')
 				}
-			}else{
+			}else if(num == 2){
 				var con = confirm('是否删除工作人员');
 				if(con){
-					alert('yes')
+					alert('yes');
+					var nickname = $(a).data("value");
+					alert(nickname);
+					$.ajax({
+						url:'inneruser/deleteInnerUser',
+						type:'GET',
+						dataType:'json',
+						data:{
+							'nickname':nickname
+						},
+						success:function(msg){
+							console.log(msg);
+						},error:function(){
+							alert('error')
+						}
+					})
 				}else{
 					alert('no')
 				}
@@ -332,23 +354,26 @@
 					'cost':parkinginf[3],
 				},success:function(res){
 					console.log(res);
+					var data = res.parkingLot;
+					var tmpParking=new parking(data);
+		           	tmpParking.parkingadd();
 					
 				},error:function(){
 
 				}
 			})
-			var check = park.check();
-			if (check == 'ok') {
-				var con = confirm('确认添加停车场');
-				if(con){
-					alert('yes');
-					park.parkingadd();
-				}else{
-					alert('no')
-				}
-			} else {
-				alert('error');
-			}
+			// var check = park.check();
+			// if (check == 'ok') {
+			// 	var con = confirm('确认添加停车场');
+			// 	if(con){
+			// 		alert('yes');
+			// 		park.parkingadd();
+			// 	}else{
+			// 		alert('no')
+			// 	}
+			// } else {
+			// 	alert('error');
+			// }
 
 		})
 
@@ -361,42 +386,48 @@
 
 		// 经理对象
 		function manger(num,manger) {
-			if(num == 1){
-				this.name = manger[0];
-				this.username = manger[1];
-				this.password = manger[2];
-				this.position = manger[3];
-			}
-			else{
-				this.name = manger[0];
-				this.username = manger[1];
-				this.password = manger[2];
-				this.position = manger[3];
-			}
+			if (num == 1){
+				this.name = manger.name;
+				this.username = manger.nickname;
+				if(manger.typeflag==1){
+					//经理
+					this.working = "经理";
+				}else if(manger.typeflag==2){
+					//操作员
+					this.working = "操作员";
+				}
+				
 			// this.name = $('.add-manger input:eq(0)').val();
 			// this.money = $('.add-manger input:eq(1)').val();
 			// this.sex = $('input[name="sex"]:checked').val();
 			// this.position = $('input[name="position"]:checked').val();
-			console.log(this.name + this.phone + this.money + this.sex);
+			console.log(this.name + this.username + this.working);
+			}
+			else if(num == 2){
+				this.name = manger[0];
+				this.username = manger[1];
+				if(manger[3]==1){
+					this.working = "经理";
+				}else if(manger[3]==2){
+					this.working = "操作员";
+				}
+			}
 		}
 
 		// 添加新的经理
 		manger.prototype.mangeradd = function() {
-			console.log(this.parkname + this.parkaddress + this.parknum);
 			var name = this.name;
-			var position = this.position;
 			var username = this.username;
-			var password = this.password;
+			var working = this.working;
 			$('.moudle2')
 					.append(
 							function() {
 								return "<div class='admin-block manger'>"
 										+ "<div>"
-										+ "<img id='close-adminblock' src='img/manger-close.svg' onClick='closeadminblock(this,2)' data-value='dfafda'> "
+										+ "<img id='close-adminblock' src='img/manger-close.svg' onClick='closeadminblock(this,2)' data-value='"+username+ "'> "
 										+ "<h3>"+name+ "</h3>"
-										+ "<p>职位：<span>"+position+"</span></p>"
-										+ "<p>用户名：<span>"+username+ "</span></p>"			
-										+ "<p>密码：<span type='password'>"+ password + "</span></p>"
+										+ "<p>职位：<span>"+working+"</span></p>"
+										+ "<p>用户名：<span>"+username+ "</span></p>"	
 										+ "<button class='btn btn-md btn-block btn-primary' onclick='editmanger(this)'>编辑</button>"
 										+ "</div>" + "</div>"
 							})
@@ -438,12 +469,53 @@
 			mangerinf[2] = $('.add-manger input:eq(1)').val();//密码
 			mangerinf[3] = $('input[name="position"]:checked').val();//职位
 			alert(mangerinf);
-			var man = new manger(1,mangerinf);
-			man.mangeradd();
+			$.ajax({
+				url:'inneruser/addInnerUser',
+				type:'POST',
+				dataType:'json',
+				data:{
+					'nickname':mangerinf[1],
+					'name':mangerinf[0],
+					'password':mangerinf[2],
+					'typeflag':mangerinf[3]
+				},success:function(msg){
+					alert('添加成功');
+					console.log(msg);
+					var working = new manger(2,mangerinf);
+					working.mangeradd();
+				},error:function(){
+					alert('ff')
+				}
+			})
+			// var man = new manger();
+			// man.mangeradd();
 		})
 
+		//关闭修改框
 		function closeparkedit(a) {
 			$('.admin-block-edit').remove();
+		}
+
+		//修改数据
+		function editworking(a){
+			var username = $(a).parent().find('input:eq(0)').val();
+			var password = $(a).parent().find('input:eq(1)').val();
+			var working = $(a).parent().find('input[name="position"]:checked').val();
+			$.ajax({
+				url:'inneruser/changeInnerUser',
+				type:'GET',
+				dataType:'json',
+				data:{
+					'nickname':username,
+					'password':password,
+					'typeflag':working
+				},success:function(msg){
+					console.log(msg)
+				},error:function(){
+
+				}
+			})
+			alert(username);
 		}
 
 		// 编辑经理
@@ -460,22 +532,25 @@
 							function() {
 								return "<div class='admin-block-edit'>"
 										+ "<h5>员工编辑</h4>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>姓名</label>"
-										+ "<input type='text' class='form-control input-sm' name='' placeholder=''>"
-										+ "</div><br/>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>工资</label>"
+										+ "<div class='form-gourp'>"
+										+ "<label>用户名</label>"
 										+ "<input type='text' class='form-control input-sm' name='' placeholder=''>"
 										+ "</div>"
+										+ "<div class='form-gourp'>"
+										+ "<label>新密码</label>"
+										+ "<input type='password' class='form-control input-sm' name='' placeholder=''>"
+										+ "</div>"
+										+ "<div class='form-gourp'>"
+										+ "<label>重新输入密码</label>"
+										+ "<input type='password' class='form-control input-sm' name='' placeholder=''>"
+										+ "</div>"
 										+ "<div class='form-gourp form-inline'>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>性别</label>"
-										+ "<input type='radio' name='position' value='经理'>经理"
-										+ "<input type='radio' name='position' value='操作员'>操作员"
+										+ "<label>职位</label>"
+										+ "<input type='radio' name='position' value='1'>经理"
+										+ "<input type='radio' name='position' value='2'>操作员"
 										+ "</div>"
 										+ "<a class='btn btn-sm btn-defalut pull-right' onclick='closeparkedit(this)'><img src='img/manger-close.svg'></a>"
-										+ "<a class='btn btn-sm btn-primary pull-right'>修改</a>"
+										+ "<a class='btn btn-sm btn-primary pull-right' onclick='editworking(this)'>修改</a>"
 								"</div>"
 							});
 			$('.admin-block-edit').css("opacity", "0");
@@ -491,7 +566,7 @@
 			if (num == 0) {
 				$('.moudle1').show();
 				$('.moudle2').hide();
-				getparking();
+
 			} else if (num == 1) {
 				$('.moudle2').show();
 				$('.moudle1').hide();
