@@ -30,7 +30,22 @@ create table Account
 	,userId bigint references User(id)
 	,parkingLotId int references ParkingLot(id)
 	,parkingPositionId bigint references ParkingPosition(id)
+	,cardId bigint
+	
 	,state tinyint default 0
-	,billStateDate datetime
+	,currentBill bigint
+	
+)engine=innodb auto_increment=1 charset='utf8';
+
+create table Bill
+(
+	id bigint primary key auto_increment
+	,userId int key
+	,parkingLotId int 
+	,accountId bigint key
+	
+	,price decimal(10,4)
+	,billStartDate datetime
 	,billEndDate datetime
+	,isPaid bit not null 
 )engine=innodb auto_increment=1 charset='utf8';

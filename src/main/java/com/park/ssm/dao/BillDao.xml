@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.park.ssm.dao.BillDao">
+
+private Long id;
+	//信息相关
+	private User user;
+	private ParkingLot parkingLot;
+	private Account account;
+	//计费相关
+	private Double price;
+	private Date billStartDate;
+	private Date billEndDate;
+	private boolean isPaid;
+
+<resultMap type="Bill" id="billRoughResult">
+	<id property="id" column="id"/>
+	
+	<result property="price" column="price" />
+	<result property="billStartDate" column="billStartDate"/>
+	<result property="billEndDate" column="billEndDate"/>
+	<result property="isPaid" column="isPaid" />
+	
+	<association property="user" column="userId" javaType="User" 
+		fetchType="lazy" select="selectUserById" autoMapping="true" />
+	<association property="parkingLot" column="parkingLotId" javaType="ParkingLot"  
+		fetchType="lazy" select="selectParkingLotById" autoMapping="true"/>
+	<association property="account" column="accountId" javaType="ParkingLot"  
+		fetchType="lazy" select="selectAccountById" autoMapping="true"/>
+</resultMap>
+
+<!-- 结果集相关查询部分 -->
+<select id="selectUserById" parameterType="Integer">
+select * from User
+where id=#{_parameter}
+</select>
+<select id="selectParkingLotById" parameterType="Integer">
+select * from ParkingLot
+where id=#{_parameter}
+</select>
+<select id="selectAccountById" parameterType="Long">
+select * from Account
+where id=#{_parameter}
+</select>
+
+<sql id="sqlField">
+	id,userId,parkingLotId,accountId,price,billStartDate,billEndDate,isPaid
+</sql>
+
+<!-- 通过id加载账单 -->
+<select id="loadBillByIdForUpdate" parameterType="Long" resultMap="billRoughResult">
+select 
+	<include refid="sqlField"/>
+from Bill
+where id=#{_parameter}	
+for update
+</select>
+
+<!-- 通过id加载账单 -->
+<select id="listBillByUserId" parameterType="Long"  resultMap="billRoughResult" >
+select 
+	<include refid="sqlField"/>
+from Bill
+where userId=#{_parameter}	
+</select>
+
+<select id="listBillByAccountId" parameterType="Long"  resultMap="billRoughResult" >
+select 
+	<include refid="sqlField"/>
+from Bill
+where accoutId=#{_parameter}	
+</select>
+
+<select id="listBillByParkingLotId" parameterType="Integer"  resultMap="billRoughResult" >
+select 
+	<include refid="sqlField"/>
+from Bill
+where parkingLotId=#{_parameter}	
+</select>
+
+<update id="updateBillStateById">
+update Bill 
+	set isPaid=1
+where id=#{_parameter}
+</update>
+
+</mapper>
