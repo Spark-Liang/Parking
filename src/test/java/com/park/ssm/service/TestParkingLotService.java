@@ -7,9 +7,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.park.AutoRollBackTest;
+import com.park.ssm.dao.ParkingLotDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.ParkingPosition;
+import com.park.ssm.entity.type.ParkingLotState;
 
 import junit.framework.Assert;
 
@@ -86,5 +88,21 @@ public class TestParkingLotService extends AutoRollBackTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	
+	@Test
+	public void deleteParkingLot() throws SQLException {
+		//Test data
+		Integer id=1;
+		
+		ParkingLot parkingLot=applicationContext.getBean(ParkingLotDao.class).loadParkingLotById(id);
+		Assert.assertEquals(parkingLot.getState(), ParkingLotState.ACTIVE);
+		
+		service.deleteParkingLot(parkingLot.getId());
+		
+		parkingLot=applicationContext.getBean(ParkingLotDao.class).loadParkingLotById(id);
+		
+		Assert.assertEquals(parkingLot.getState(), ParkingLotState.INACTIVE);
 	}
 }

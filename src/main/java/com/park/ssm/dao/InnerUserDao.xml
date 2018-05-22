@@ -5,7 +5,7 @@
 
 	<!-- 根据nickname查找InnerUser -->
 	<select id="getInnerUserByNickname" resultType="com.park.ssm.entity.InnerUser">
-		select nickname,password,typeflag,name,sex,phone,address from
+		select nickname,password,typeflag,name from
 		InnerUser
 		<where>
 			nickname=#{nicknadme}

@@ -53,7 +53,7 @@ public class TestParkingLotDao extends AutoRollBackTest {
 		System.out.println(1==dao.updateParkingLot(parkingLot));
 	}
 	
-	//@Test
+	@Test
 	public void testDeleteParkingLot() {
 		ParkingLot parkingLot=dao.loadParkingLotById(1);
 		System.out.println(parkingLot);
@@ -72,7 +72,7 @@ public class TestParkingLotDao extends AutoRollBackTest {
 		dao.updateParkingLot(parkingLot);
 	}
 	
-	@Test
+	//@Test
 	public void testJSON() {
 		ParkingLot parkingLot=dao.loadParkingLotById(1);
 		String jsonString=JSON.toJSONString(parkingLot);

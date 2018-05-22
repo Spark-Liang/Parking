@@ -27,8 +27,6 @@ public class InnerUserController {
 
 	@RequestMapping("page")
 	public String loginPage() {
-		// System.out.println("here");
-		// return new ModelAndView("login.html");
 		return "login";
 	}
 
@@ -93,17 +91,20 @@ public class InnerUserController {
 	@ResponseBody
 	public String checkNickname(@PathVariable("nickname") String nickname) {
 		InnerUser innerUser = new InnerUser();
+		Map<String, Object> map = new HashMap<>();
 		try {
 			innerUser = innerUserService.findInnerUserByNickname(nickname.trim());
 			if (null != innerUser) {
-				return JSON.toJSONString(innerUser);
+				map.put("msg", 1);
+				// return JSON.toJSONString(innerUser);
 			} else {
-				return JSON.toJSONString(null);
+				map.put("msg", 0);
 			}
 		} catch (Exception e) {
-			return JSON.toJSONString(null);
+			map.put("msg", -1);
 		}
-
+		String strCheckNickname = new JSONObject(map).toString();
+		return strCheckNickname;
 	}
 
 	/**
@@ -114,21 +115,23 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "addInnerUser", method = { RequestMethod.POST })
 	@ResponseBody
-	public String addInnerUser(InnerUser innerUser) {
-		innerUser.setNickname("aa");
-		innerUser.setPassword("123456");
-		innerUser.setTypeflag(2);
-		innerUser.setName("goo");
+	public String addInnerUser(InnerUser innerUser, HttpSession session) {
+		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
+		int id = admin.getTypeflag();
 		Map<String, Object> map = new HashMap<>();
-		try {
-			result = innerUserService.insertInnerUser(innerUser);
-			if (result > 0) {
-				map.put("msg", 1);
-			} else {
-				map.put("msg", 0);
+		if (id == 0) {// admin的typefalg为0，只有admin才能添加
+			try {
+				result = innerUserService.insertInnerUser(innerUser);
+				if (result > 0) {
+					map.put("msg", 1);
+				} else {
+					map.put("msg", 0);
+				}
+			} catch (Exception e) {
+				map.put("msg", -1);
 			}
-		} catch (Exception e) {
+		} else {
 			map.put("msg", -1);
 		}
 		String strAddInnerUser = new JSONObject(map).toString();
@@ -143,17 +146,23 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "changeInnerUser", method = { RequestMethod.PUT })
 	@ResponseBody
-	public String changeInnerUser(InnerUser innerUser) {
+	public String changeInnerUser(InnerUser innerUser, HttpSession session) {
+		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
+		int id = admin.getTypeflag();
 		Map<String, Object> map = new HashMap<>();
-		try {
-			result = innerUserService.changeInnerUserByNickname(innerUser);
-			if (result > 0) {
-				map.put("msg", 1);
-			} else {
-				map.put("msg", 0);
+		if (id == 0) {// admin的typefalg为0，只有admin才能修改
+			try {
+				result = innerUserService.changeInnerUserByNickname(innerUser);
+				if (result > 0) {
+					map.put("msg", 1);
+				} else {
+					map.put("msg", 0);
+				}
+			} catch (Exception e) {
+				map.put("msg", -1);
 			}
-		} catch (Exception e) {
+		} else {
 			map.put("msg", -1);
 		}
 		String strChangeInnerUser = new JSONObject(map).toString();
@@ -168,17 +177,23 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "deleteInnerUser", method = RequestMethod.DELETE)
 	@ResponseBody
-	public String deleteInnerUser(@RequestParam("nickname") String nickname) {
+	public String deleteInnerUser(@RequestParam("nickname") String nickname, HttpSession session) {
 		int result = 0;
+		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
+		int id = admin.getTypeflag();
 		Map<String, Object> map = new HashMap<>();
-		try {
-			result = innerUserService.dropInnerUserByNickname(nickname);
-			if (result > 0) {
-				map.put("msg", 1);
-			} else {
-				map.put("msg", 0);
+		if (id == 0) {// admin的typefalg为0，只有admin才能删除
+			try {
+				result = innerUserService.dropInnerUserByNickname(nickname);
+				if (result > 0) {
+					map.put("msg", 1);
+				} else {
+					map.put("msg", 0);
+				}
+			} catch (Exception e) {
+				map.put("msg", -1);
 			}
-		} catch (Exception e) {
+		} else {
 			map.put("msg", -1);
 		}
 		String strDeleteInnerUser = new JSONObject(map).toString();
@@ -193,19 +208,23 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "selectInnerUser", method = RequestMethod.GET)
 	@ResponseBody
-	public String selectInnerUserByTypeflag() {
+	public String selectInnerUser(HttpSession session) {
+		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		List<InnerUser> list = new ArrayList<>();
 		Map<String, Object> map = new HashMap<>();
-		int intTypeflag = 0;
-		try {
-			//intTypeflag = Integer.parseInt();
-			list = innerUserService.findInnerUserByTypeflag();
-			if (!list.isEmpty()) {
-				map.put("msg", list);
-			} else {
-				map.put("msg", null);
+		int id = admin.getTypeflag();
+		if (id == 0) {// admin的typefalg为0，只展示inneerUser给admin
+			try {
+				list = innerUserService.findInnerUserByTypeflag();
+				if (!list.isEmpty()) {
+					map.put("msg", list);
+				} else {
+					map.put("msg", null);
+				}
+			} catch (Exception e) {
+				map.put("msg", "error");
 			}
-		} catch (Exception e) {
+		} else {
 			map.put("msg", "error");
 		}
 		String strInnerUser = new JSONObject(map).toString();
@@ -219,43 +238,24 @@ public class InnerUserController {
 	 * @param sex
 	 * @param phone
 	 * @return
-	
-	@RequestMapping(value = "selectInnerUserByFuzzy", method = RequestMethod.GET)
-	@ResponseBody
-	public String selectInnerUserByFuzzy(@PathVariable("nickname") String nickname, @PathVariable("sex") String sex,
-			@PathVariable("phone") String phone) {
-		int intSex = -1;// 由于数据库设置了0表示男，1表示女，故初始值只能设置为0和1以外的整数
-		int intPhone = 0;
-		List<InnerUser> list = new ArrayList<>();
-		Map<String, Object> map = new HashMap<>();
-		// 非空才转化成整型
-		if (null != sex && !"".equals(sex)) {
-			try {
-				intSex = Integer.parseInt(sex);
-			} catch (Exception e) {
-				map.put("msg", "error");
-			}
-		}
-		if (null != phone && !"".equals(phone)) {
-			try {
-				intPhone = Integer.parseInt(phone);
-			} catch (Exception e) {
-				map.put("msg", "error");
-			}
-		}
-
-		try {
-			list = innerUserService.findInnerUserByFuzzy(nickname, intSex, intPhone);
-			if (!list.isEmpty()) {
-				map.put("msg", list);
-			} else {
-				map.put("msg", null);
-			}
-		} catch (Exception e) {
-			map.put("msg", "error");
-		}
-		String strFuzzySearch = new JSONObject(map).toString();
-		return strFuzzySearch;
-	}
+	 * 
+	 * @RequestMapping(value = "selectInnerUserByFuzzy", method = RequestMethod.GET)
+	 * @ResponseBody public String selectInnerUserByFuzzy(@PathVariable("nickname")
+	 *               String nickname, @PathVariable("sex") String
+	 *               sex, @PathVariable("phone") String phone) { int intSex = -1;//
+	 *               由于数据库设置了0表示男，1表示女，故初始值只能设置为0和1以外的整数 int intPhone = 0;
+	 *               List<InnerUser> list = new ArrayList<>(); Map<String, Object>
+	 *               map = new HashMap<>(); // 非空才转化成整型 if (null != sex &&
+	 *               !"".equals(sex)) { try { intSex = Integer.parseInt(sex); }
+	 *               catch (Exception e) { map.put("msg", "error"); } } if (null !=
+	 *               phone && !"".equals(phone)) { try { intPhone =
+	 *               Integer.parseInt(phone); } catch (Exception e) { map.put("msg",
+	 *               "error"); } }
+	 * 
+	 *               try { list = innerUserService.findInnerUserByFuzzy(nickname,
+	 *               intSex, intPhone); if (!list.isEmpty()) { map.put("msg", list);
+	 *               } else { map.put("msg", null); } } catch (Exception e) {
+	 *               map.put("msg", "error"); } String strFuzzySearch = new
+	 *               JSONObject(map).toString(); return strFuzzySearch; }
 	 */
 }

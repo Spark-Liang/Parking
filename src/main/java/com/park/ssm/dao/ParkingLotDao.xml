@@ -8,7 +8,7 @@
 <resultMap type="ParkingLot" id="parkingLotRoughResult">
 	<id property="id" column="id" />
 	
-	<result property="totalPositionNum" column=""/>
+	<result property="totalPositionNum" column="totalPositionNum"/>
 	<result property="currentPrice" column="currentPrice" />
 	<result property="state" column="state" typeHandler="com.park.ssm.entity.type.ParkingLotStateHandler"/>
 	
@@ -163,10 +163,13 @@
 	where id=#{id}
 </update>
 
+<sql id="DeleteState" >
+
+</sql>
 
 <update id="deleteParkingLot" parameterType="int" >
 	update ParkingLot 
-		set state=-1
+		set state=-1 <!-- ${ParkingLotState.INACTIVE.getInd()} -->
 	where id=#{_parameter}
 </update>
 
