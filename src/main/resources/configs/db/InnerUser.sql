@@ -1,7 +1,8 @@
 create table if not exists InnerUser(nickname varchar(16) primary key,
-password varchar(256) not null,
+password varchar(512) not null,
 typeflag int(2) not null,
 name varchar(16) null,
+salt varchar(512) null
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 insert into InnerUser(nickname,password,typeflag,name) values

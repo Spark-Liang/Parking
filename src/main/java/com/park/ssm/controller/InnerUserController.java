@@ -175,7 +175,7 @@ public class InnerUserController {
 	 * @param nickname
 	 * @return
 	 */
-	@RequestMapping(value = "deleteInnerUser", method = RequestMethod.DELETE)
+	@RequestMapping(value = "deleteInnerUser", method = RequestMethod.GET)
 	@ResponseBody
 	public String deleteInnerUser(@RequestParam("nickname") String nickname, HttpSession session) {
 		int result = 0;
