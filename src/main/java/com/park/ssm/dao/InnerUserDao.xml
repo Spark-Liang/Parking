@@ -54,27 +54,16 @@
 	<select id="getInnerUserByTypeflag" resultType="com.park.ssm.entity.InnerUser">
 		select nickname,name,typeflag
 		from InnerUser
+		<where>
+			typeflag=1 or typeflag=2
+		</where>
 	</select>
-	
+
 
 	<!-- 条件查询InnerUser -->
-	<!-- 
-	<select id="getInnerUserByFuzzy" resultType="com.park.ssm.entity.InnerUser">
-		select nickname,name
-		from InnerUser
-		<where>
-			<choose>
-				<when test="nickname!=null">
-					nickname=#{nickname}
-				</when>
-				<when test="sex==0 or sex==1">
-					and sex=#{sex}
-				</when>
-				<when test="phone!=0">
-					and phone=#{phone}
-				</when>
-			</choose>
-		</where>
-	</select> 
--->
+	<!-- <select id="getInnerUserByFuzzy" resultType="com.park.ssm.entity.InnerUser"> 
+		select nickname,name from InnerUser <where> <choose> <when test="nickname!=null"> 
+		nickname=#{nickname} </when> <when test="sex==0 or sex==1"> and sex=#{sex} 
+		</when> <when test="phone!=0"> and phone=#{phone} </when> </choose> </where> 
+		</select> -->
 </mapper>
