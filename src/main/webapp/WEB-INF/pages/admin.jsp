@@ -11,12 +11,28 @@
 <base href="<%=basePath%>">
 <meta charset="UTF-8">
 <title>管理员管理页面</title>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<link rel="stylesheet" href="/css/admin.css">
+=======
 <link rel="stylesheet" href="css/admin.css">
+>>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
+=======
+<link rel="stylesheet" href="css/admin.css">
+>>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
 <link rel="stylesheet"
 	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
 	crossorigin="anonymous">
+<<<<<<< HEAD
+<<<<<<< HEAD
+<script src="/js/jquery-3.3.1.js"></script>
+=======
 <script src="js/jquery-3.3.1.js"></script>
+>>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
+=======
+<script src="js/jquery-3.3.1.js"></script>
+>>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
 <script
 	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"

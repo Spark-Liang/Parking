@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @TransactionConfiguration
-@ContextConfiguration(locations = { "classpath:configs/spring/applicationContext.xml" })
+@ContextConfiguration(locations = { "classpath*:configs/spring/*xml" })
 public class MainTest extends AbstractTransactionalJUnit4SpringContextTests {
 	@Override
 	@Resource(name = "dataSource")

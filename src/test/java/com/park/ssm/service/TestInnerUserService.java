@@ -9,12 +9,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import com.park.AutoRollBackTest;
 import com.park.MainTest;
 import com.park.ssm.entity.InnerUser;
 
 
 
-public class TestInnerUserService extends MainTest{
+public class TestInnerUserService extends AutoRollBackTest{
 	@Autowired  
    private InnerUserService innerUserService;  
   
@@ -43,13 +44,13 @@ public class TestInnerUserService extends MainTest{
    
    @Test
    public void testFindInnerUserByNickname() {
-	   InnerUser innerUser=innerUserService.findInnerUserByNickname("Meisi");
-	   Assert.assertEquals("Meii", innerUser.getNickname());
+	   InnerUser innerUser=innerUserService.findInnerUserByNickname("15219326102");
+	   Assert.assertEquals("ff", innerUser.getName());
    }
    
    @Test
    public void testFindInnerUser() {
-	   InnerUser innerUser=innerUserService.findInnerUser("Meixi", "123678",2);
+	   InnerUser innerUser=innerUserService.findInnerUser("13075119722", "123456",2);
 	   Assert.assertEquals(2, innerUser.getTypeflag());
    }
    
@@ -63,7 +64,7 @@ public class TestInnerUserService extends MainTest{
    public void testFindInnerUserByTypeflag() {
 	   List<InnerUser> list=new ArrayList<InnerUser>();
 	   list=innerUserService.findInnerUserByTypeflag();
-	   Assert.assertEquals("14785236930", list.get(0).getNickname());
+	   Assert.assertEquals("13075119722", list.get(0).getNickname());
    }
    
    
