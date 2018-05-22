@@ -11,12 +11,12 @@
 <base href="<%=basePath%>">
 <meta charset="UTF-8">
 <title>管理员管理页面</title>
-<link rel="stylesheet" href="../css/admin.css">
+<link rel="stylesheet" href="css/admin.css">
 <link rel="stylesheet"
 	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
 	crossorigin="anonymous">
-<script src="../js/jquery-3.3.1.js"></script>
+<script src="js/jquery-3.3.1.js"></script>
 <script
 	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
@@ -110,11 +110,11 @@
 		<div class="moudle-one moudle1 ">
 			<h4>停车场管理</h4>
 			<div class="admin-block addparking">
-				<img src="../img/admin-add.svg">
+				<img src="img/admin-add.svg">
 			</div>
 			<div class="admin-block">
 				<div>
-				    <img id="close-adminblock" src="../img/manger-close.svg" onClick='closeadminblock(this,1)' data-value='fdsa'>
+				    <img id="close-adminblock" src="img/manger-close.svg" onClick='closeadminblock(this,1)' data-value='fdsa'>
 					<h3>停车场1</h3>
 					地址：
 					<p></p>
@@ -131,11 +131,11 @@
 		<div class="moudle-one moudle2" style="display: none;">
 			<h4>工作人员管理</h4>
 			<div class="admin-block addparking">
-				<img src="../img/admin-add.svg">
+				<img src="img/admin-add.svg">
 			</div>
 			<div class="admin-block opperation">
 				<div>
-				    <img id='close-adminblock' src='../img/manger-close.svg' onClick='closeadminblock(this,2)'>
+				    <img id='close-adminblock' src='img/manger-close.svg' onClick='closeadminblock(this,2)'>
 				    <h3>Johnay</h3>
 				    <p>用户名：</p>
 					<p>密码：</p>
@@ -156,55 +156,46 @@
 
 
 	<script type="text/javascript">
-		// 页面刷新加载停车场信息
-		 // $(window).ready(function(){
-			//  var adminname = window.location.href.split("=")[1];
-			//  console.log(adminname);
-			//  $('#admin-name span').text(adminname);
-		 //     getparking();
-		 // }) 
-		 // function getparking(){
-		 // 	$.ajax({
-		 //         url:'parkinglot/list',
-		 //         type:'GET',
-		 //         dataType:'json',
-		 //         data:{
+		//页面刷新加载停车场信息
+		 $(window).ready(function(){
+			 var adminname = window.location.href.split("=")[2];
+			 console.log(adminname);
+			 $('#admin-name span').text(adminname);
+		     getparking();
+		 }) 
+		 function getparking(){
+		 	$.ajax({
+		         url:'parkinglot/list',
+		         type:'GET',
+		         dataType:'json',
+		         data:{
 
-		 //         },success:function(responce){
-		 //        	 var res=responce.res;
-		 //        	 console.log(res);
-		 //        	 var length = res.length;
-		 //        	 for (var i = 0;i<length;i++){
-			//            	var tmpParking=new parking(2，res[i]);
-			//            	tmpParking.parkingadd();
+		         },success:function(responce){
+		        	 var res=responce.res;
+		        	 console.log(res);
+		        	 var length = res.length;
+		        	 for (var i = 0;i<length;i++){
+			           	var tmpParking=new parking(res[i]);
+			           	tmpParking.parkingadd();
 		        		
-		 //        	 }
-		 //         },error:function(){
+		        	 }
+		         },error:function(){
 
-		 //         }
-		 //     });
-		 // }
-		// 页面刷新加载停车场信息
+		         }
+		     });
+		 }
+		//页面刷新加载停车场信息
 
 
 		// 停车场对象
-		function parking(num,option) {
-			if(num == 1){
-				this.parkname = option[0];
-				this.parkaddress = option[1];
-				this.parknum = option[2];
-				this.parkmoney = option[3];
-				this.zt = option[4];
-			}
-			else{
+		function parking(option) {
 				this.parkname = option.name;
 				this.parkaddress = option.location;
 				this.parknum = option.totalPositionNum;
 				this.parkmoney = option.cost;
 				this.zt = option.state;
-			}
-			
-			console.log(this.parkname + this.parkaddress + this.parknum);
+				this.parkid = option.id;
+			console.log(this.parkname + this.parkaddress +" f"+ this.parknum);
 		}
 		// 检查添加停车场的信息是否不合规
 		parking.prototype.check = function() {
@@ -237,6 +228,10 @@
 			}
 			return 'ok'
 		}
+
+
+
+		//删除停车场
 		function closeadminblock(a,num){
 			if(num==1){
 				var con = confirm('是否删除停车场');
@@ -251,7 +246,7 @@
 					// 	data:{
 					// 		'id':id
 					// 	},success:function(data){
-
+					//      $(a).parent().parent().remove();
 					// 	},error:function(){
 					// 		console.log('error');
 					// 	}
@@ -276,12 +271,13 @@
 			var parknum = this.parknum;
 			var parkmoney = this.parkmoney;
 			var zt = this.zt;
+			var parkid = this.parkid;
 			$('.moudle1')
 					.append(
 							function() {
 								return "<div class='admin-block' >"
 										+ "<div>"
-										+"<img id='close-adminblock' onClick='closeadminblock(this,1)' src='../img/manger-close.svg' data-value='fdsa'>"
+										+"<img id='close-adminblock' onClick='closeadminblock(this,1)' src='img/manger-close.svg' data-value='"+parkid+"'>"
 										+ "<h3>"
 										+ parkname
 										+ "</h3>"
@@ -300,34 +296,6 @@
 										// + "<button class='btn btn-md btn-block btn-primary' onclick='editadmin(this)'>编辑</button>"
 										+ "</div>" + "</div>"
 							})
-			// $.ajax({
-			//     url:'parkinglot/add',
-			//     type:'GET',
-			//     dataType:'json',
-			//     data:{
-			//         'totalPositionNum':this.parknum,
-			//         'currentPrice': '',
-			//         'name':this.parkname,
-			//         'location':this.parkaddress,
-			//         'cost':this.parkmoney
-			//     },success:function(res){
-			//         $('.moudle1').append(function(){
-			//     return "<div class='admin-block' >"
-			//     +"<div>"
-			//         +"<h3>"+parkname+"</h3>"
-			//         +"<p>地址："+parkaddress+"</p>"
-			//         +"<p>停车位："+parknum+"</p>"
-			//         +"<p>成本："+parkmoney+"</p>"
-			//         +"<p>状态："+parkname+"</p>"
-			//         +"<button class='btn btn-md btn-block btn-primary' onclick='editadmin(this)'>编辑</button>"
-			//     +"</div>"
-			//     +"</div>"
-			// })
-			//         })
-			//     }，error:function(){
-
-			//     }
-			// });
 		}
 		// 点击按钮新建停车场
 		$('.add-parking button').click(function() {
@@ -336,8 +304,23 @@
 			parkinginf[1] = $('.add-parking input:eq(1)').val();//地址
 			parkinginf[2] = $('.add-parking input:eq(2)').val();//车位
 			parkinginf[3] = $('.add-parking input:eq(3)').val();//成本
-			parkinginf[4] = $('input[name="zt"]:checked').val();//状态
-			var park = new parking(1,parkinginf);
+			// parkinginf[4] = $('input[name="zt"]:checked').val();//
+			$.ajax({
+				url:'parkinglot/add',
+				dataType:'json',
+				type:'GET',
+				data:{
+					'name':parkinginf[0],
+					'location':parkinginf[1],
+					'totalPositionNum':parkinginf[2],
+					'cost':parkinginf[3],
+				},success:function(res){
+					console.log(res);
+					
+				},error:function(){
+
+				}
+			})
 			var check = park.check();
 			if (check == 'ok') {
 				var con = confirm('确认添加停车场');
@@ -352,6 +335,10 @@
 			}
 
 		})
+
+		//点击按钮删除停车场
+
+
 		//操作停车场
 
 
@@ -366,8 +353,8 @@
 			}
 			else{
 				this.name = manger[0];
-				this.money = manger[1];
-				this.sex = manger[2];
+				this.username = manger[1];
+				this.password = manger[2];
 				this.position = manger[3];
 			}
 			// this.name = $('.add-manger input:eq(0)').val();
@@ -389,7 +376,7 @@
 							function() {
 								return "<div class='admin-block manger'>"
 										+ "<div>"
-										+ "<img id='close-adminblock' src='../img/manger-close.svg' onClick='closeadminblock(this,2)' data-value='dfafda'> "
+										+ "<img id='close-adminblock' src='img/manger-close.svg' onClick='closeadminblock(this,2)' data-value='dfafda'> "
 										+ "<h3>"+name+ "</h3>"
 										+ "<p>职位：<span>"+position+"</span></p>"
 										+ "<p>用户名：<span>"+username+ "</span></p>"			
@@ -471,7 +458,7 @@
 										+ "<input type='radio' name='position' value='经理'>经理"
 										+ "<input type='radio' name='position' value='操作员'>操作员"
 										+ "</div>"
-										+ "<a class='btn btn-sm btn-defalut pull-right' onclick='closeparkedit(this)'><img src='../img/manger-close.svg'></a>"
+										+ "<a class='btn btn-sm btn-defalut pull-right' onclick='closeparkedit(this)'><img src='img/manger-close.svg'></a>"
 										+ "<a class='btn btn-sm btn-primary pull-right'>修改</a>"
 								"</div>"
 							});
@@ -492,6 +479,19 @@
 			} else if (num == 1) {
 				$('.moudle2').show();
 				$('.moudle1').hide();
+				//获取经工作人员的信息
+				// $.ajax({
+				// 	url:'',
+				// 	type:'GET',
+				// 	dataType:'json',
+				// 	data:{
+
+				// 	},success:function(data){
+
+				// 	},error:function(){
+
+				// 	}
+				// })
 			}
 		}
 

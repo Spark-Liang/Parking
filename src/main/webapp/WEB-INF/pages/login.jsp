@@ -187,11 +187,12 @@ body {
 						$('.pass').val('');
 						return;
 					} else {
+						
 						if (select == 0) {
-							var hre = "<%=basePath%>parkinglot/admin?id=" + user.nickname;
+							var hre = "<%=basePath%>parkinglot/admin?id=" + user.nickname + "&name=" +user.name;
 
 						} else if (select == 1) {
-							var hre = "<%=basePath%>parkinglot/manager?id=" + user.nickname;
+							var hre = "<%=basePath%>parkinglot/manager?id=" + user.nickname + "&name=" +user.name;
 
 						} else if (select == 2) {
 
