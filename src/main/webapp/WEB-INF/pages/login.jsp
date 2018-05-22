@@ -109,7 +109,7 @@ body {
 
 			<br /> <a class="btn btn-md btn-primary pull-right btn-block"
 				onclick="login(this)" href="javascript:void(0);">登录
-				</button>
+				</a>
 	</div>
 
 	<script type="text/javascript">
