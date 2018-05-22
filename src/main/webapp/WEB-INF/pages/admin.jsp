@@ -11,12 +11,12 @@
 <base href="<%=basePath%>">
 <meta charset="UTF-8">
 <title>管理员管理页面</title>
-<link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="../css/admin.css">
 <link rel="stylesheet"
 	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
 	crossorigin="anonymous">
-<script src="js/jquery-3.3.1.js"></script>
+<script src="../js/jquery-3.3.1.js"></script>
 <script
 	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
@@ -52,62 +52,43 @@
 					<label>*成本</label> <input type="number" class="form-control"
 						name="" placeholder="Parking money">
 				</div>
-				<br />
+				<br/>
 				<div class="form-gorup">
 					<label>*状态:</label> <input type="radio" name="zt" value="可用">可用
 					<input type="radio" name="zt" value="不可用">不可用
 				</div>
-				<button class="btn btn-md btn-primary pull-right" type="button">提交</button>
+				<button class="btn btn-md btn-primary" type="button">提交</button>
+				<a class="add-block-one-close">关闭</a>
 			</form>
 		</div>
 		<!-- 添加一个经理的div -->
 		<div class="add-block-one add-manger">
-			<h3>添加一个经理</h3>
+			<h3>添加一个员工</h3>
 			<br />
 			<form>
 				<div class="form-gorup">
-					<label>*新经理名字</label> <input type="text" class="form-control"
-						name="" placeholder="New parking name">
+					<label>*新员工名字</label> <input type="text" class="form-control"
+						name="" placeholder="New name">
 				</div>
 				<div class="form-gorup">
-					<label>*联系方式</label> <input type="number" class="form-control"
-						name="" placeholder="Parking num">
+					<label>*用户名</label> <input type="number" class="form-control"
+						name="" placeholder="username">
 				</div>
 				<div class="form-gorup">
-					<label>*工资</label> <input type="number" class="form-control"
-						name="" placeholder="Parking num">
-				</div>
-				<br />
-				<div class="form-gorup">
-					<label>*性别</label> <input type="radio" name="sex" value="男">男
-					<input type="radio" name="sex" value="女">女
-				</div>
-				<button class="btn btn-md btn-primary pull-right" type="button">提交</button>
-			</form>
-		</div>
-		<!-- 添加一个操作员的div -->
-		<div class="add-block-one add-operation">
-			<h3>添加一个操作员</h3>
-			<br />
-			<form>
-				<div class="form-gorup">
-					<label>*新操作员名字</label> <input type="text" class="form-control"
-						name="" placeholder="New parking name">
+					<label>*密码</label> <input type="number" class="form-control"
+						name="" placeholder="password">
 				</div>
 				<div class="form-gorup">
-					<label>*联系方式</label> <input type="number" class="form-control"
-						name="" placeholder="Parking num">
+					<label>*确认密码</label> <input type="number" class="form-control"
+						name="" placeholder="check password">
 				</div>
 				<div class="form-gorup">
-					<label>*工资</label> <input type="number" class="form-control"
-						name="" placeholder="Parking num">
+					<label>*职位</label>
+					<input type="radio" name="position" value="经理">经理
+					<input type="radio" name="position" value="操作员">操作员
 				</div>
-				<br />
-				<div class="form-gorup">
-					<label>*性别</label> <input type="radio" name="sex" value="男">男
-					<input type="radio" name="sex" value="女">女
-				</div>
-				<button class="btn btn-md btn-primary pull-right">提交</button>
+				<button class="btn btn-md btn-primary pull-left" type="button">提交</button>
+				<a class="add-block-one-close">关闭</a>
 			</form>
 		</div>
 	</div>
@@ -119,18 +100,8 @@
 	</div>
 	<!-- 导航条 -->
 	<div class="container container-style">
-		<h1 id='admin-name'>Hello,<span></span></h1>
+		<h1 id='admin-name'>Hello,<span>XXX</span></h1>
 		<p class="text-info">你的身份是管理员,可以操作以下数据</p>
-		<form class="form-inline select-admin">
-			<div class="form-group">
-				<label>搜索条件</label> <select>
-					<option value="名称">名称</option>
-					<option value="地址">地址</option>
-					<option value="成本">成本</option>
-				</select> <input type="text" class="form-control" name="">
-			</div>
-			<button class="btn btn-defalut">搜索</button>
-		</form>
 		<ol class="breadcrumb">
 			<li><a onclick="skip(0)">停车场管理</a></li>
 			<li><a onclick="skip(1)">人员管理</a></li>
@@ -139,11 +110,11 @@
 		<div class="moudle-one moudle1 ">
 			<h4>停车场管理</h4>
 			<div class="admin-block addparking">
-				<img src="img/admin-add.svg">
+				<img src="../img/admin-add.svg">
 			</div>
 			<div class="admin-block">
 				<div>
-				    <img id="close-adminblock" src="img/manger-close.svg">
+				    <img id="close-adminblock" src="../img/manger-close.svg" onClick='closeadminblock(this,1)' data-value='fdsa'>
 					<h3>停车场1</h3>
 					地址：
 					<p></p>
@@ -153,46 +124,22 @@
 					<p></p>
 					状态：
 					<p></p>
-					<button class="btn btn-md btn-block btn-primary" onclick="editadmin(this)">编辑</button>
 				</div>
-				<!-- <div class="admin-block-edit" style="display: none;">
-                        <h5>停车场1编辑</h4>
-                        <div class="form-gourp">
-                            <label>名称</label>
-                            <input type="text" class="form-control" name="" placeholder="">
-                        </div>
-                        <div class="form-gourp">
-                            <label>地址</label>
-                            <input type="text" class="form-control" name="" placeholder="">
-                        </div>
-                        <div class="form-gourp">
-                            <label>停车位数量</label>
-                            <input type="text" class="form-control" name="" placeholder="">
-                        </div>
-                        <div class="form-gourp">
-                            <label>成本</label>
-                            <input type="text" class="form-control" name="" placeholder="">
-                        </div>
-                        <br/>
-                        <a class="btn btn-primary pull-right">修改</a>
-                    </div> -->
 			</div>
 		</div>
 		<!-- admin管理工作人员模块 -->
 		<div class="moudle-one moudle2" style="display: none;">
 			<h4>工作人员管理</h4>
 			<div class="admin-block addparking">
-				<img src="img/admin-add.svg">
+				<img src="../img/admin-add.svg">
 			</div>
 			<div class="admin-block opperation">
 				<div>
-				    <img id='close-adminblock' src='img/manger-close.svg'>
-					<img src="img/admin-tx.svg" id="head-img">
-					<p>姓名：</p>
+				    <img id='close-adminblock' src='../img/manger-close.svg' onClick='closeadminblock(this,2)'>
+				    <h3>Johnay</h3>
+				    <p>用户名：</p>
+					<p>密码：</p>
 					<p>职位：</p>
-					<p>工资：</p>
-					<p>电话：</p>
-					<p>性别：</p>
 					<button class="btn btn-md btn-block btn-primary"
 						onclick="editoperation(this)">编辑</button>
 				</div>
@@ -202,62 +149,61 @@
 	</div>
 
 
+
+
+
+
+
+
 	<script type="text/javascript">
 		// 页面刷新加载停车场信息
-		 $(window).ready(function(){
-			 var adminname = window.location.href.split("=")[1];
-			 console.log(adminname);
-			 $('#admin-name span').text(adminname);
-		     $.ajax({
-		         url:'parkinglot/list',
-		         type:'GET',
-		         dataType:'json',
-		         data:{
+		 // $(window).ready(function(){
+			//  var adminname = window.location.href.split("=")[1];
+			//  console.log(adminname);
+			//  $('#admin-name span').text(adminname);
+		 //     getparking();
+		 // }) 
+		 // function getparking(){
+		 // 	$.ajax({
+		 //         url:'parkinglot/list',
+		 //         type:'GET',
+		 //         dataType:'json',
+		 //         data:{
 
-		         },success:function(responce){
-		        	 var res=responce.res;
-		        	 console.log(res);
-		        	 var length = res.length;
-		        	 for (var i = 0;i<length;i++){
-			           	var tmpParking=new parking(res[i]);
+		 //         },success:function(responce){
+		 //        	 var res=responce.res;
+		 //        	 console.log(res);
+		 //        	 var length = res.length;
+		 //        	 for (var i = 0;i<length;i++){
+			//            	var tmpParking=new parking(2，res[i]);
+			//            	tmpParking.parkingadd();
 		        		
-			           	tmpParking.parkingadd();
-		        		
-		        	 }
-		         },error:function(){
+		 //        	 }
+		 //         },error:function(){
 
-		         }
-		     });
-		 }) 
-		 function getparking(num){
-			 $.ajax({
-		         url:'parkinglot/list',
-		         type:'GET',
-		         dataType:'json',
-		         data:{
+		 //         }
+		 //     });
+		 // }
+		// 页面刷新加载停车场信息
 
-		         },success:function(responce){
-		        	 var res=responce.res;
-		        	 console.log(res);
-		        	 var length = res.length;
-		        	 for (var i = 0;i<length;i++){
-			           	var tmpParking=new parking(res[i]);
-		        		
-			           	tmpParking.parkingadd();
-		        		
-		        	 }
-		         },error:function(){
 
-		         }
-		     })
-		}
 		// 停车场对象
-		function parking(option) {
-			this.parkname = option.name;
-			this.parkaddress = option.location;
-			this.parknum = option.totalPositionNum;
-			this.parkmoney = option.cost;
-			this.zt = option.state;
+		function parking(num,option) {
+			if(num == 1){
+				this.parkname = option[0];
+				this.parkaddress = option[1];
+				this.parknum = option[2];
+				this.parkmoney = option[3];
+				this.zt = option[4];
+			}
+			else{
+				this.parkname = option.name;
+				this.parkaddress = option.location;
+				this.parknum = option.totalPositionNum;
+				this.parkmoney = option.cost;
+				this.zt = option.state;
+			}
+			
 			console.log(this.parkname + this.parkaddress + this.parknum);
 		}
 		// 检查添加停车场的信息是否不合规
@@ -291,12 +237,35 @@
 			}
 			return 'ok'
 		}
-		function closeadminblock(){
-			var con = confirm('是否删除停车场');
-			if(con){
-				
+		function closeadminblock(a,num){
+			if(num==1){
+				var con = confirm('是否删除停车场');
+				if(con){
+					alert('yes');
+					var id = $(a).data("value");
+					console(id);
+					// $.ajax({
+					// 	url:'parkinglot/delete',
+					// 	type:'GET',
+					// 	dataType:'json',
+					// 	data:{
+					// 		'id':id
+					// 	},success:function(data){
+
+					// 	},error:function(){
+					// 		console.log('error');
+					// 	}
+					// })
+				}else{
+					alert('no')
+				}
 			}else{
-				
+				var con = confirm('是否删除工作人员');
+				if(con){
+					alert('yes')
+				}else{
+					alert('no')
+				}
 			}
 		}
 		//添加成功之后把停车场添加到页面中
@@ -312,7 +281,7 @@
 							function() {
 								return "<div class='admin-block' >"
 										+ "<div>"
-										+"<img id='close-adminblock' onClick='closeadminblock()' src='img/manger-close.svg'>"
+										+"<img id='close-adminblock' onClick='closeadminblock(this,1)' src='../img/manger-close.svg' data-value='fdsa'>"
 										+ "<h3>"
 										+ parkname
 										+ "</h3>"
@@ -328,7 +297,7 @@
 										+ "<p>状态：<span>"
 										+ zt
 										+ "</span></p>"
-										+ "<button class='btn btn-md btn-block btn-primary' onclick='editadmin(this)'>编辑</button>"
+										// + "<button class='btn btn-md btn-block btn-primary' onclick='editadmin(this)'>编辑</button>"
 										+ "</div>" + "</div>"
 							})
 			// $.ajax({
@@ -362,22 +331,49 @@
 		}
 		// 点击按钮新建停车场
 		$('.add-parking button').click(function() {
-			var park = new parking();
+			var parkinginf = new Array();
+			parkinginf[0] = $('.add-parking input:eq(0)').val();//名称
+			parkinginf[1] = $('.add-parking input:eq(1)').val();//地址
+			parkinginf[2] = $('.add-parking input:eq(2)').val();//车位
+			parkinginf[3] = $('.add-parking input:eq(3)').val();//成本
+			parkinginf[4] = $('input[name="zt"]:checked').val();//状态
+			var park = new parking(1,parkinginf);
 			var check = park.check();
 			if (check == 'ok') {
-				park.parkingadd();
+				var con = confirm('确认添加停车场');
+				if(con){
+					alert('yes');
+					park.parkingadd();
+				}else{
+					alert('no')
+				}
 			} else {
-				alert('error')
+				alert('error');
 			}
 
 		})
+		//操作停车场
+
+
 
 		// 经理对象
-		function manger() {
-			this.name = $('.add-manger input:eq(0)').val();
-			this.phone = $('.add-manger input:eq(1)').val();
-			this.money = $('.add-manger input:eq(2)').val();
-			this.sex = $('input[name="sex"]:checked').val();
+		function manger(num,manger) {
+			if(num == 1){
+				this.name = manger[0];
+				this.username = manger[1];
+				this.password = manger[2];
+				this.position = manger[3];
+			}
+			else{
+				this.name = manger[0];
+				this.money = manger[1];
+				this.sex = manger[2];
+				this.position = manger[3];
+			}
+			// this.name = $('.add-manger input:eq(0)').val();
+			// this.money = $('.add-manger input:eq(1)').val();
+			// this.sex = $('input[name="sex"]:checked').val();
+			// this.position = $('input[name="position"]:checked').val();
 			console.log(this.name + this.phone + this.money + this.sex);
 		}
 
@@ -385,28 +381,19 @@
 		manger.prototype.mangeradd = function() {
 			console.log(this.parkname + this.parkaddress + this.parknum);
 			var name = this.name;
-			var phone = this.phone;
-			var money = this.money;
-			var sex = this.sex;
+			var position = this.position;
+			var username = this.username;
+			var password = this.password;
 			$('.moudle2')
 					.append(
 							function() {
 								return "<div class='admin-block manger'>"
 										+ "<div>"
-										+ "<img src='img/admin-tx.svg' id='head-img'>"
-										+ "<p>姓名：<span>"
-										+ name
-										+ "</span></p>"
-										+ "<p>职位：<span>经理</span></p>"
-										+ "<p>工资：<span>"
-										+ money
-										+ "</span></p>"
-										+ "<p>电话：<span>"
-										+ phone
-										+ "</span></p>"
-										+ "<p>性别：<span>"
-										+ sex
-										+ "</span></p>"
+										+ "<img id='close-adminblock' src='../img/manger-close.svg' onClick='closeadminblock(this,2)' data-value='dfafda'> "
+										+ "<h3>"+name+ "</h3>"
+										+ "<p>职位：<span>"+position+"</span></p>"
+										+ "<p>用户名：<span>"+username+ "</span></p>"			
+										+ "<p>密码：<span type='password'>"+ password + "</span></p>"
 										+ "<button class='btn btn-md btn-block btn-primary' onclick='editmanger(this)'>编辑</button>"
 										+ "</div>" + "</div>"
 							})
@@ -442,55 +429,16 @@
 
 		// 点击按钮添加经理 
 		$('.add-manger button').click(function() {
-			var man = new manger();
+			var mangerinf = new Array();
+			mangerinf[0] = $('.add-manger input:eq(0)').val();//姓名
+			mangerinf[1] = $('.add-manger input:eq(1)').val();//用户名
+			mangerinf[2] = $('.add-manger input:eq(1)').val();//密码
+			mangerinf[3] = $('input[name="position"]:checked').val();//职位
+			alert(mangerinf);
+			var man = new manger(1,mangerinf);
 			man.mangeradd();
 		})
-		// 编辑停车场
-		function editadmin(a) {
-			$('.admin-block-edit').remove();
-			var parkname = $(a).parent().find('h3').text();
-			var parkaddress = $(a).parent().find('span:eq(0)').text();
-			var parknum = $(a).parent().find('span:eq(1)').text();
-			var parkmoney = $(a).parent().find('span:eq(2)').text();
-			$(a)
-					.parent()
-					.parent()
-					.append(
-							function() {
-								return "<div class='admin-block-edit'>"
-										+ "<h5>"
-										+ parkname
-										+ "编辑</h4>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>名称</label>"
-										+ "<input type='text' class='form-control input-sm' name='' placeholder='' value='"+parkname+"'>"
-										+ "</div><br/>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>地址</label>"
-										+ "<input type='text' class='form-control input-sm' name='' placeholder='' value='"+parkaddress+"'>"
-										+ "</div><br/>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>数量</label>"
-										+ "<input type='number' class='form-control input-sm' name='' placeholder='' value='"+parknum+"'>"
-										+ "</div><br/>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>成本</label>"
-										+ "<input type='number' class='form-control input-sm' name='' placeholder='' value='"+parkmoney+"'>"
-										+ "</div>"
-										+ "<div class='form-gorup'>"
-										+ "<label>*状态:</label>"
-										+ "<input type='radio' name='zt' value='可用'>可用"
-										+ "<input type='radio' name='zt' value='不可用'>不可用"
-										+ "</div>"
-										+ "<a class='btn btn-sm btn-defalut pull-right' onclick='closeparkedit(this)'><img src='img/manger-close.svg'></a>"
-										+ "<a class='btn btn-sm btn-primary pull-right'>修改</a>"
-								"</div>"
-							});
-			$('.admin-block-edit').css("opacity", "0");
-			$('.admin-block-edit').animate({
-				"opacity" : "1"
-			}, 600);
-		}
+
 		function closeparkedit(a) {
 			$('.admin-block-edit').remove();
 		}
@@ -508,25 +456,22 @@
 					.append(
 							function() {
 								return "<div class='admin-block-edit'>"
-										+ "<h5>经理1编辑</h4>"
+										+ "<h5>员工编辑</h4>"
 										+ "<div class='form-gourp form-inline'>"
 										+ "<label>姓名</label>"
 										+ "<input type='text' class='form-control input-sm' name='' placeholder=''>"
 										+ "</div><br/>"
 										+ "<div class='form-gourp form-inline'>"
-										+ "<label>职位</label>"
+										+ "<label>工资</label>"
 										+ "<input type='text' class='form-control input-sm' name='' placeholder=''>"
-										+ "</div><br/>"
+										+ "</div>"
 										+ "<div class='form-gourp form-inline'>"
-										+ "<label>电话</label>"
-										+ "<input type='text' class='form-control input-sm' name='' placeholder=''>"
-										+ "</div><br/>"
 										+ "<div class='form-gourp form-inline'>"
 										+ "<label>性别</label>"
-										+ "<input type='radio' name='sex' value='男'>男"
-										+ "<input type='radio' name='sex' value='女'>女"
-										+ "</div><br/>"
-										+ "<a class='btn btn-sm btn-defalut pull-right' onclick='closeparkedit(this)'><img src='img/manger-close.svg'></a>"
+										+ "<input type='radio' name='position' value='经理'>经理"
+										+ "<input type='radio' name='position' value='操作员'>操作员"
+										+ "</div>"
+										+ "<a class='btn btn-sm btn-defalut pull-right' onclick='closeparkedit(this)'><img src='../img/manger-close.svg'></a>"
 										+ "<a class='btn btn-sm btn-primary pull-right'>修改</a>"
 								"</div>"
 							});
@@ -535,59 +480,22 @@
 				"opacity" : "1"
 			}, 600);
 		}
-		// 编辑操作员
-		function editoperation(a) {
-			$('.admin-block-edit').remove();
-			$(a)
-					.parent()
-					.parent()
-					.append(
-							function() {
-								return "<div class='admin-block-edit'>"
-										+ "<h5>操作员编辑</h4>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>姓名</label>"
-										+ "<input type='text' class='form-control input-sm' name='' placeholder=''>"
-										+ "</div><br/>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>职位</label>"
-										+ "<input type='text' class='form-control input-sm' name='' placeholder=''>"
-										+ "</div><br/>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>电话</label>"
-										+ "<input type='text' class='form-control input-sm' name='' placeholder=''>"
-										+ "</div><br/>"
-										+ "<div class='form-gourp form-inline'>"
-										+ "<label>性别</label>"
-										+ "<input type='radio' name='sex' value='男'>男"
-										+ "<input type='radio' name='sex' value='女'>女"
-										+ "</div><br/>"
-										+ "<a class='btn btn-sm btn-defalut pull-right' onclick='closeparkedit(this)'><img src='img/manger-close.svg'></a>"
-										+ "<a class='btn btn-sm btn-primary pull-right'>修改</a>"
-								"</div>"
-							});
-			$('.admin-block-edit').css("opacity", "0");
-			$('.admin-block-edit').animate({
-				"opacity" : "1"
-			}, 600);
-		}
+		//经理的操作
+
 
 		// admin、经理、操作员之间的跳转
-		// 跳转的时候改变select的值
 		function skip(num) {
 			if (num == 0) {
 				$('.moudle1').show();
-				$('.moudle2,.moudle3').hide();
-				$('.select-admin option:eq(0)').val("名称").text("名称");
-				$('.select-admin option:eq(1)').val("地址").text("地址");
-				$('.select-admin option:eq(2)').val("成本").text("成本");
+				$('.moudle2').hide();
+				getparking();
 			} else if (num == 1) {
 				$('.moudle2').show();
 				$('.moudle1').hide();
-				$('.select-admin option:eq(1)').val("性别").text("性别");
-				$('.select-admin option:eq(2)').val("电话").text("电话");
 			}
 		}
+
+
 		// 添加
 		$('.addparking:eq(0)').click(
 				function() {
@@ -603,21 +511,9 @@
 					$('.add-block-one:eq(0),.add-block-one:eq(2)').css(
 							"display", "none");
 				})
-		$('.addparking:eq(2)').click(
-				function() {
-					$('.add-block,.add-block2').fadeToggle();
-					$('.add-block-one:eq(2)').css("display", "block");
-					$('.add-block-one:eq(1),.add-block-one:eq(0)').css(
-							"display", "none");
-				})
-		$('.add-block2').click(function() {
+		$('.add-block2,.add-block-one-close').click(function() {
 			$('.add-block,.add-block2,.selectall-1').fadeOut();
-		})
-		
-		//批量管理
-		$('.selectall').click(function() {
-			$('.selectall-1,.add-block2').fadeToggle();
-		})
+		}) 
 	</script>
 </body>
 
