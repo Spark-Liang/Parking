@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.dao.ParkingLotDao.CONDITION;
 import com.park.ssm.entity.ParkingLot;
@@ -35,11 +36,16 @@ public class ParkingLotController {
 		return "admin";
 	}
 	
+	/**
+	 * 
+	 * @param parkingLot
+	 * @return JSON {”res”: “true”(成功) “false”(失败) “parkingLot”：添加成功之后的parkingLot }
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value="add")
 	//@RequestMapping(value="add",produces= {"application/json; charset=UTF-8"})
 	@ResponseBody
-	public Map addParkingLot(ParkingLot parkingLot) {
+	public String addParkingLot(ParkingLot parkingLot) {
 		boolean res=false;
 		Map result=new HashMap();
 		try {
@@ -51,7 +57,8 @@ public class ParkingLotController {
 			e.printStackTrace();
 		}
 		result.put("res", res);
-		return result;
+		result.put("parkingLot", parkingLot);
+		return JSON.toJSONString(result);
 	}
 	
 	/**返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类
@@ -69,9 +76,10 @@ public class ParkingLotController {
 	 * 
 	 * */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value="list",produces= {"application/json; charset=UTF-8"})
+	@RequestMapping(value="list")
+	//@RequestMapping(value="list",produces= {"application/json; charset=UTF-8"})
 	@Permission(value= {Permission.Type.ADMIN,Permission.Type.MANAGER})
-	public @ResponseBody Map listParkingLot(HttpServletRequest request) {
+	public @ResponseBody String listParkingLot(HttpServletRequest request) {
 		Map<String, String[]> params=request.getParameterMap();
 		Map<String, Object> conditions=new HashMap<>();
 		//提取参数
@@ -91,7 +99,34 @@ public class ParkingLotController {
 		Map result=new HashMap();
 		result.put("res", res);
 		result.put("totalRowNum", parkingLotService.countParkingLot(conditions));
-		return result;
+		return JSON.toJSONString(result);
+	}
+	
+	
+	/**
+	 * 
+	 * @param parkingLot
+	 * @return JSON {”res”: “true”(成功) “false”(失败) “parkingLot”：更新之后的parkingLot }
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@RequestMapping(value="update")
+	//@RequestMapping(value="list",produces= {"application/json; charset=UTF-8"})
+	@Permission(value= {Permission.Type.ADMIN,Permission.Type.MANAGER})
+	public @ResponseBody String updateParkingLot(ParkingLot parkingLot) {
+		Map result=new HashMap();
+		boolean res=false;
+		
+		try {
+			parkingLotService.updateParkingLot(parkingLot);
+			res=true;
+			result.put("parkingLot", parkingLot);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			result.put("error", e.toString());
+			e.printStackTrace();
+		}
+		result.put("res", res);
+		return JSON.toJSONString(result);
 	}
 	
 	/**删除停车场
@@ -99,15 +134,16 @@ public class ParkingLotController {
 	 * 提交多个id是，所有删除成功返回null，否则返回失败的id
 	 * 
 	 * @param ids
-	 * @return String JSON ｛"res":结果｝
+	 * @return String JSON ｛"res":结果 ,"fail":多个删除的时候失败的id列表｝
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value="delete",produces= {"application/json; charset=UTF-8"})
-	public @ResponseBody Map deleteParkingLot(@RequestParam("id") Integer[] ids) {
+	@RequestMapping(value="delete")
+	//@RequestMapping(value="delete",produces= {"application/json; charset=UTF-8"})
+	public @ResponseBody String deleteParkingLot(@RequestParam("id") Integer[] ids) {
 		Map result=new HashMap();
+		boolean res=false;
 		if(ids.length==1) {
 			//单个删除
-			boolean res=false;
 			try {
 				parkingLotService.deleteParkingLot(ids[0]);
 				res=true;
@@ -116,7 +152,6 @@ public class ParkingLotController {
 				result.put("error", e.toString());
 				e.printStackTrace();
 			}
-			result.put("res", res);
 		}else {
 			//批量删除
 			List<Integer> list=new ArrayList<>(ids.length);
@@ -124,9 +159,14 @@ public class ParkingLotController {
 				list.add(ids[i]);
 			}
 			List<Integer> resultList=parkingLotService.listDeleteParkingLot(list);
-			result.put("res", resultList);
+			if(resultList!=null && !resultList.isEmpty()) {
+				result.put("fail", resultList);
+			}else {
+				res=true;
+			}
 		}
-		return result;
+		result.put("res", res);
+		return JSON.toJSONString(result);
 		
 	}
 	

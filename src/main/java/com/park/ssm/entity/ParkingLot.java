@@ -31,6 +31,10 @@ public class ParkingLot {
 	public Integer getId() {
 		return id;
 	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public int getTotalPositionNum() {
 		return totalPositionNum;
 	}
