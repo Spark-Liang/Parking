@@ -93,15 +93,10 @@ public class InnerUserServiceImpl implements InnerUserService {
 	 * 根据typeflag查找InnerUser
 	 */
 	@Override
-	public List<InnerUser> findInnerUserByTypeflag(int typeflag) {
+	public List<InnerUser> findInnerUserByTypeflag() {
 		// TODO Auto-generated method stub
-		return innerUserDao.getInnerUserByTypeflag(typeflag);
+		return innerUserDao.getInnerUserByTypeflag();
 	}
 
-	@Override
-	public List<InnerUser> findInnerUserByFuzzy(String nickname, int sex, int phone) {
-		// TODO Auto-generated method stub
-		return innerUserDao.getInnerUserByFuzzy(nickname, sex, phone);
-	}
-
+	
 }

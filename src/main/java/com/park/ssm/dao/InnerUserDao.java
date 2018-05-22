@@ -24,7 +24,7 @@ public interface InnerUserDao {
 
 	public int updateInnerUserByNickname(InnerUser innerUser);//修改用户，admin才具有此权限
 	
-	public List<InnerUser> getInnerUserByTypeflag(int typeflag);//根据typeflag查找InnerUser
+	public List<InnerUser> getInnerUserByTypeflag();
 	
-	public List<InnerUser> getInnerUserByFuzzy(@Param("nickname")String nickname,@Param("sex")int sex,@Param("phone")int phone);//根据nickname,sex,phone查询InnerUser
+	//public List<InnerUser> getInnerUserByFuzzy(@Param("nickname")String nickname,@Param("sex")int sex,@Param("phone")int phone);//根据nickname,sex,phone查询InnerUser
 }

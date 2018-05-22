@@ -11,9 +11,7 @@ public class InnerUser implements Serializable {
 	private String password;		  //密码，不允许低于8位
 	private int typeflag;			  //类型标记，1为admin，2为manager，3为operator
 	private String name;			  //用户真实姓名，允许同姓名
-	private int sex;				  //性别，1男2女
-	private int phone;				  //手机号码，一般为11位
-	private String address;			  //用户住址
+	
 	
 	public InnerUser() {
 		
@@ -30,14 +28,12 @@ public class InnerUser implements Serializable {
 		this.typeflag=typeflag;
 	}
 	
-	public InnerUser(String nickname,String password,int typeflag,String name,int sex,int phone,String address){
+	public InnerUser(String nickname,String password,int typeflag,String name){
 		this.nickname=nickname;
 		this.password=password;
 		this.typeflag=typeflag;
 		this.name=name;
-		this.sex=sex;
-		this.phone=phone;
-		this.address=address;
+		
 	}
 
 	public String getNickname() {
@@ -72,34 +68,11 @@ public class InnerUser implements Serializable {
 		this.name = name;
 	}
 
-	public int getSex() {
-		return sex;
-	}
-
-	public void setSex(int sex) {
-		this.sex = sex;
-	}
-
-	public int getPhone() {
-		return phone;
-	}
-
-	public void setPhone(int phone) {
-		this.phone = phone;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
 
 	@Override
 	public String toString() {
 		return "InnerUser [nickname=" + nickname + ", password=" + password + ", typeflag=" + typeflag + ", name="
-				+ name + ", sex=" + sex + ", phone=" + phone + ", address=" + address + "]";
+				+ name + "]";
 	}
 	
 	

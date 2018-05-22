@@ -22,13 +22,10 @@ public class TestInnerUserService extends MainTest{
    //@Rollback(false)
    public void  testInsertInnerUser() {
 	   InnerUser innerUser=new InnerUser();
-	   innerUser.setNickname("Meixi");
+	   innerUser.setNickname("14785236930");
 	   innerUser.setPassword("123678");
 	   innerUser.setTypeflag(2);
 	   innerUser.setName("Mei");
-	   innerUser.setSex(1);
-	   innerUser.setPhone(121789);
-	   innerUser.setAddress("Toronto");
 	   Assert.assertTrue(innerUserService.insertInnerUser(innerUser)>0);
    }
    
@@ -36,13 +33,10 @@ public class TestInnerUserService extends MainTest{
    @Rollback(false)
    public void testChangeInnerUserByNickname() {
 	   InnerUser innerUser=new InnerUser();
-	   innerUser.setNickname("Meisi");
+	   innerUser.setNickname("10987654321");
 	   innerUser.setPassword("9876/-74321");
 	   innerUser.setTypeflag(1);
 	   innerUser.setName("Messi");
-	   innerUser.setSex(1);
-	   innerUser.setPhone(123456789);
-	   innerUser.setAddress("Basaluona");
 	  // System.out.println("----------------------------------"+innerUser.getAddress());
 	   Assert.assertTrue(innerUserService.changeInnerUserByNickname(innerUser)>0);
    }
@@ -56,26 +50,21 @@ public class TestInnerUserService extends MainTest{
    @Test
    public void testFindInnerUser() {
 	   InnerUser innerUser=innerUserService.findInnerUser("Meixi", "123678",2);
-	   Assert.assertEquals(121789, innerUser.getPhone());
+	   Assert.assertEquals(2, innerUser.getTypeflag());
    }
    
    @Test
   // @Rollback(false)
    public void testdropInnerUserByNickname() {
-	   Assert.assertTrue(innerUserService.dropInnerUserByNickname("Meixi")>0);
+	   Assert.assertTrue(innerUserService.dropInnerUserByNickname("10987654321")>0);
    }
    
    @Test
    public void testFindInnerUserByTypeflag() {
 	   List<InnerUser> list=new ArrayList<InnerUser>();
-	   list=innerUserService.findInnerUserByTypeflag(2);
-	   Assert.assertEquals("bb", list.get(0).getNickname());
+	   list=innerUserService.findInnerUserByTypeflag();
+	   Assert.assertEquals("14785236930", list.get(0).getNickname());
    }
    
-   @Test
-   public void testFindInnerUserByFuzzy() {
-	   List<InnerUser> list=new ArrayList<InnerUser>();
-	   list=innerUserService.findInnerUserByFuzzy(null, 3, 0);
-	   Assert.assertEquals("bb", list.get(0).getNickname());
-   }
+   
 }

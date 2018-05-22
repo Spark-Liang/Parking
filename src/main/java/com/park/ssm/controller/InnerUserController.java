@@ -193,13 +193,13 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "selectInnerUser", method = RequestMethod.GET)
 	@ResponseBody
-	public String selectInnerUserByTypeflag(@PathVariable("typeflag") String typeflag) {
+	public String selectInnerUserByTypeflag() {
 		List<InnerUser> list = new ArrayList<>();
 		Map<String, Object> map = new HashMap<>();
 		int intTypeflag = 0;
 		try {
-			intTypeflag = Integer.parseInt(typeflag);
-			list = innerUserService.findInnerUserByTypeflag(intTypeflag);
+			//intTypeflag = Integer.parseInt();
+			list = innerUserService.findInnerUserByTypeflag();
 			if (!list.isEmpty()) {
 				map.put("msg", list);
 			} else {
@@ -219,7 +219,7 @@ public class InnerUserController {
 	 * @param sex
 	 * @param phone
 	 * @return
-	 */
+	
 	@RequestMapping(value = "selectInnerUserByFuzzy", method = RequestMethod.GET)
 	@ResponseBody
 	public String selectInnerUserByFuzzy(@PathVariable("nickname") String nickname, @PathVariable("sex") String sex,
@@ -257,4 +257,5 @@ public class InnerUserController {
 		String strFuzzySearch = new JSONObject(map).toString();
 		return strFuzzySearch;
 	}
+	 */
 }

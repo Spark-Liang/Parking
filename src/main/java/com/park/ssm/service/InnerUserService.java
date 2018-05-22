@@ -16,7 +16,7 @@ public interface InnerUserService {
 
 	public int changeInnerUserByNickname(InnerUser innerUser);//修改用户，admin才具有此权限
 	
-	public List<InnerUser> findInnerUserByTypeflag(int typeflag);//根据typeflag查找InnerUser
+	public List<InnerUser> findInnerUserByTypeflag();//根据typeflag查找InnerUser
 	
-	public List<InnerUser> findInnerUserByFuzzy(String nickname,int sex,int phone);//根据条件查询InnerUser
+	//public List<InnerUser> findInnerUserByFuzzy(String nickname,int sex,int phone);//根据条件查询InnerUser
 }

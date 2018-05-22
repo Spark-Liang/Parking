@@ -14,7 +14,7 @@
 
 	<!-- 登陆验证 -->
 	<select id="getInnerUser" resultType="com.park.ssm.entity.InnerUser">
-		select nickname,password,typeflag,name,sex,phone,address from
+		select nickname,password,typeflag,name from
 		InnerUser
 		<where>
 			nickname=#{nickname}
@@ -28,15 +28,15 @@
 	<!-- 新增InnerUser -->
 	<insert id="addInnerUser" parameterType="com.park.ssm.entity.InnerUser">
 		insert into
-		InnerUser(nickname,password,typeflag,name,sex,phone,address)
-		values(#{nickname},#{password},#{typeflag},#{name},#{sex},#{phone},#{address})
+		InnerUser(nickname,password,typeflag,name)
+		values(#{nickname},#{password},#{typeflag},#{name})
 	</insert>
 
 	<!-- 更新InnerUser信息,nickname不能更改 -->
 	<update id="updateInnerUserByNickname">
 		update InnerUser set
 		password=#{password},typeflag=#{typeflag},
-		name=#{name},sex=#{sex},phone=#{phone},address=#{address}
+		name=#{name}
 		<where>
 			nickname=#{nickname}
 		</where>
@@ -52,16 +52,15 @@
 
 	<!-- 根据typeflag查找InnerUser,用于登陆成功时显示 -->
 	<select id="getInnerUserByTypeflag" resultType="com.park.ssm.entity.InnerUser">
-		select nickname,name,sex,phone,address
+		select nickname,name,typeflag
 		from InnerUser
-		<where>
-			typeflag=#{typefalg}
-		</where>
 	</select>
+	
 
 	<!-- 条件查询InnerUser -->
+	<!-- 
 	<select id="getInnerUserByFuzzy" resultType="com.park.ssm.entity.InnerUser">
-		select nickname,name,sex,phone,address
+		select nickname,name
 		from InnerUser
 		<where>
 			<choose>
@@ -76,5 +75,6 @@
 				</when>
 			</choose>
 		</where>
-	</select>
+	</select> 
+-->
 </mapper>
