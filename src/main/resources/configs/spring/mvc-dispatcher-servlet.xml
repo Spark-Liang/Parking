@@ -28,7 +28,7 @@
 	<!-- 拦截器配置 -->
     <mvc:interceptors>
     	<mvc:interceptor>
-    		<mvc:mapping path="/"/>
+    		<mvc:mapping path="/**"/>
     		<mvc:exclude-mapping path="/index.jsp"/>
     		<bean class="com.park.ssm.interceptor.LoginInterceptor"/>
     	</mvc:interceptor>
