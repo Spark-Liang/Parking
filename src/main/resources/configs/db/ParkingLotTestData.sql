@@ -15,9 +15,9 @@ create table ParkingLot
 
 insert into ParkingLot(totalPositionNum,currentPrice,cost,name,location)
 values
- (100,1.33,100,'A','CC')
-,(100,233,100,'B','CC')
-,(100,3.33,100,'C','CC')
+ (4,1.33,100,'A','CC')
+,(3,233,100,'B','CC')
+,(3,3.33,100,'C','CC')
 ;
 
 
