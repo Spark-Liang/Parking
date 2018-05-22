@@ -53,8 +53,9 @@ public class TestParkingLotController extends AutoRollBackTest {
 		mockRequest.andExpect(status().isOk());
 	}
 	
+
 	
-	@Test
+//	@Test
 	public void testUpdate() throws Exception {
 		//测试参数
 		MultiValueMap<String,String> params=new LinkedMultiValueMap<String, String>();
