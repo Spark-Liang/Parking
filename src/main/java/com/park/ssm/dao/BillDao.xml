@@ -3,16 +3,7 @@
 <!--客户映射 指定到dao接口 -->
 <mapper namespace="com.park.ssm.dao.BillDao">
 
-private Long id;
-	//信息相关
-	private User user;
-	private ParkingLot parkingLot;
-	private Account account;
-	//计费相关
-	private Double price;
-	private Date billStartDate;
-	private Date billEndDate;
-	private boolean isPaid;
+
 
 <resultMap type="Bill" id="billRoughResult">
 	<id property="id" column="id"/>

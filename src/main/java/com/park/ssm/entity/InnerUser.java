@@ -7,6 +7,7 @@ import java.io.Serializable;
  *
  */
 public class InnerUser implements Serializable {
+	private int id;
 	private String nickname;          //昵称即用户名，登陆时使用昵称，不允许重复
 	private String password;		  //密码，不允许低于8位
 	private int typeflag;			  //类型标记，1为admin，2为manager，3为operator
@@ -28,12 +29,22 @@ public class InnerUser implements Serializable {
 		this.typeflag=typeflag;
 	}
 	
-	public InnerUser(String nickname,String password,int typeflag,String name){
+	public InnerUser(int id,String nickname,String password,int typeflag,String name){
+		this.id=id;
 		this.nickname=nickname;
 		this.password=password;
 		this.typeflag=typeflag;
 		this.name=name;
 		
+	}
+	
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getNickname() {
@@ -68,12 +79,10 @@ public class InnerUser implements Serializable {
 		this.name = name;
 	}
 
-
 	@Override
 	public String toString() {
-		return "InnerUser [nickname=" + nickname + ", password=" + password + ", typeflag=" + typeflag + ", name="
-				+ name + "]";
-	}
-	
+		return "InnerUser [id=" + id + ", nickname=" + nickname + ", password=" + password + ", typeflag=" + typeflag
+				+ ", name=" + name + "]";
+	}	
 	
 }

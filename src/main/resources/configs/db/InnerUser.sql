@@ -1,4 +1,6 @@
-create table if not exists InnerUser(nickname varchar(16) primary key,
+create table if not exists InnerUser(
+id int primary key auto_increment,
+nickname varchar(16) not null,
 password varchar(512) not null,
 typeflag int(2) not null,
 name varchar(16) null,

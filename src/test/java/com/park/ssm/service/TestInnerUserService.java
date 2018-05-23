@@ -34,10 +34,12 @@ public class TestInnerUserService extends AutoRollBackTest{
    @Rollback(false)
    public void testChangeInnerUserByNickname() {
 	   InnerUser innerUser=new InnerUser();
+	   innerUser.setId(2);
 	   innerUser.setNickname("10987654321");
 	   innerUser.setPassword("9876/-74321");
 	   innerUser.setTypeflag(1);
-	   innerUser.setName("Messi");
+	 //  innerUser.setName("Messi");
+	  
 	  // System.out.println("----------------------------------"+innerUser.getAddress());
 	   Assert.assertTrue(innerUserService.changeInnerUserByNickname(innerUser)>0);
    }

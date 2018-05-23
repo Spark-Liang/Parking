@@ -34,11 +34,11 @@
 
 	<!-- 更新InnerUser信息,nickname不能更改 -->
 	<update id="updateInnerUserByNickname">
-		update InnerUser set
-		password=#{password},typeflag=#{typeflag},
-		name=#{name}
+		update InnerUser set 
+		nickname=#{nickname},
+		password=#{password},typeflag=#{typeflag}
 		<where>
-			nickname=#{nickname}
+			id=#{id}
 		</where>
 	</update>
 
@@ -52,7 +52,7 @@
 
 	<!-- 根据typeflag查找InnerUser,用于登陆成功时显示 -->
 	<select id="getInnerUserByTypeflag" resultType="com.park.ssm.entity.InnerUser">
-		select nickname,name,typeflag
+		select id,nickname,name,typeflag
 		from InnerUser
 		<where>
 			typeflag=1 or typeflag=2

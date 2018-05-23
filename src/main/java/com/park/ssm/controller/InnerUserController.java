@@ -144,12 +144,13 @@ public class InnerUserController {
 	 * @param innerUser
 	 * @return
 	 */
-	@RequestMapping(value = "changeInnerUser", method = { RequestMethod.PUT })
+	@RequestMapping(value = "changeInnerUser", method = { RequestMethod.POST })
 	@ResponseBody
 	public String changeInnerUser(InnerUser innerUser, HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
 		int id = admin.getTypeflag();
+		//String oldNickname=innerUser.getNickname();
 		Map<String, Object> map = new HashMap<>();
 		if (id == 0) {// admin的typefalg为0，只有admin才能修改
 			try {
