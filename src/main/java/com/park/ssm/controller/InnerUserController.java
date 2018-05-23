@@ -136,7 +136,7 @@ public class InnerUserController {
 				innerUser.setPassword(password);
 				innerUser.setSalt(salt);
 				result = innerUserService.insertInnerUser(innerUser);
-				System.out.println("++++++++++++++++++++++++++"+innerUser.getSalt());
+				//System.out.println("++++++++++++++++++++++++++"+innerUser.getSalt());
 				if (result > 0) {
 					map.put("msg", 1);
 				} else {
@@ -168,6 +168,13 @@ public class InnerUserController {
 		Map<String, Object> map = new HashMap<>();
 		if (id == 0) {// admin的typefalg为0，只有admin才能修改
 			try {
+				String password=innerUser.getPassword();
+				Encryption en=new Encryption();
+				String salt=en.createSalt();
+				password+=salt;
+				password=en.SHA512(password);
+				innerUser.setPassword(password);
+				innerUser.setSalt(salt);
 				result = innerUserService.changeInnerUserByNickname(innerUser);
 				if (result > 0) {
 					map.put("msg", 1);
