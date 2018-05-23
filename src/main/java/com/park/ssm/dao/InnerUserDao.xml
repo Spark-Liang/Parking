@@ -28,13 +28,13 @@
 	<!-- 新增InnerUser -->
 	<insert id="addInnerUser" parameterType="com.park.ssm.entity.InnerUser">
 		insert into
-		InnerUser(nickname,password,typeflag,name)
-		values(#{nickname},#{password},#{typeflag},#{name})
+		InnerUser(nickname,password,typeflag,name,salt)
+		values(#{nickname},#{password},#{typeflag},#{name},#{salt})
 	</insert>
 
 	<!-- 更新InnerUser信息,nickname不能更改 -->
 	<update id="updateInnerUserByNickname">
-		update InnerUser set 
+		update InnerUser set
 		nickname=#{nickname},
 		password=#{password},typeflag=#{typeflag}
 		<where>
@@ -59,7 +59,12 @@
 		</where>
 	</select>
 
-
+	<select id="getSaltByNickname" resultType="java.lang.String">
+		select salt from InnerUser
+		<where>
+			nickname=#{nickname}
+		</where>
+	</select>
 	<!-- 条件查询InnerUser -->
 	<!-- <select id="getInnerUserByFuzzy" resultType="com.park.ssm.entity.InnerUser"> 
 		select nickname,name from InnerUser <where> <choose> <when test="nickname!=null"> 

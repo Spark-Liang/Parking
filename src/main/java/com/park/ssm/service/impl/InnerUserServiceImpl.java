@@ -98,5 +98,11 @@ public class InnerUserServiceImpl implements InnerUserService {
 		return innerUserDao.getInnerUserByTypeflag();
 	}
 
+	@Override
+	public String findSaltByNickname(String nickname) {
+		// TODO Auto-generated method stub
+		return innerUserDao.getSaltByNickname(nickname);
+	}
+
 	
 }

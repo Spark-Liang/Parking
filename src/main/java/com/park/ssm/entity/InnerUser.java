@@ -12,21 +12,31 @@ public class InnerUser implements Serializable {
 	private String password;		  //密码，不允许低于8位
 	private int typeflag;			  //类型标记，1为admin，2为manager，3为operator
 	private String name;			  //用户真实姓名，允许同姓名
+	private String salt;		      //盐
 	
-	
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
 	public InnerUser() {
 		
 	}
 	
-	public InnerUser(String nickname,String password) {
+	public InnerUser(String nickname,String password,String salt) {
 		this.nickname=nickname;
 		this.password=password;
+		this.salt=salt;
 	}
 	
-	public InnerUser(String nickname,String password,int typeflag) {
+	public InnerUser(String nickname,String password,int typeflag,String salt) {
 		this.nickname=nickname;
 		this.password=password;
 		this.typeflag=typeflag;
+		this.salt=salt;
 	}
 	
 	public InnerUser(int id,String nickname,String password,int typeflag,String name){
@@ -82,7 +92,8 @@ public class InnerUser implements Serializable {
 	@Override
 	public String toString() {
 		return "InnerUser [id=" + id + ", nickname=" + nickname + ", password=" + password + ", typeflag=" + typeflag
-				+ ", name=" + name + "]";
-	}	
+				+ ", name=" + name + ", salt=" + salt + "]";
+	}
+
 	
 }

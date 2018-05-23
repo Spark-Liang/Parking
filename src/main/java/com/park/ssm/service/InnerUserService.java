@@ -18,5 +18,6 @@ public interface InnerUserService {
 	
 	public List<InnerUser> findInnerUserByTypeflag();//根据typeflag查找InnerUser
 	
+	public String findSaltByNickname(String nickname);//取出盐值
 	//public List<InnerUser> findInnerUserByFuzzy(String nickname,int sex,int phone);//根据条件查询InnerUser
 }

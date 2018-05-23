@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.park.ssm.entity.InnerUser;
 import com.park.ssm.service.InnerUserService;
+import com.park.ssm.util.Encryption;
 
 @Controller
 @RequestMapping("inneruser")
@@ -48,13 +49,17 @@ public class InnerUserController {
 	public String login(HttpSession session, String nickname, String password, String typeflag) {
 		InnerUser innerUser = new InnerUser();
 		int intTypeflag = Integer.parseInt(typeflag.trim());
-		innerUser.setNickname(nickname.trim());
-		innerUser.setPassword(password.trim());
-		innerUser.setTypeflag(intTypeflag);
+		Encryption en=new Encryption();
+		//innerUser.setNickname(nickname.trim());
+		//innerUser.setPassword(password.trim());
+		//innerUser.setTypeflag(intTypeflag);
+		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+salt);
 		if (null != nickname.trim() && !"".equals(nickname.trim())) {
 			if (null != password && "" != password) {
 				try {
-					innerUser = innerUserService.findInnerUser(nickname.trim(), password.trim(), intTypeflag);
+					String salt=innerUserService.findSaltByNickname(nickname);
+					String passwordAndSalt=en.SHA512(password.trim()+salt);
+					innerUser = innerUserService.findInnerUser(nickname.trim(), passwordAndSalt, intTypeflag);
 				} catch (Exception e) {
 					return JSON.toJSONString(null);
 				}
@@ -62,6 +67,7 @@ public class InnerUserController {
 		}
 		if (null != innerUser) {
 			session.setAttribute("innerUser", innerUser);
+			System.out.println(innerUser.toString());
 			return JSON.toJSONString(innerUser);
 		} else {
 			return JSON.toJSONString(null);
@@ -122,7 +128,15 @@ public class InnerUserController {
 		Map<String, Object> map = new HashMap<>();
 		if (id == 0) {// admin的typefalg为0，只有admin才能添加
 			try {
+				String password=innerUser.getPassword();
+				Encryption en=new Encryption();
+				String salt=en.createSalt();
+				password+=salt;
+				password=en.SHA512(password);
+				innerUser.setPassword(password);
+				innerUser.setSalt(salt);
 				result = innerUserService.insertInnerUser(innerUser);
+				System.out.println("++++++++++++++++++++++++++"+innerUser.getSalt());
 				if (result > 0) {
 					map.put("msg", 1);
 				} else {
