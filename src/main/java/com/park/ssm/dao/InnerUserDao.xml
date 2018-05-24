@@ -20,8 +20,6 @@
 			nickname=#{nickname}
 			and
 			password=#{password}
-			and
-			typeflag=#{typeflag}
 		</where>
 	</select>
 

@@ -51,7 +51,7 @@ public class TestInnerUserService extends AutoRollBackTest {
 
 	@Test
 	public void testFindInnerUser() {
-		InnerUser innerUser = innerUserService.findInnerUser("13075119722", "123456", 2);
+		InnerUser innerUser = innerUserService.findInnerUser("13075119722", "123456");
 		Assert.assertEquals(2, innerUser.getTypeflag());
 	}
 

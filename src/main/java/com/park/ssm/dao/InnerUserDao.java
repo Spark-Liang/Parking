@@ -18,7 +18,7 @@ public interface InnerUserDao {
 
 	public int addInnerUser(InnerUser innerUser);//增加用户，admin才具有此权限
 
-	public InnerUser getInnerUser(@Param("nickname")String nickname, @Param("password")String password,@Param("typeflag")int typeflag);//根据用户名和密码查找，主要用于用户登陆验证
+	public InnerUser getInnerUser(@Param("nickname")String nickname, @Param("password")String password);//根据用户名和密码查找，主要用于用户登陆验证
 
 	public int deleteInnerUserByNickname(String nickname);//删除用户，admin才具有此权限
 

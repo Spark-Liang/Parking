@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.park.ssm.annotation.Permission;
 import com.park.ssm.entity.InnerUser;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.service.InnerUserService;
@@ -51,9 +52,9 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "login", method = { RequestMethod.POST })
 	@ResponseBody
-	public String login(HttpSession session, String nickname, String password, String typeflag) {
+	public String login(HttpSession session, String nickname, String password) {
 		InnerUser innerUser = new InnerUser();
-		int intTypeflag = Integer.parseInt(typeflag.trim());
+		//int intTypeflag = Integer.parseInt(typeflag.trim());
 		Encryption en=new Encryption();
 		//innerUser.setNickname(nickname.trim());
 		//innerUser.setPassword(password.trim());
@@ -64,7 +65,7 @@ public class InnerUserController {
 				try {
 					String salt=innerUserService.findSaltByNickname(nickname.trim());
 					String passwordAndSalt=en.SHA512(password.trim()+salt);
-					innerUser = innerUserService.findInnerUser(nickname.trim(), passwordAndSalt, intTypeflag);
+					innerUser = innerUserService.findInnerUser(nickname.trim(), passwordAndSalt);
 				} catch (Exception e) {
 					return JSON.toJSONString(null);
 				}
@@ -126,6 +127,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "addInnerUser", method = { RequestMethod.POST })
 	@ResponseBody
+	@Permission(value={Permission.Type.ADMIN})
 	public String addInnerUser(InnerUser innerUser, HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
@@ -165,6 +167,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "changeInnerUser", method = { RequestMethod.POST })
 	@ResponseBody
+	@Permission(value={Permission.Type.ADMIN})
 	public String changeInnerUser(InnerUser innerUser, HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
@@ -204,6 +207,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "deleteInnerUser", method = RequestMethod.GET)
 	@ResponseBody
+	@Permission(value={Permission.Type.ADMIN})
 	public String deleteInnerUser(@RequestParam("nickname") String nickname, HttpSession session) {
 		int result = 0;
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
@@ -235,6 +239,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "selectInnerUser", method = RequestMethod.GET)
 	@ResponseBody
+	@Permission(value={Permission.Type.ADMIN})
 	public String selectInnerUser(HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		List<InnerUser> list = new ArrayList<>();
@@ -266,6 +271,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value="changeParkingLotPrice",method=RequestMethod.POST)
 	@ResponseBody
+	@Permission(value={Permission.Type.MANAGER})
 	public String changeParkingLotPrice(ParkingLot parkingLot,HttpSession session) {
 		InnerUser manager=(InnerUser)session.getAttribute("innerUser");
 		int id=manager.getTypeflag();

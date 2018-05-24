@@ -46,9 +46,9 @@ public class InnerUserServiceImpl implements InnerUserService {
 	 * 登陆时调用这个方法，昵称和用户名匹配才能登陆
 	 */
 	@Override
-	public InnerUser findInnerUser(String nickname, String password, int typeflag) {
+	public InnerUser findInnerUser(String nickname, String password) {
 		// TODO Auto-generated method stub
-		return innerUserDao.getInnerUser(nickname, password, typeflag);
+		return innerUserDao.getInnerUser(nickname, password);
 	}
 
 	/**
