@@ -7,5 +7,5 @@ import com.park.ssm.entity.User;
 @MapperScan
 public interface UserDao {
 	
-	public abstract User loadUserById(long id);
+	public abstract User loadUserById(long userId);
 }

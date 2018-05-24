@@ -49,6 +49,14 @@
 	for update
 </select>
 
+<select id="findAccountrById" parameterType="long" resultMap="accountRoughResult">
+	select 
+		*
+	from Account
+	where userId=#{_parameter}
+</select>
+
+
 <insert id="insertAccount" parameterType="Account">
 insert into Account (id,userId,parkingLotId,parkingPositionId,cardId,state,currentBillId) values
 (#{id},#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},${state.getInd()},#{currentBillId})
