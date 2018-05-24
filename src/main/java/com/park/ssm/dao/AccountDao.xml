@@ -67,5 +67,11 @@ update Account
 	set state=${state.getInd()}
 where id=#{id}
 </update>
-
+  
+  <update id="modifyAccount" parameterType="Account">
+update Account
+	set cardId=${cardId}
+where userId=#{userId} and parkingLotId=${parkingLotId}
+</update>
+  
 </mapper>

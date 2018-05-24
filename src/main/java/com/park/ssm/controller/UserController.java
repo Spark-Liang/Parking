@@ -30,8 +30,9 @@ public class UserController {
 	private AccountService accountService;
 
 	/**
+	 * 操作员
 	 * 根据客户ID获取客户的所有帐户信息
-	 * @userId 用户ID
+	 * userId 客户ID 
 	 */
 	@RequestMapping(value = "getAllAccount", method = { RequestMethod.POST })
 	@ResponseBody
@@ -57,12 +58,14 @@ public class UserController {
 	
 
 	/**
+	 * 操作员
 	 * 根据客户ID创建特定停车场的停车卡
-	 * @LotId 停车场Id
+	 * LotId 停车场Id
+	 * userId 客户ID 
 	 */
 	@RequestMapping(value = "addNewCard", method = { RequestMethod.POST })
 	@ResponseBody
-	public String addNewCard(HttpSession session,@PathVariable("LotId") Integer LotId ,@PathVariable("userId") long userId) {
+	public String addNewCard(@PathVariable("LotId") Integer LotId ,@PathVariable("userId") long userId) {
 		Map result=new HashMap();
 		Account account=new Account();
 		String Message="";
@@ -87,6 +90,39 @@ public class UserController {
 				}
 		     result.put("falg",falg);
 			 result.put("message",Message);
+		}catch(Exception e) {
+			e.printStackTrace();
+			result.put("message"," 服务器出现错误");
+		}
+		return JSON.toJSONString(result);
+	}
+	
+	
+
+	/**
+	 * 操作员
+	 * 根据客户ID，更换新的停车卡
+	 * LotId 停车场Id
+	 * userId 客户ID 
+	 */
+	@RequestMapping(value = "changeNewCard", method = { RequestMethod.POST })
+	@ResponseBody
+	public String changeNewCard(@PathVariable("LotId") Integer LotId ,@PathVariable("userId") long userId){
+		Map result=new HashMap();
+		String Message="";
+		int status=0;
+		Account account =new Account();
+		try {
+			account.setUserId(userId);
+			account.setParkingLotId(LotId);
+	         status=accountService.modifyAccount(account);
+	         if(status>0) {
+	        	 Message="更换成功！";
+	         }
+	         else {
+	        	  Message="更换失败，请重新尝试！";
+	         }
+			result.put("message", Message);
 		}catch(Exception e) {
 			e.printStackTrace();
 			result.put("message"," 服务器出现错误");

@@ -12,4 +12,6 @@ public interface AccountService {
 	public User findUserByuserId(long userId);//根据用户ID获取用户基础信息
 	
 	public int addNewCard(Account account);
+	
+	public int modifyAccount(Account account);
 }

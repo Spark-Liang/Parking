@@ -35,5 +35,10 @@ public class AccountServiceImpl implements AccountService {
 		// TODO Auto-generated method stub
 		return accountdao.insertAccount(account);
 	}
+	@Override
+	public int modifyAccount(Account account) {
+		// TODO Auto-generated method stub
+		return accountdao.modifyAccount(account);
+	}
 
 }

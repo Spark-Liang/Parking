@@ -27,4 +27,6 @@ public interface AccountDao {
 	public abstract int setAccountState(@Param("id") Long id,@Param("state")AccountState state); 
 	
 	public abstract List<Account> findAccountrById(long userId);
+	
+	public abstract int modifyAccount(Account account);
 }
