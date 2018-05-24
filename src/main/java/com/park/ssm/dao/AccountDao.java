@@ -1,5 +1,7 @@
 package com.park.ssm.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
@@ -23,4 +25,6 @@ public interface AccountDao {
 	public abstract int insertAccount(Account account);
 	
 	public abstract int setAccountState(@Param("id") Long id,@Param("state")AccountState state); 
+	
+	public abstract List<Account> findAccountrById(long userId);
 }

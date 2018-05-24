@@ -8,7 +8,7 @@
 	select 
 		*
 	from User
-	where id=#{_parameter}
+	where userId=#{_parameter}
 </select>
 
 
