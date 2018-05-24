@@ -18,11 +18,7 @@
 	<br>
 	<h2>错误信息:</h2>
 	<br>
-	<ul>
-	<c:forEach items="${request.getAttributeNames() }" var="key">
-		<li>${key }:${request.getAttribute(key) }</li>
-	</c:forEach>
-	</ul>
+	${error }
 	<a href="">返回</a>
 </body>
 </html>

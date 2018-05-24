@@ -3,16 +3,15 @@ package com.park.ssm.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import com.alibaba.fastjson.JSON;
-import com.park.AutoRollBackTest;
+import com.park.AutoLoginTest;
 import com.park.ssm.dao.ParkingLotDao;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.type.ParkingLotState;
@@ -24,16 +23,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-public class TestParkingLotController extends AutoRollBackTest {
+public class TestParkingLotController extends AutoLoginTest {
 	
 	
 	MultiValueMap<String,String> params=new LinkedMultiValueMap<String, String>();
 	Map<String, String> paramsMap;
 	
-
+	
+	
+	
 	public TestParkingLotController() {	
 		
 	}
+	
+	@Before
+	public void setUpLogin() {
+		innerUser.setName("12345678910");
+		innerUser.setPassword("123456");
+		innerUser.setTypeflag(0);
+	}
+	
 	
 	@Test
 	public void testAdd() throws Exception {
@@ -54,9 +63,12 @@ public class TestParkingLotController extends AutoRollBackTest {
 		}
 		ResultActions mockRequest=mockMvc.perform(
 					post("/parkinglot/add")
-					.accept(MediaType.APPLICATION_FORM_URLENCODED)
+					.session(session)
+					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.accept(MediaType.APPLICATION_JSON_UTF8)
 					.params(params)
 					);
+		
 		MockMvcResultHandlers.print(System.out).handle(mockRequest.andReturn());
 		mockRequest.andExpect(status().isOk());
 		
@@ -84,7 +96,9 @@ public class TestParkingLotController extends AutoRollBackTest {
 		}
 		ResultActions mockRequest=mockMvc.perform(
 					post("/parkinglot/update")
-					.accept(MediaType.APPLICATION_FORM_URLENCODED)
+					.session(session)
+					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.accept(MediaType.APPLICATION_JSON_UTF8)
 					.params(params)
 					);
 		MockMvcResultHandlers.print(System.out).handle(mockRequest.andReturn());
@@ -109,7 +123,9 @@ public class TestParkingLotController extends AutoRollBackTest {
 		}
 		ResultActions mockRequest=mockMvc.perform(
 					post("/parkinglot/delete")
-					.accept(MediaType.APPLICATION_FORM_URLENCODED)
+					.session(session)
+					.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+					.accept(MediaType.APPLICATION_JSON_UTF8)
 					.params(params)
 					);
 		MockMvcResultHandlers.print(System.out).handle(mockRequest.andReturn());

@@ -1,7 +1,12 @@
 package com.park.ssm.controller;
 
+import java.io.IOException;
+import java.util.Map;
+
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -48,5 +53,21 @@ public class DemoController {
 	@RequestMapping("index")
 	public String testIndex(){
 		return "index";
+	}
+	
+	
+	@RequestMapping("throw")
+	public @ResponseBody Map testThrow() {
+		throw new RuntimeException("test throw runtime exception");
+	}
+	
+	@RequestMapping("toError")
+	public String testToErrorHandler(HttpServletRequest request) {
+		return "forward:/error";
+	}
+	
+	@RequestMapping("testForward")
+	public void testForward(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("/error").forward(request, response);
 	}
 }
