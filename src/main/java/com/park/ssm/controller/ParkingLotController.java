@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,10 +32,24 @@ public class ParkingLotController {
 	 * 返回parkingLot 的Admin的主页
 	 * @return
 	 */
+	
 	@RequestMapping("admin")
+	@Permission(value= {},haveControl=false)
 	public String parkingLotIndex() {
 		return "admin";
 	}
+	
+	/**
+	 * 返回parkingLot 的Operator的主页
+	 * @return
+	 */
+	@RequestMapping("operator")
+	@Permission(value= {},haveControl=false)
+	public String operatorIndex() {
+		return "operator";
+	}
+	
+	
 	
 	/**
 	 * 
@@ -42,10 +57,9 @@ public class ParkingLotController {
 	 * @return JSON {”res”: “true”(成功) “false”(失败) “parkingLot”：添加成功之后的parkingLot }
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value="add")
-	//@RequestMapping(value="add",produces= {"application/json; charset=UTF-8"})
-	@ResponseBody
-	public String addParkingLot(ParkingLot parkingLot) {
+	//@RequestMapping(value="add")
+	@RequestMapping(value="add",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public @ResponseBody Map addParkingLot(ParkingLot parkingLot) {
 		boolean res=false;
 		Map result=new HashMap();
 		try {
@@ -58,7 +72,8 @@ public class ParkingLotController {
 		}
 		result.put("res", res);
 		result.put("parkingLot", parkingLot);
-		return JSON.toJSONString(result);
+		//throw new RuntimeException("test exception");
+		return result;
 	}
 	
 	/**返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类
@@ -126,6 +141,7 @@ public class ParkingLotController {
 			e.printStackTrace();
 		}
 		result.put("res", res);
+		System.err.println("\nresult:"+result);
 		return JSON.toJSONString(result);
 	}
 	
