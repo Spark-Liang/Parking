@@ -39,10 +39,6 @@ public class ParkingLotController {
 		return "admin";
 	}
 	
-	@RequestMapping("operator")
-	public String parkingLotOperator() {
-		return "operator";
-	}
 	/**
 	 * 返回parkingLot 的Operator的主页
 	 * @return
