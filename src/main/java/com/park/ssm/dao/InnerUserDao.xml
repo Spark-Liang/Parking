@@ -36,7 +36,7 @@
 	<update id="updateInnerUserByNickname">
 		update InnerUser set
 		nickname=#{nickname},
-		password=#{password},typeflag=#{typeflag}
+		password=#{password},typeflag=#{typeflag},salt=#{salt}
 		<where>
 			id=#{id}
 		</where>

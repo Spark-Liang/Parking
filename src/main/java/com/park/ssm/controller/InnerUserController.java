@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.park.ssm.entity.InnerUser;
+import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.service.InnerUserService;
+import com.park.ssm.service.ParkingLotService;
 import com.park.ssm.util.Encryption;
 
 @Controller
@@ -25,7 +27,10 @@ import com.park.ssm.util.Encryption;
 public class InnerUserController {
 	@Autowired
 	private InnerUserService innerUserService;
-
+	
+	@Autowired
+	private ParkingLotService parkingLotService;
+	
 	@RequestMapping("page")
 	public String loginPage() {
 		return "login";
@@ -55,9 +60,9 @@ public class InnerUserController {
 		//innerUser.setTypeflag(intTypeflag);
 		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+salt);
 		if (null != nickname.trim() && !"".equals(nickname.trim())) {
-			if (null != password && "" != password) {
+			if (null != password && !"".equals(password)) {
 				try {
-					String salt=innerUserService.findSaltByNickname(nickname);
+					String salt=innerUserService.findSaltByNickname(nickname.trim());
 					String passwordAndSalt=en.SHA512(password.trim()+salt);
 					innerUser = innerUserService.findInnerUser(nickname.trim(), passwordAndSalt, intTypeflag);
 				} catch (Exception e) {
@@ -131,10 +136,10 @@ public class InnerUserController {
 				String password=innerUser.getPassword();
 				Encryption en=new Encryption();
 				String salt=en.createSalt();
+				innerUser.setSalt(salt);
 				password+=salt;
 				password=en.SHA512(password);
 				innerUser.setPassword(password);
-				innerUser.setSalt(salt);
 				result = innerUserService.insertInnerUser(innerUser);
 				//System.out.println("++++++++++++++++++++++++++"+innerUser.getSalt());
 				if (result > 0) {
@@ -171,10 +176,10 @@ public class InnerUserController {
 				String password=innerUser.getPassword();
 				Encryption en=new Encryption();
 				String salt=en.createSalt();
+				innerUser.setSalt(salt);
 				password+=salt;
 				password=en.SHA512(password);
 				innerUser.setPassword(password);
-				innerUser.setSalt(salt);
 				result = innerUserService.changeInnerUserByNickname(innerUser);
 				if (result > 0) {
 					map.put("msg", 1);
@@ -252,7 +257,30 @@ public class InnerUserController {
 		String strInnerUser = new JSONObject(map).toString();
 		return strInnerUser;
 	}
-
+	
+	/**
+	 * manager修改停车场价格
+	 * @param parkingLot
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value="changeParkingLotPrice",method=RequestMethod.POST)
+	@ResponseBody
+	public String changeParkingLotPrice(ParkingLot parkingLot,HttpSession session) {
+		InnerUser manager=(InnerUser)session.getAttribute("innerUser");
+		int id=manager.getTypeflag();
+		Map<String,Object> map=new HashMap<>();
+		if(id==1) {
+			try {
+				parkingLotService.updateParkingLot(parkingLot);
+				map.put("msg", 1);
+			}catch(Exception e) {
+				map.put("msg", "error");
+			}
+		}
+		String strChangeParkingLotPrice=new JSONObject(map).toString();
+		return strChangeParkingLotPrice;
+	}
 	/**
 	 * 前端下拉列表查询InnerUser
 	 * 
