@@ -17,6 +17,7 @@
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
 	crossorigin="anonymous">
 <script src="js/jquery-3.3.1.js"></script>
+<script src = "js/check6.js"></script>
 <script
 	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
@@ -53,10 +54,10 @@
 						name="" placeholder="Parking money">
 				</div>
 				<br/>
-				<div class="form-gorup">
+				<!--<div class="form-gorup">
 					<label>*状态:</label> <input type="radio" name="zt" value="可用">可用
 					<input type="radio" name="zt" value="不可用">不可用
-				</div>
+				</div>-->
 				<button class="btn btn-md btn-primary" type="button">提交</button>
 				<a class="add-block-one-close">关闭</a>
 			</form>
@@ -67,19 +68,19 @@
 			<br />
 			<form>
 				<div class="form-gorup">
-					<label>*新员工名字</label> <input type="text" class="form-control"
+					<label>*新员工名字</label> <input type="text" class="form-control newName"
 						name="" placeholder="New name">
 				</div>
 				<div class="form-gorup">
-					<label>*用户名</label> <input type="number" class="form-control"
+					<label>*用户名</label> <input type="number" class="form-control userName"
 						name="" placeholder="username">
 				</div>
 				<div class="form-gorup">
-					<label>*密码</label> <input type="number" class="form-control"
+					<label>*密码</label> <input type="number" class="form-control pwd"
 						name="" placeholder="password">
 				</div>
 				<div class="form-gorup">
-					<label>*确认密码</label> <input type="number" class="form-control"
+					<label>*确认密码</label> <input type="number" class="form-control pwd2"
 						name="" placeholder="check password">
 				</div>
 				<div class="form-gorup">
@@ -122,8 +123,8 @@
 					<p></p>
 					成本：
 					<p></p>
-					状态：
-					<p></p>
+					<!--状态：
+					<p></p>-->
 				</div>
 			</div>
 		</div>
@@ -133,7 +134,7 @@
 			<div class="admin-block addparking">
 				<img src="img/admin-add.svg">
 			</div>
-			<div class="admin-block opperation">
+			<!--<div class="admin-block opperation">
 				<div>
 				    <img id='close-adminblock' src='img/manger-close.svg' onClick='closeadminblock(this,2)'>
 				    <h3>Johnay</h3>
@@ -144,7 +145,7 @@
 						onclick="editoperation(this)">编辑</button>
 				</div>
 				<a>fdsa</a>
-			</div>
+			</div>-->
 		</div>
 
 	</div>
@@ -209,7 +210,7 @@
 				this.parkaddress = option.location;
 				this.parknum = option.totalPositionNum;
 				this.parkmoney = option.cost;
-				this.zt = option.state;
+				//this.zt = option.state;
 				this.parkid = option.id;
 			console.log(this.parkname + this.parkaddress +" f"+ this.parknum);
 		}
@@ -219,16 +220,16 @@
 			if (!object.test(a[0])) {
 				$('.add-parking input:eq(0)').parent().addClass('has-error');num++;
 			} else {
-				$('.add-parking input:eq(0)').parent().removeClass('has-error');num--;
+				$('.add-parking input:eq(0)').parent().removeClass('has-error');
 			}
 			var object = /^[\u4e00-\u9fa5\ \w]{6,25}$/g;
 			if (!object.test(a[1])) {
 				$('.add-parking input:eq(1)').parent().addClass('has-error');num++;
 			} else {
-				$('.add-parking input:eq(1)').parent().removeClass('has-error');num--;
+				$('.add-parking input:eq(1)').parent().removeClass('has-error');
 			}
-			if (a[2] > 10 && a[2] < 10000) {
-				$('.add-parking input:eq(2)').parent().removeClass('has-error');num--;
+			if (a[2] > 100 && a[2] < 10000) {
+				$('.add-parking input:eq(2)').parent().removeClass('has-error');
 			} else {
 				$('.add-parking input:eq(2)').parent().addClass('has-error');num++;
 			}
@@ -236,7 +237,7 @@
 			if (!object.test(a[3])) {
 				$('.add-parking input:eq(3)').parent().addClass('has-error');num++;
 			} else {
-				$('.add-parking input:eq(3)').parent().removeClass('has-error');num--;
+				$('.add-parking input:eq(3)').parent().removeClass('has-error');
 			}
 			if (num>0){
 				return 'error';
@@ -246,14 +247,44 @@
 			
 		}
 
-
+		//检查添加员工的信息是否合规
+		function checkNewWorker(a){
+			var num = 0;
+			if (!a[0]) {
+				$('.add-manger input:eq(0)').parent().addClass('has-error');num++;
+			} else {
+				$('.add-manger input:eq(0)').parent().removeClass('has-error');
+			}
+			var object = new RegExp("^[0-9]+$");
+			if (!object.test(a[1])||a[1].length!=11) {
+				$('.add-manger input:eq(1)').parent().addClass('has-error');num++;
+			} else {
+				$('.add-manger input:eq(1)').parent().removeClass('has-error');
+			}
+			if (a[2]) {
+				$('.add-manger input:eq(2)').parent().removeClass('has-error');
+			} else {
+				$('.add-manger input:eq(2)').parent().addClass('has-error');num++;
+			}
+			
+			if (a[4] != a[2]) {
+				$('.add-manger input:eq(3)').parent().addClass('has-error');num++;
+			} else {
+				$('.add-manger input:eq(3)').parent().removeClass('has-error');
+			}
+			if (num>0){
+				return 'error';
+			}else{
+				return 'ok';
+			}
+		}
 
 		//删除停车场或者员工
 		function closeadminblock(a,num){
 			if(num==1){
 				var con = confirm('是否删除停车场');
 				if(con){
-					alert('yes');
+					//alert('yes');
 					var id = $(a).data("value");
 					console.log(id);
 					$.ajax({
@@ -268,15 +299,15 @@
 							console.log('error');
 						}
 					})
-				}else{
+				}/*else{
 					alert('no')
-				}
+				}*/
 			}else if(num == 2){
 				var con = confirm('是否删除工作人员');
 				if(con){
-					alert('yes');
+					//alert('yes');
 					var nickname = $(a).data("value");
-					alert(nickname);
+					//alert(nickname);
 					$.ajax({
 						url:'inneruser/deleteInnerUser',
 						type:'GET',
@@ -291,9 +322,9 @@
 							alert('error')
 						}
 					})
-				}else{
+				}/*else{
 					alert('no')
-				}
+				}*/
 			}
 		}
 		//添加成功之后把停车场添加到页面中
@@ -303,7 +334,7 @@
 			var parkaddress = this.parkaddress;
 			var parknum = this.parknum;
 			var parkmoney = this.parkmoney;
-			var zt = this.zt;
+			//var zt = this.zt;
 			var parkid = this.parkid;
 			$('.moudle1')
 					.append(
@@ -322,9 +353,6 @@
 										+ "</span></p>"
 										+ "<p>成本：<span>"
 										+ parkmoney
-										+ "</span></p>"
-										+ "<p>状态：<span>"
-										+ zt
 										+ "</span></p>"
 										// + "<button class='btn btn-md btn-block btn-primary' onclick='editadmin(this)'>编辑</button>"
 										+ "</div>" + "</div>"
@@ -464,33 +492,44 @@
 			//     }
 			// });
 		}
-
-		// 点击按钮添加经理 
+		
+		// 点击按钮添加人员 
 		$('.add-manger button').click(function() {
 			var mangerinf = new Array();
 			mangerinf[0] = $('.add-manger input:eq(0)').val();//姓名
 			mangerinf[1] = $('.add-manger input:eq(1)').val();//用户名
-			mangerinf[2] = $('.add-manger input:eq(1)').val();//密码
+			mangerinf[2] = $('.add-manger input:eq(2)').val();//密码
 			mangerinf[3] = $('input[name="position"]:checked').val();//职位
-			alert(mangerinf);
-			$.ajax({
-				url:'inneruser/addInnerUser',
-				type:'POST',
-				dataType:'json',
-				data:{
-					'nickname':mangerinf[1],
-					'name':mangerinf[0],
-					'password':mangerinf[2],
-					'typeflag':mangerinf[3]
-				},success:function(msg){
-					alert('添加成功');
-					console.log(msg);
-					var working = new manger(2,mangerinf);
-					working.mangeradd();
-				},error:function(){
-					alert('ff')
-				}
-			})
+			mangerinf[4] = $('.add-manger input:eq(3)').val();//确认密码
+			//alert(mangerinf);
+			var check1 = checkNewWorker(mangerinf);
+			if (check1 == 'ok'){
+				$.ajax({
+					url:'inneruser/addInnerUser',
+					type:'POST',
+					dataType:'json',
+					data:{
+						'nickname':mangerinf[1],
+						'name':mangerinf[0],
+						'password':mangerinf[2],
+						'typeflag':mangerinf[3]
+					},success:function(msg){
+						if(msg.msg == 1){
+							alert('添加成功');
+							console.log(msg);
+							var working = new manger(2,mangerinf);
+							working.mangeradd();
+						}else{
+							alert("添加失败");
+						}
+					},error:function(){
+						alert("添加失败")
+					}
+				})
+			}else{
+				alert("格式错误，添加失败");
+			}
+			
 			// var man = new manger();
 			// man.mangeradd();
 		})
@@ -516,17 +555,17 @@
 			if(password!=''&&password2!=''){
 				if (password != password2){
 				 $(a).parent().find('input:eq(2)').parent().addClass('has-error');num++;
-				 alert('两次密码不一样！！')
+				 alert('两次密码不一样！！');return;
 				}else{
 					$(a).parent().find('input:eq(2)').parent().removeClass('has-error');num--;
 				}num--;
 			}else{
-				alert('密码不能为空');num++;
+				alert('密码不能为空');return;num++;
 				$(a).parent().find('input:eq(2)').parent().addClass('has-error');
 			}
 			if(working == null){
 				num++;
-				alert('职位不能为空')
+				alert('职位不能为空');return;
 			}else{
 				num--;
 			}
@@ -639,6 +678,7 @@
 		$('.add-block2,.add-block-one-close').click(function() {
 			$('.add-block,.add-block2,.selectall-1').fadeOut();
 		}) 
+		
 	</script>
 </body>
 
