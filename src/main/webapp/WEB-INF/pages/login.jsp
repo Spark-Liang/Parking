@@ -197,7 +197,7 @@ body {
 							var hre = "<%=basePath%>parkinglot/manager?id=" + user.nickname + "&name=" +user.name;
 
 						} else if (select == 2) {
-
+							var hre = "<%=basePath%>parkinglot/operator?id=" + user.nickname + "&name=" +user.name;
 						}
 						$(location).attr('href', hre);
 					}

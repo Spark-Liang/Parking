@@ -22,7 +22,7 @@ import com.park.ssm.service.ParkingLotService;
 
 @RequestMapping("parkinglot")
 @Controller
-@Permission(value={Permission.Type.ADMIN})
+//@Permission(value={Permission.Type.ADMIN})
 public class ParkingLotController {
 	@Autowired
 	private ParkingLotService parkingLotService;
@@ -36,6 +36,10 @@ public class ParkingLotController {
 		return "admin";
 	}
 	
+	@RequestMapping("operator")
+	public String parkingLotOperator() {
+		return "operator";
+	}
 	/**
 	 * 
 	 * @param parkingLot

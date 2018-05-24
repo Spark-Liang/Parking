@@ -8,7 +8,7 @@
 		select nickname,password,typeflag,name from
 		InnerUser
 		<where>
-			nickname=#{nicknadme}
+			nickname=#{nickname}
 		</where>
 	</select>
 
