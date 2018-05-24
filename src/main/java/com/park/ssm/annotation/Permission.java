@@ -16,6 +16,9 @@ import java.lang.annotation.Target;
  * <li>注解在类上是整个类默认允许的访问角色
  * <li>方法级别注解高于类级别注解
  * <ol>
+ * @param haveControl 指是否需要进行权限控制
+ * @param value Type[] 指能够允许的权限角色
+ * 
  * @author ASNPHXJ<br>
  * {@value}用于控制该方法或者整个类的允许访问的角色，比如允许ADMIN就添加 “Permission.ADMIN”
  */
@@ -24,6 +27,7 @@ import java.lang.annotation.Target;
 public @interface Permission {
 
 	Type[] value();
+	boolean haveControl() default true;
 	
 	public static enum Type{
 		ADMIN(0,"ADMIN"),MANAGER(1,"MANAGER"),OPERATOR(2,"OPERATOR");

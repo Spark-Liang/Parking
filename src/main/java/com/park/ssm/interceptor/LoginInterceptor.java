@@ -85,6 +85,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	 * @return
 	 */
 	private boolean checkPermission(Permission permission,InnerUser innerUser) {
+		//判断注解的方法是否需要权限控制
+		if(permission.haveControl()==false) {
+			return true;
+		}
 		int typeflag=innerUser.getTypeflag();
 		for(Permission.Type permissionRole:permission.value()) {
 			if(permissionRole.getInd()==typeflag){
