@@ -9,9 +9,9 @@ import com.park.ssm.entity.type.AccountState;
  */
 public class Account {
 	private Long id;
-	private User user;
-	private ParkingLot parkingLot;
-	private ParkingPosition parkingPosition;
+	private Long userId;
+	private Integer parkingLotId;
+	private Long parkingPositionId;
 	private Long cardId;
 	
 	private AccountState state;
@@ -24,23 +24,23 @@ public class Account {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return userId;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
-	public ParkingLot getParkingLot() {
-		return parkingLot;
+	public Integer getParkingLotId() {
+		return parkingLotId;
 	}
-	public void setParkingLot(ParkingLot parkingLot) {
-		this.parkingLot = parkingLot;
+	public void setParkingLotId(Integer parkingLotId) {
+		this.parkingLotId = parkingLotId;
 	}
-	public ParkingPosition getParkingPosition() {
-		return parkingPosition;
+	public Long getParkingPositionId() {
+		return parkingPositionId;
 	}
-	public void setParkingPosition(ParkingPosition parkingPosition) {
-		this.parkingPosition = parkingPosition;
+	public void setParkingPositionId(Long parkingPositionId) {
+		this.parkingPositionId = parkingPositionId;
 	}
 	public Long getCardId() {
 		return cardId;
@@ -68,5 +68,4 @@ public class Account {
 	}
 	
 	
-
 }

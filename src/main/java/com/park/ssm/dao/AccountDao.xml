@@ -6,16 +6,33 @@
 
 <resultMap type="Account" id="accountRoughResult">
 	<id property="id" column="id"/>
+	<result property="userId" column="userId"/>
+	<result property="parkingLotId" column="parkingLotId"/>
+	<result property="parkingPositionId" column="parkingPositionId"/>
+	<result property="cardId" column="cardId"/>
 	<result property="state" column="state" typeHandler="com.park.ssm.entity.type.AccountStateHandler"/>
-	<result property="billStartDate" column="billStartDate"/>
-	<result property="billEndDate" column="billEndDate"/>
-	<association property="user" column="userId" javaType="User" fetchType="lazy" select="com.park.ssm.dao.UserDao.loadUserById" />
-	<association property="parkingLot" column="parkingLotId" javaType="ParkingLot"  
-		fetchType="lazy" select="com.park.ssm.dao.ParkingLotDao.loadParkingLotById"></association>
-	<association property="parkingPosition" column="parkingPositionId" javaType="ParkingPosition"  
-		fetchType="lazy" select="com.park.ssm.dao.ParkingPositionDao.loadParkingPositionById"></association>
+	<association property="currentBill"  column="currentBillId" fetchType="eager" 
+		select="selectInfoById" autoMapping="true" />
+		
+	<collection property="bills" column="id" fetchType="lazy" 
+		select="selectBillInfoByAccountId" autoMapping="true" />
 </resultMap>
 
+<!-- 加载Bill信息 -->
+<select id="selectBillInfoById" parameterType="Long">
+	select * from Bill
+	where id=#{_parameter}
+</select>
+<select id="selectBillInfoByAccountId" parameterType="Long">
+	select * from Bill
+	where accountId=#{_parameter}
+</select>
+
+
+<!-- dao相关sql -->
+<sql id="sqlField">
+	id,userId,parkingLotId,parkingPositionId,cardId,state,currentBillId
+</sql>
 
 
 <select id="loadAccountById" parameterType="long" resultMap="accountRoughResult">
@@ -24,6 +41,23 @@
 	from Account
 	where id=#{_parameter}
 </select>
+<select id="loadAccountByIdForUpdate" parameterType="long" resultMap="accountRoughResult">
+	select 
+		*
+	from Account
+	where id=#{_parameter}
+	for update
+</select>
 
+<insert id="insertAccount" parameterType="Account">
+insert into Account (id,userId,parkingLotId,parkingPositionId,cardId,state,currentBillId) values
+(#{id},#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},${state.getInd()},#{currentBillId})
+</insert>
+
+<update id="setAccountState">
+update Account
+	set state=${state.getInd()}
+where id=#{id}
+</update>
 
 </mapper>

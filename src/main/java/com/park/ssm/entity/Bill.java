@@ -10,9 +10,9 @@ import java.util.Date;
 public class Bill {
 	private Long id;
 	//信息相关
-	private User user;
-	private ParkingLot parkingLot;
-	private Account account;
+	private Long userId;
+	private Integer parkingLotId;
+	private Long accountId;
 	//计费相关
 	private Double price;
 	private Date billStartDate;
@@ -26,23 +26,23 @@ public class Bill {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return userId;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
-	public ParkingLot getParkingLot() {
-		return parkingLot;
+	public Integer getParkingLotId() {
+		return parkingLotId;
 	}
-	public void setParkingLot(ParkingLot parkingLot) {
-		this.parkingLot = parkingLot;
+	public void setParkingLotId(Integer parkingLotId) {
+		this.parkingLotId = parkingLotId;
 	}
-	public Account getAccount() {
-		return account;
+	public Long getAccountId() {
+		return accountId;
 	}
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
 	}
 	public Double getPrice() {
 		return price;
@@ -68,6 +68,7 @@ public class Bill {
 	public void setPaid(boolean isPaid) {
 		this.isPaid = isPaid;
 	}
+	
 	
 	
 }
