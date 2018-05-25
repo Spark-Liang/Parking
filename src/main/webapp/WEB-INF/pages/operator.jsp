@@ -12,15 +12,9 @@
 <meta charset="UTF-8">
 <title>管理员管理页面</title>
 <link rel="stylesheet" href="css/admin.css">
-<link rel="stylesheet"
-	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
-	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-	crossorigin="anonymous">
+<link rel="stylesheet" href="css/bootstrap.min.css">
 <script src="js/jquery-3.3.1.js"></script>
-<script
-	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
-	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-	crossorigin="anonymous"></script>
+<script src="js/bootstrap.min.js"></script>
 
 </head>
 
@@ -43,7 +37,7 @@
 	margin-bottom: 20px;
 }
 .operator-module1 select{
-	min-width: 200px;
+	min-width: 220px;
 }
 </style>
 <script type="text/javascript">
@@ -85,7 +79,7 @@
 			</form>
 			
 		</div>
-		<div class="operator-module1">
+		<div class="operator-module1" style="display: none;">
 			<h3>用户停卡</h3>
 			<form class="form-inline">
 				<div class="form-group">
@@ -94,7 +88,7 @@
 				</div>
 				<div class="form-group">
 					<label for="exampleInputEmail2">停车场</label>
-					<select class="form-control">
+					<select class="form-control parkaddress">
 						<option value=""></option>
 						<option value="">放大分</option>
 						<option value=""></option>
@@ -108,6 +102,8 @@
 	
 	<script type="text/javascript">
 		$(window).ready(function(){
+			var adminname = window.location.href.split("=")[2];
+			$('#admin-name span').text(adminname);
 			$.ajax({
 				url:'parkinglot/list',
 				type:'GET',
@@ -115,7 +111,14 @@
 				data:{
 
 				},success:function(data){
-					console.log(data);
+					console.log(data.res);
+					var l = data.res.length;
+					for(var i = 0;i<l;i++){
+						$('.parkaddress').apppend(function(){
+							return "<option>"+data.res[i]+"</option>";
+						})
+					}
+					
 				},error:function(){
 
 				}

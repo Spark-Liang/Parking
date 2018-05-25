@@ -38,20 +38,20 @@
 			<br />
 			<form>
 				<div class="form-gorup">
-					<label>*新停车场名称</label> <input type="text" class="form-control"
-						name="" placeholder="New parking name">
+					<label>*新停车场名称</label>
+					<input type="text" class="form-control" name="" placeholder="(4个字以上)不允许空格">
 				</div>
 				<div class="form-gorup">
-					<label>*地址</label> <input type="text" class="form-control" name=""
-						placeholder="Parking address">
+					<label>*地址</label> 
+					<input type="text" class="form-control" name="" placeholder="(输入6个字或以上)不允许空格">
 				</div>
 				<div class="form-gorup">
 					<label>*停车位</label> <input type="number" class="form-control"
-						name="" placeholder="Parking num">
+						name="" placeholder="(输入2位数或以上)">
 				</div>
 				<div class="form-gorup">
-					<label>*成本</label> <input type="number" class="form-control"
-						name="" placeholder="Parking money">
+					<label>*成本 (/万)</label> <input type="number" class="form-control"
+						name="" placeholder="(输入3位数或以上)">
 				</div>
 				<br/>
 				<!--<div class="form-gorup">
@@ -69,24 +69,25 @@
 			<form>
 				<div class="form-gorup">
 					<label>*新员工名字</label> <input type="text" class="form-control newName"
-						name="" placeholder="New name">
+						name="" placeholder="2个字或以上">
 				</div>
 				<div class="form-gorup">
-					<label>*用户名</label> <input type="number" class="form-control userName"
-						name="" placeholder="username">
+					<label>*手机号码</label> <input type="number" class="form-control userName"
+						name="" placeholder="手机号码格式">
 				</div>
 				<div class="form-gorup">
-					<label>*密码</label> <input type="number" class="form-control pwd"
+					<label>*密码</label> <input type="password" class="form-control pwd"
 						name="" placeholder="password">
 				</div>
 				<div class="form-gorup">
-					<label>*确认密码</label> <input type="number" class="form-control pwd2"
+					<label>*确认密码</label> <input type="password" class="form-control pwd2"
 						name="" placeholder="check password">
 				</div>
-				<div class="form-gorup">
+				<div class="form-gorup has-error">
 					<label>*职位</label>
 					<input type="radio" name="position" value="1">经理
 					<input type="radio" name="position" value="2">操作员
+					<p class="text-warning" style="display: none;" id="work-tip">没有选择！！<p>
 				</div>
 				<button class="btn btn-md btn-primary pull-left" type="button">提交</button>
 				<a class="add-block-one-close">关闭</a>
@@ -150,10 +151,12 @@
 
 	</div>
 	<script type="text/javascript">
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+		})
 		//页面刷新加载停车场信息
 		 $(window).ready(function(){
 			 var adminname = window.location.href.split("=")[2];
-			 console.log(adminname);
 			 $('#admin-name span').text(adminname);
 		     getparking();
 		     getworking();
@@ -216,24 +219,24 @@
 		}
 		// 检查添加停车场的信息是否不合规
 		function check(a) {
-			var object = /^[\u4e00-\u9fa5\ \w]{3,15}$/g;var num = 0;
+			var object = /^[\u4e00-\u9fa5\|\w]{3,15}$/g;var num = 0;
 			if (!object.test(a[0])) {
 				$('.add-parking input:eq(0)').parent().addClass('has-error');num++;
 			} else {
 				$('.add-parking input:eq(0)').parent().removeClass('has-error');
 			}
-			var object = /^[\u4e00-\u9fa5\ \w]{6,25}$/g;
+			var object = /^[\u4e00-\u9fa5\|\w]{6,25}$/g;
 			if (!object.test(a[1])) {
 				$('.add-parking input:eq(1)').parent().addClass('has-error');num++;
 			} else {
 				$('.add-parking input:eq(1)').parent().removeClass('has-error');
 			}
-			if (a[2] > 100 && a[2] < 10000) {
+			if (a[2] > 10 && a[2] < 10000) {
 				$('.add-parking input:eq(2)').parent().removeClass('has-error');
 			} else {
 				$('.add-parking input:eq(2)').parent().addClass('has-error');num++;
 			}
-			var object = /^[1-9]{1}[0-9]{4,12}.[0-9]{0,3}$/g;
+			var object = /^[1-9]{1}[0-9]{2,7}.[0-9]{0,3}$/g;
 			if (!object.test(a[3])) {
 				$('.add-parking input:eq(3)').parent().addClass('has-error');num++;
 			} else {
@@ -246,39 +249,6 @@
 			}
 			
 		}
-
-		//检查添加员工的信息是否合规
-		function checkNewWorker(a){
-			var num = 0;
-			if (!a[0]) {
-				$('.add-manger input:eq(0)').parent().addClass('has-error');num++;
-			} else {
-				$('.add-manger input:eq(0)').parent().removeClass('has-error');
-			}
-			var object = new RegExp("^[0-9]+$");
-			if (!object.test(a[1])||a[1].length!=11) {
-				$('.add-manger input:eq(1)').parent().addClass('has-error');num++;
-			} else {
-				$('.add-manger input:eq(1)').parent().removeClass('has-error');
-			}
-			if (a[2]) {
-				$('.add-manger input:eq(2)').parent().removeClass('has-error');
-			} else {
-				$('.add-manger input:eq(2)').parent().addClass('has-error');num++;
-			}
-			
-			if (a[4] != a[2]) {
-				$('.add-manger input:eq(3)').parent().addClass('has-error');num++;
-			} else {
-				$('.add-manger input:eq(3)').parent().removeClass('has-error');
-			}
-			if (num>0){
-				return 'error';
-			}else{
-				return 'ok';
-			}
-		}
-
 		//删除停车场或者员工
 		function closeadminblock(a,num){
 			if(num==1){
@@ -492,7 +462,43 @@
 			//     }
 			// });
 		}
-		
+		//检查添加员工的信息是否合规
+		function checkNewWorker(a){
+			var num = 0;
+			var object = /^[\u4e00-\u9fa5\|\w]{2,10}$/g;
+			if (!object.test(a[0])) {
+				$('.add-manger input:eq(0)').parent().addClass('has-error');num++;
+			} else {
+				$('.add-manger input:eq(0)').parent().removeClass('has-error');
+			}
+			var object = new RegExp("^1{1}[3-9]{2}[0-9]{8}$");
+			if (!object.test(a[1])||a[1].length!=11) {
+				$('.add-manger input:eq(1)').parent().addClass('has-error');num++;
+			} else {
+				$('.add-manger input:eq(1)').parent().removeClass('has-error');
+			}
+			if (a[2]) {
+				$('.add-manger input:eq(2)').parent().removeClass('has-error');
+			} else {
+				$('.add-manger input:eq(2)').parent().addClass('has-error');num++;
+			}
+			if(a[3]==null){
+				$('#work-tip').parent().find('p').fadeIn();num++;
+			}else{
+				alert('fff')
+				$('#work-tip').parent().find('p').fadeOut();
+			}
+			if (a[4] != a[2]) {
+				$('.add-manger input:eq(3)').parent().addClass('has-error');num++;
+			} else {
+				$('.add-manger input:eq(3)').parent().removeClass('has-error');
+			}
+			if (num>0){
+				return 'error';
+			}else{
+				return 'ok';
+			}
+		}
 		// 点击按钮添加人员 
 		$('.add-manger button').click(function() {
 			var mangerinf = new Array();
@@ -501,6 +507,7 @@
 			mangerinf[2] = $('.add-manger input:eq(2)').val();//密码
 			mangerinf[3] = $('input[name="position"]:checked').val();//职位
 			mangerinf[4] = $('.add-manger input:eq(3)').val();//确认密码
+			alert(mangerinf[3]);
 			//alert(mangerinf);
 			var check1 = checkNewWorker(mangerinf);
 			if (check1 == 'ok'){

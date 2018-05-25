@@ -100,11 +100,7 @@ body {
 					<label>密码</label> <input type="password" class="form-control pass"
 						name="password" placeholder="password">
 				</div>
-				<br /> <label>角色选择</label> <select name="typeflag">
-					<option value="0">管理者</option>
-					<option value="1">经理</option>
-					<option value="2">操作者</option>
-				</select>
+				<br />
 			</form>
 			
 			
@@ -189,14 +185,14 @@ body {
 						$('.pass').val('');
 						return;
 					} else {
-						
-						if (select == 0) {
+						console.log(user)
+						if (user.typeflag == 0) {
 							var hre = "<%=basePath%>parkinglot/admin?id=" + user.nickname + "&name=" +user.name;
 
-						} else if (select == 1) {
+						} else if (user.typeflag == 1) {
 							var hre = "<%=basePath%>parkinglot/manager?id=" + user.nickname + "&name=" +user.name;
 
-						} else if (select == 2) {
+						} else if (user.typeflag == 2) {
 							var hre = "<%=basePath%>parkinglot/operator?id=" + user.nickname + "&name=" +user.name;
 						}
 						$(location).attr('href', hre);
