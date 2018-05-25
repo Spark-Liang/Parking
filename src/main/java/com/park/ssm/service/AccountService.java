@@ -11,7 +11,9 @@ public interface AccountService {
 	
 	public User findUserByuserId(long userId);//根据用户ID获取用户基础信息
 	
-	public int addNewCard(Account account);
+	public int addNewCard(Account account);//为客户新建停车卡
 	
-	public int modifyAccount(Account account);
+	public int modifyAccount(Account account);//修改客户的帐户信息
+	
+	public int isNotExistCard(long cardId);//是否已存在该停车卡
 }

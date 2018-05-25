@@ -55,6 +55,12 @@
 	from Account
 	where userId=#{_parameter}
 </select>
+<select id="isNotExistCard" parameterType="long" resultMap="accountRoughResult">
+	select 
+		*
+	from Account
+	where cardId=#{_paramter}
+</select>
 
 
 <insert id="insertAccount" parameterType="Account">

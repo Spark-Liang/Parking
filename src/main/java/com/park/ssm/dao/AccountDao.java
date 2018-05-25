@@ -29,4 +29,6 @@ public interface AccountDao {
 	public abstract List<Account> findAccountrById(long userId);
 	
 	public abstract int modifyAccount(Account account);
+	
+	public abstract int isNotExistCard(long cardId);
 }
