@@ -17,7 +17,6 @@
 	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
 	crossorigin="anonymous">
 <script src="js/jquery-3.3.1.js"></script>
-<script src = "js/check6.js"></script>
 <script
 	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
@@ -170,15 +169,18 @@
 
 		         },success:function(responce){
 		        	 var res=responce.res;
+		        	 if(responce.error){
+
+		        	 }else{
 		        	 console.log(res);
 		        	 var length = res.length;
 		        	 for (var i = 0;i<length;i++){
 			           	var tmpParking=new parking(res[i]);
 			           	tmpParking.parkingadd();
-		        		
+		        	 }
 		        	 }
 		         },error:function(){
-
+		         	alert('获取失败')
 		         }
 		     });
 		 }
@@ -236,7 +238,7 @@
 			} else {
 				$('.add-parking input:eq(2)').parent().addClass('has-error');num++;
 			}
-			var object = /^[1-9]{1}[0-9]{2,7}.[0-9]{0,3}$/g;
+			var object = /^[1-9]{1}[0-9]{1,7}.[0-9]{0,3}$/g;
 			if (!object.test(a[3])) {
 				$('.add-parking input:eq(3)').parent().addClass('has-error');num++;
 			} else {
@@ -337,7 +339,6 @@
 			parkinginf[3] = $('.add-parking input:eq(3)').val();//成本
 			// parkinginf[4] = $('input[name="zt"]:checked').val();//
 			var check1 = check(parkinginf);
-			alert(check1);
 			if(check1 == 'ok'){
 				$.ajax({
 				url:'parkinglot/add',
@@ -353,7 +354,7 @@
 					var data = res.parkingLot;
 					var tmpParking=new parking(data);
 		           	tmpParking.parkingadd();
-					
+					alert('停车场添加成功');
 				},error:function(){
 
 				}
@@ -429,7 +430,7 @@
 										+ "<img id='close-adminblock' src='img/manger-close.svg' onClick='closeadminblock(this,2)' data-value='"+username+ "' > "
 										+ "<h3>"+name+ "</h3>"
 										+ "<p>职位：<span>"+working+"</span></p>"
-										+ "<p>用户名：<span>"+username+ "</span></p>"	
+										+ "<p>手机号：<span>"+username+ "</span></p>"	
 										+ "<button class='btn btn-md btn-block btn-primary' onclick='editmanger(this)' data-idd='"+ idd +"'>编辑</button>"
 										+ "</div>" + "</div>"
 							})
@@ -554,18 +555,19 @@
 			var working = $(a).parent().find('input[name="position"]:checked').val();
 			var idd = $(a).data("idd");
 			var num = 0;
-			if (username.length!=11){
+			var object = /^1{1}[3-9]{2}[0-9]{8}$/g;
+			if (!object.test(username)){
 				 $(a).parent().find('input:eq(0)').parent().addClass('has-error');num++;
 			}else{
-				$(a).parent().find('input:eq(0)').parent().removeClass('has-error');num--;
+				$(a).parent().find('input:eq(0)').parent().removeClass('has-error');
 			}
 			if(password!=''&&password2!=''){
 				if (password != password2){
 				 $(a).parent().find('input:eq(2)').parent().addClass('has-error');num++;
 				 alert('两次密码不一样！！');return;
 				}else{
-					$(a).parent().find('input:eq(2)').parent().removeClass('has-error');num--;
-				}num--;
+					$(a).parent().find('input:eq(2)').parent().removeClass('has-error');
+				}
 			}else{
 				alert('密码不能为空');return;num++;
 				$(a).parent().find('input:eq(2)').parent().addClass('has-error');
@@ -574,11 +576,11 @@
 				num++;
 				alert('职位不能为空');return;
 			}else{
-				num--;
+				
 			}
 			
-			if(num>=0){
-				alert("error");
+			if(num>0){
+				alert("格式错误，添加失败");
 			}else{
 				$.ajax({
 				url:'inneruser/changeInnerUser',
@@ -591,7 +593,9 @@
 					'typeflag':working,
 				},success:function(msg){
 					console.log(msg);
-					alert('ok');
+					alert('修改成功');
+					$(a).parent().remove();
+					$(a).parent().parent().find("span:eq(1)").text(username);
 				},error:function(){
 
 				}
@@ -613,8 +617,8 @@
 								return "<div class='admin-block-edit'>"
 										+ "<h5>员工编辑</h4>"
 										+ "<div class='form-gourp'>"
-										+ "<label>用户名</label>"
-										+ "<input type='text' class='form-control input-sm' name='' placeholder='' value='"+username+"'>"
+										+ "<label>手机号</label>"
+										+ "<input type='text' class='form-control input-sm' name='' placeholder='手机号码格式' value='"+username+"'>"
 										+ "</div>"
 										+ "<div class='form-gourp'>"
 										+ "<label>新密码</label>"
