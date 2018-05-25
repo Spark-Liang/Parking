@@ -1,11 +1,18 @@
 package com.park.ssm.entity;
 
+import java.io.Serializable;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.park.ssm.annotation.UnEditableField;
 import com.park.ssm.entity.type.ParkingLotState;
 
-public class ParkingLot {
+@JsonIgnoreProperties(value= {"handler"},ignoreUnknown = true)
+public class ParkingLot implements Serializable{
+	/**
+	 */
+	private static final long serialVersionUID = 4364826856691783045L;
+	
 	@UnEditableField
 	private Integer id;
 	//业务相关

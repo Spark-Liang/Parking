@@ -1,13 +1,22 @@
 package com.park.ssm.entity;
 
+import java.io.Serializable;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.park.ssm.entity.type.AccountState;
 /**
  * 账户类，每个账户都会对应一个账户类
  * @author LZH
  * 
  */
-public class Account {
+@JsonIgnoreProperties(value= {"handler"},ignoreUnknown = true)
+public class Account implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2549308258379790138L;
+
 	private Long id;
 	private Long userId;
 	private Integer parkingLotId;

@@ -9,13 +9,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.annotation.Permission.Type;
 import com.park.ssm.dao.ParkingLotDao.CONDITION;
@@ -24,7 +22,7 @@ import com.park.ssm.service.ParkingLotService;
 
 @RequestMapping("parkinglot")
 @Controller
-//@Permission(value={Permission.Type.ADMIN})
+@Permission(value={Permission.Type.ADMIN})
 public class ParkingLotController {
 	@Autowired
 	private ParkingLotService parkingLotService;
@@ -50,7 +48,15 @@ public class ParkingLotController {
 		return "operator";
 	}
 	
-	
+	/**
+	 * 返回parkingLot 的Operator的主页
+	 * @return
+	 */
+	@RequestMapping("manager")
+	@Permission(value= {},haveControl=false)
+	public String managerIndex() {
+		return "manager";
+	}
 	
 	/**
 	 * 
@@ -59,7 +65,7 @@ public class ParkingLotController {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value="add")
-	public @ResponseBody String addParkingLot(ParkingLot parkingLot) {
+	public @ResponseBody Map addParkingLot(ParkingLot parkingLot) {
 		boolean res=false;
 		Map result=new HashMap();
 		try {
@@ -72,9 +78,7 @@ public class ParkingLotController {
 		}
 		result.put("res", res);
 		result.put("parkingLot", parkingLot);
-		//throw new RuntimeException("test exception");
-		//return result;
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 	/**返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类
@@ -94,7 +98,7 @@ public class ParkingLotController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="list")
 	@Permission(value= {Type.ADMIN,Type.MANAGER,Type.OPERATOR})
-	public @ResponseBody String listParkingLot(HttpServletRequest request) {
+	public @ResponseBody Map listParkingLot(HttpServletRequest request) {
 		Map<String, String[]> params=request.getParameterMap();
 		Map<String, Object> conditions=new HashMap<>();
 		//提取参数
@@ -114,8 +118,7 @@ public class ParkingLotController {
 		Map result=new HashMap();
 		result.put("res", res);
 		result.put("totalRowNum", parkingLotService.countParkingLot(conditions));
-		//return result;
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 	
@@ -127,7 +130,7 @@ public class ParkingLotController {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="update")
 	@Permission(value= {Permission.Type.ADMIN,Permission.Type.MANAGER})
-	public @ResponseBody String updateParkingLot(ParkingLot parkingLot) {
+	public @ResponseBody Map updateParkingLot(ParkingLot parkingLot) {
 		Map result=new HashMap();
 		boolean res=false;
 		
@@ -142,8 +145,7 @@ public class ParkingLotController {
 		}
 		result.put("res", res);
 		System.err.println("\nresult:"+result);
-		//return result;
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 	/**删除停车场
@@ -155,7 +157,7 @@ public class ParkingLotController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="delete")
-	public @ResponseBody String deleteParkingLot(@RequestParam("id") Integer[] ids) {
+	public @ResponseBody Map deleteParkingLot(@RequestParam("id") Integer[] ids) {
 		Map result=new HashMap();
 		boolean res=false;
 		if(ids.length==1) {
@@ -182,8 +184,7 @@ public class ParkingLotController {
 			}
 		}
 		result.put("res", res);
-		//return result;
-		return JSON.toJSONString(result);
+		return result;
 		
 	}
 	
@@ -194,11 +195,10 @@ public class ParkingLotController {
 	 */
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="existname")
-	public @ResponseBody String isExistName(@RequestParam("name")String name) {
+	public @ResponseBody Map isExistName(@RequestParam("name")String name) {
 		Map<String, Object> result=new HashMap<>();
 		result.put("res", parkingLotService.isExistingName(name));
-		//return result;
-		return JSON.toJSONString(result);
+		return result;
 	}
 	
 }

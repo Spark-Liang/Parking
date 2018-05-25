@@ -1,8 +1,16 @@
 package com.park.ssm.entity;
 
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.park.ssm.entity.type.ParkingPositionState;
 
-public class ParkingPosition {
+@JsonIgnoreProperties(value= {"handler"},ignoreUnknown = true)
+public class ParkingPosition implements Serializable {
+	/**
+	 */
+	private static final long serialVersionUID = -7269728599839139227L;
+	
 	private Long id;
 	private Long parkingLotId;
 	private Long accountId;

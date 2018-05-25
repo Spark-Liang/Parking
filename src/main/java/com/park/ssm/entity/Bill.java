@@ -1,13 +1,22 @@
 package com.park.ssm.entity;
 
+import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * 账单类，包含系统中所有账单的信息，即包含历史账单和当前账单
  * @author LZH
  *
  */
-public class Bill {
+@JsonIgnoreProperties(value= {"handler"},ignoreUnknown = true)
+public class Bill implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3688859156173625270L;
+	
 	private Long id;
 	//信息相关
 	private Long userId;

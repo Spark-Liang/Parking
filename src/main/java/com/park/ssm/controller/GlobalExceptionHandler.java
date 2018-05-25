@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,11 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class GlobalExceptionHandler {
+	private Logger logger=Logger.getLogger(this.getClass());
 	
 	@SuppressWarnings({ "rawtypes", "unchecked", "serial" })
 	@RequestMapping(value="error",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public @ResponseBody Map handleExceptionToJSON(HttpServletRequest request) {
 		Exception e=(Exception) request.getAttribute("error");
+		logger.info("method:handleExceptionToJSON");
+		logger.info(e);
 		return new HashMap() {
 			{
 				put("error", e.getMessage());
@@ -30,7 +34,10 @@ public class GlobalExceptionHandler {
 	@RequestMapping(value="error")
 	public String handleException(HttpServletRequest request,ModelMap modelMap) {
 		Exception e=(Exception) request.getAttribute("error");
-		modelMap.addAttribute("error", "message:"+e.getMessage()+";\nLocalizedMessage:"+e.getLocalizedMessage());
+		logger.info("method:handleException");
+		logger.info(e);
+		modelMap.addAttribute("error", "message:"+e.getMessage());
 		return "errorInfoPage";
 	}
+	
 }
