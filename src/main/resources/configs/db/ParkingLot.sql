@@ -33,7 +33,7 @@ create table Account
 	,cardId bigint
 	
 	,state tinyint default 0
-	,currentBill bigint
+	,currentBillId bigint
 	
 )engine=innodb auto_increment=1 charset='utf8';
 
