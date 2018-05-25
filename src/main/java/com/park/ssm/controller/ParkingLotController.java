@@ -50,6 +50,15 @@ public class ParkingLotController {
 		return "operator";
 	}
 	
+	/**
+	 * 返回parkingLot 的manager的主页
+	 * @return
+	 */
+	@RequestMapping("manager")
+	@Permission(value= {},haveControl=false)
+	public String managerIndex() {
+		return "manager";
+	}
 	
 	
 	/**
