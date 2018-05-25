@@ -266,7 +266,12 @@
 						data:{
 							'id':id
 						},success:function(data){
-					     $(a).parent().parent().remove();
+							if(data.error){
+								alert('停车场存在帐户以及车辆')
+							}else{
+								$(a).parent().parent().remove();
+							}
+					     
 						},error:function(){
 							console.log('error');
 						}
