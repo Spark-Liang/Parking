@@ -569,7 +569,7 @@
 			}else{
 				$(a).parent().find('input:eq(0)').parent().removeClass('has-error');
 			}
-			var object = /^\w{1,}$/g
+			var object = /^\w{6,}$/g
 			if(password!=''&&password2!=''&&object.test(password)){
 				if (password != password2){
 				 $(a).parent().find('input:eq(2)').parent().addClass('has-error');num++;
