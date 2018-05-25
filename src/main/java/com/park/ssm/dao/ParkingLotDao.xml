@@ -16,7 +16,7 @@
 	<result property="location" column="location" />
 	<result property="cost" column="cost" />
 	
-	<collection property="parkingPositions" column="id" javaType="java.util.HashSet" ofType="ParkingPosition" 
+	<collection property="parkingPositions" column="id" javaType="java.util.ArrayList" ofType="ParkingPosition" 
 		fetchType="lazy" select="loadParkingPosition">
 	</collection>
 </resultMap>

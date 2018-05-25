@@ -1,6 +1,5 @@
 package com.park.ssm.service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +22,10 @@ public interface ParkingLotService {
 	 * 保存ParkingLot对象到数据库
 	 * @return 
 	 * true 保存成功  false 保存失败
+	 * @throws RuntimeException(错误信息)
+	 * <li>数据库内部添加停车场事务异常，停车位更新失败
 	 * */
-	public abstract void saveParkingLot(ParkingLot parkingLot) throws SQLException;
+	public abstract void saveParkingLot(ParkingLot parkingLot);
 	
 	/**
 	 * 查询该停车场名称是否存在
@@ -52,18 +53,25 @@ public interface ParkingLotService {
 	 * @return
 	 */
 	public abstract int countParkingLot(Map<String, Object> conditions);
+	
 	/**
 	 * 更新停车场信息，之可以更新cost，price，location这几个参数
 	 * @param parkingLot 更新的停车场
+	 * @throws RuntimeException
+	 * <li>数据库内部更新失败
 	 * */
-	public abstract void updateParkingLot(ParkingLot parkingLot) throws SQLException;
+	public abstract void updateParkingLot(ParkingLot parkingLot);
 	
 	/**
 	 * 把ParkingLot在数据库中标记为INACTIVE
 	 * @return 
 	 * true 修改成功  false 修改失败
+	 * @throws RuntimeException
+	 * <li>删除一个不存在的停车场
+	 * <li>停车场中还存在正在使用的停车卡，不能进行删除
+	 * <li>内部数据库错误，删除事务不完整，删除失败
 	 * */
-	public abstract void deleteParkingLot(Integer lotId) throws SQLException;
+	public abstract void deleteParkingLot(Integer lotId) ;
 	
 	/**
 	 * 把List中的ParkingLot在数据库中标记为INACTIVE

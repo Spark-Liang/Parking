@@ -1,10 +1,10 @@
 package com.park.ssm.service.impl;
 
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,6 +14,7 @@ import com.park.ssm.dao.ParkingLotDao;
 import com.park.ssm.dao.ParkingLotDao.CONDITION;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.entity.ParkingLot;
+import com.park.ssm.entity.ParkingPosition;
 import com.park.ssm.entity.type.ParkingLotState;
 import com.park.ssm.service.ParkingLotService;
 
@@ -25,9 +26,17 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 	@Autowired
 	private ParkingPositionDao parkingPositionDao;
 	
+	private Logger logger=Logger.getLogger(this.getClass());
+	
+	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRED)
-	public void saveParkingLot(ParkingLot parkingLot) throws SQLException{
+	public void saveParkingLot(ParkingLot parkingLot){
+		ParkingLot parkingLotInDB=parkingLotDao.loadParkingLotByName(parkingLot.getName());
+		if(parkingLotInDB!=null) {
+			throw new RuntimeException("数据库内部已经存在同名的停车场");
+		}
+		
 		if(1==parkingLotDao.insertParkingLot(parkingLot)) {
 			Integer totalPositionNum=parkingLot.getTotalPositionNum();
 			Integer id=parkingLot.getId();
@@ -39,7 +48,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 				return;
 			}
 		}
-		throw new SQLException("error in saveParkingLot.");
+		throw new RuntimeException("数据库内部添加停车场事务异常，停车位更新失败");
 	}
 	
 	@Override
@@ -64,12 +73,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 			pageSize=20;
 		}
 		List<ParkingLot> resList=null;
-		try {
-			resList=parkingLotDao.listParkingLot(conditions, pageNum, pageSize);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		resList=parkingLotDao.listParkingLot(conditions, pageNum, pageSize);
 		return resList;
 	}
 	
@@ -81,10 +85,10 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
 	@Override
 	@Transactional
-	public void updateParkingLot(ParkingLot parkingLot) throws SQLException {
+	public void updateParkingLot(ParkingLot parkingLot){
 		// TODO Auto-generated method stub
 		if(1!=parkingLotDao.updateParkingLot(parkingLot)) {
-			throw new SQLException("update ParkingLot failed.ParkingLot :"+parkingLot);
+			throw new RuntimeException("数据库内部更新失败");
 		}
 	}
 
@@ -92,36 +96,47 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 	
 	@Override
 	@Transactional
-	public void deleteParkingLot(Integer lotId) throws SQLException{
-		
+	public void deleteParkingLot(Integer lotId){
 		ParkingLot parkingLot=parkingLotDao.loadParkingLotByIdForUpdate(lotId);
-
+		if(parkingLot.getState().equals(ParkingLotState.INACTIVE)) {
+			throw new RuntimeException("删除一个不存在的停车场");
+		}
+		List<ParkingPosition> parkingPositions=parkingLot.getParkingPositions();
+		for(ParkingPosition parkingPosition:parkingPositions) {
+			if(parkingPosition.getAccountId()!=null) {
+				throw new RuntimeException("停车场中还存在正在使用的停车卡，不能进行删除");
+			}
+		}
+		
 		int totalPosition=parkingLot.getTotalPositionNum();
 		if(1==parkingLotDao.deleteParkingLot(parkingLot.getId())) {
 			if(totalPosition==parkingPositionDao.deleteParkingPositionByLotId(parkingLot.getId())) {
 				return;
 			}
+		}else {
+			//抛出异常并自动回滚
+			throw new RuntimeException("内部数据库错误，删除事务不完整，删除失败");
 		}
-		//抛出异常并自动回滚
-		throw new SQLException("error in deleteParkingLot. Lotid is "+lotId);
+		
 	}
 
 	@Override
+	@Transactional
 	public List<Integer> listDeleteParkingLot(List<Integer> ids) {
 		List<Integer> resList=new LinkedList<>();
 		for(Integer id:ids) {
-			try {
-				deleteParkingLot(id);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				resList.add(id);
-				e.printStackTrace();
-			}
+			deleteParkingLot(id);
 		}
 		return resList;
 	}
 
 
+	@SuppressWarnings("unused")
+	private void logException(Object message) {
+		if(logger!=null) {
+			logger.info(message);
+		}
+	}
 
 
 }

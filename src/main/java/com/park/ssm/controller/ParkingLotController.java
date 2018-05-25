@@ -1,6 +1,5 @@
 package com.park.ssm.controller;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,14 +67,8 @@ public class ParkingLotController {
 	public @ResponseBody Map addParkingLot(ParkingLot parkingLot) {
 		boolean res=false;
 		Map result=new HashMap();
-		try {
-			parkingLotService.saveParkingLot(parkingLot);
-			res=true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			result.put("error", e.toString());
-			e.printStackTrace();
-		}
+		parkingLotService.saveParkingLot(parkingLot);
+		res=true;
 		result.put("res", res);
 		result.put("parkingLot", parkingLot);
 		return result;
@@ -134,17 +127,10 @@ public class ParkingLotController {
 		Map result=new HashMap();
 		boolean res=false;
 		
-		try {
-			parkingLotService.updateParkingLot(parkingLot);
-			res=true;
-			result.put("parkingLot", parkingLot);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			result.put("error", e.toString());
-			e.printStackTrace();
-		}
+		parkingLotService.updateParkingLot(parkingLot);
+		res=true;
+		result.put("parkingLot", parkingLot);
 		result.put("res", res);
-		System.err.println("\nresult:"+result);
 		return result;
 	}
 	
@@ -153,7 +139,7 @@ public class ParkingLotController {
 	 * 提交多个id是，所有删除成功返回null，否则返回失败的id
 	 * 
 	 * @param ids
-	 * @return String JSON ｛"res":结果 ,"fail":多个删除的时候失败的id列表｝
+	 * @return String JSON ｛"res":结果 ｝
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="delete")
@@ -161,15 +147,8 @@ public class ParkingLotController {
 		Map result=new HashMap();
 		boolean res=false;
 		if(ids.length==1) {
-			//单个删除
-			try {
-				parkingLotService.deleteParkingLot(ids[0]);
-				res=true;
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				result.put("error", e.toString());
-				e.printStackTrace();
-			}
+			parkingLotService.deleteParkingLot(ids[0]);
+			res=true;
 		}else {
 			//批量删除
 			List<Integer> list=new ArrayList<>(ids.length);
@@ -177,15 +156,12 @@ public class ParkingLotController {
 				list.add(ids[i]);
 			}
 			List<Integer> resultList=parkingLotService.listDeleteParkingLot(list);
-			if(resultList!=null && !resultList.isEmpty()) {
-				result.put("fail", resultList);
-			}else {
+			if(resultList==null || resultList.isEmpty()) {
 				res=true;
 			}
 		}
 		result.put("res", res);
 		return result;
-		
 	}
 	
 	/**

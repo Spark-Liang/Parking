@@ -33,10 +33,62 @@
 </select>
 
 
+<!-- 复杂查询条件 -->
+<sql id="condition" >
+	<where>
+		<!-- price部分 -->
+		<if test="map.id != null">
+			and id=#{map.id}
+		</if>
+		<if test="map.parkingLotId != null">
+			and id=#{map.parkingLotId}
+		</if>
+		<if test="map.accountId != null">
+			and id=#{map.accountId}
+		</if>
+		<!-- state部分 -->
+		<if test="map.states != null">
+			and state in
+			<foreach collection="map.states" open="(" close=")" separator="," item="state">
+				${state.getInd()}
+			</foreach>
+		</if>
+	</where>
+</sql>
+<!-- 返回的parkingLot中的所有对象的所有的bean属性都不进行加载，只是生成代理类 -->
+<select id="listParkingPosition"  resultMap="parkingPositionRoughResult">
+	select 
+		*
+	from ParkingPosition
+	<if test="map != null and !map.isEmpty()">
+		<include refid="condition"/>
+	</if>
+	<if test="pageNum != null and pageSize != null">
+		limit ${(pageNum-1)*pageSize},#{pageSize}
+	</if>
+</select>
+
+
 <insert id="insertParkingPosition" parameterType="List" >
 insert into ParkingPosition(parkingLotId) values
 <foreach collection="list" item="parkingLotId" separator=",">(#{parkingLotId})</foreach>
 </insert>
+
+<update id="updateParkingPosition" parameterType="int">
+update ParkingPosition
+	<set>
+		<if test="parkingposition.parkingLotId != null">
+			set parkingLotId=#{parkingposition.parkingLotId},
+		</if>
+		<if test="parkingposition.accountId != null">
+			set accountId=#{parkingposition.accountId},
+		</if>
+		<if test="parkingposition.state != null">
+			set state=${parkingposition.state.getInd()},
+		</if>
+	</set>
+where id=#{id}
+</update>
 
 
  

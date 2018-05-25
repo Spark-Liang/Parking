@@ -1,8 +1,7 @@
 package com.park.ssm.entity;
 
 import java.io.Serializable;
-import java.util.Set;
-
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.park.ssm.annotation.UnEditableField;
 import com.park.ssm.entity.type.ParkingLotState;
@@ -25,7 +24,7 @@ public class ParkingLot implements Serializable{
 	private String name;
 	private String location;
 	private Double cost;
-	private Set<ParkingPosition> parkingPositions;
+	private List<ParkingPosition> parkingPositions;
 	
 	public ParkingLot() {}
 	public ParkingLot(Integer id,int totalPositionNum) {
@@ -80,10 +79,10 @@ public class ParkingLot implements Serializable{
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public Set<ParkingPosition> getParkingPositions() {
+	public List<ParkingPosition> getParkingPositions() {
 		return parkingPositions;
 	}
-	public void setParkingPositions(Set<ParkingPosition> parkingPositions) {
+	public void setParkingPositions(List<ParkingPosition> parkingPositions) {
 		this.parkingPositions = parkingPositions;
 	}
 	
