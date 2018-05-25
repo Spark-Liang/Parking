@@ -530,7 +530,7 @@
 							var working = new manger(2,mangerinf);
 							working.mangeradd();
 						}else{
-							alert("添加失败");
+							alert("手机号码已经存在");
 						}
 					},error:function(){
 						alert("添加失败")
@@ -560,6 +560,7 @@
 			var object = /^1{1}[3-9]{2}[0-9]{8}$/g;
 			if (!object.test(username)){
 				 $(a).parent().find('input:eq(0)').parent().addClass('has-error');num++;
+				 alert('手机号码格式有问题')
 			}else{
 				$(a).parent().find('input:eq(0)').parent().removeClass('has-error');
 			}
@@ -583,7 +584,7 @@
 			}
 			
 			if(num>0){
-				alert("格式错误，添加失败");
+				
 			}else{
 				$.ajax({
 				url:'inneruser/changeInnerUser',
@@ -595,12 +596,17 @@
 					'password':password,
 					'typeflag':working,
 				},success:function(msg){
-					console.log(msg);
+					if(msg.msg==1){
+						console.log(msg);
 					alert('修改成功');
 					$('.manger').remove();
 					getworking();
 					// $(a).parent().remove();
 					// $(a).parent().parent().find('h3').hide();
+					}
+					else{
+						alert('手机号已经存在')
+					}
 				},error:function(){
 
 				}
