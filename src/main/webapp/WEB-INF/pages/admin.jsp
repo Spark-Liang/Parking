@@ -221,7 +221,7 @@
 		}
 		// 检查添加停车场的信息是否不合规
 		function check(a) {
-			var object = /^[\u4e00-\u9fa5\|\w]{3,15}$/g;var num = 0;
+			var object = /^[\u4e00-\u9fa5\|\w]{4,15}$/g;var num = 0;
 			if (!object.test(a[0])) {
 				$('.add-parking input:eq(0)').parent().addClass('has-error');num++;
 			} else {
@@ -350,11 +350,15 @@
 					'totalPositionNum':parkinginf[2],
 					'cost':parkinginf[3],
 				},success:function(res){
-					console.log(res);
+					if(res.error){
+						alert('停车场名称重复')
+					}else{
+						console.log(res);
 					var data = res.parkingLot;
 					var tmpParking=new parking(data);
 		           	tmpParking.parkingadd();
 					alert('停车场添加成功');
+					}
 				},error:function(){
 
 				}
@@ -430,7 +434,7 @@
 										+ "<img id='close-adminblock' src='img/manger-close.svg' onClick='closeadminblock(this,2)' data-value='"+username+ "' > "
 										+ "<h3>"+name+ "</h3>"
 										+ "<p>职位：<span>"+working+"</span></p>"
-										+ "<p>手机号：<span>"+username+ "</span></p>"	
+										+ "<p>手机号：<span id='work-iphone'>"+username+ "</span></p>"	
 										+ "<button class='btn btn-md btn-block btn-primary' onclick='editmanger(this)' data-idd='"+ idd +"'>编辑</button>"
 										+ "</div>" + "</div>"
 							})
@@ -486,10 +490,10 @@
 			if(a[3]==null){
 				$('#work-tip').parent().find('p').fadeIn();num++;
 			}else{
-				alert('fff')
 				$('#work-tip').parent().find('p').fadeOut();
 			}
-			if (a[4] != a[2]) {
+			var object = /\w{1,}/g;
+			if (a[4] != a[2]||!object.test(a[2])) {
 				$('.add-manger input:eq(3)').parent().addClass('has-error');num++;
 			} else {
 				$('.add-manger input:eq(3)').parent().removeClass('has-error');
@@ -508,8 +512,6 @@
 			mangerinf[2] = $('.add-manger input:eq(2)').val();//密码
 			mangerinf[3] = $('input[name="position"]:checked').val();//职位
 			mangerinf[4] = $('.add-manger input:eq(3)').val();//确认密码
-			alert(mangerinf[3]);
-			//alert(mangerinf);
 			var check1 = checkNewWorker(mangerinf);
 			if (check1 == 'ok'){
 				$.ajax({
@@ -522,9 +524,9 @@
 						'password':mangerinf[2],
 						'typeflag':mangerinf[3]
 					},success:function(msg){
+						console.log(msg);
 						if(msg.msg == 1){
 							alert('添加成功');
-							console.log(msg);
 							var working = new manger(2,mangerinf);
 							working.mangeradd();
 						}else{
@@ -561,7 +563,8 @@
 			}else{
 				$(a).parent().find('input:eq(0)').parent().removeClass('has-error');
 			}
-			if(password!=''&&password2!=''){
+			var object = /^\w{1,}$/g
+			if(password!=''&&password2!=''&&object.test(password)){
 				if (password != password2){
 				 $(a).parent().find('input:eq(2)').parent().addClass('has-error');num++;
 				 alert('两次密码不一样！！');return;
@@ -569,7 +572,7 @@
 					$(a).parent().find('input:eq(2)').parent().removeClass('has-error');
 				}
 			}else{
-				alert('密码不能为空');return;num++;
+				alert('密码不能有空格并且不能为空');return;num++;
 				$(a).parent().find('input:eq(2)').parent().addClass('has-error');
 			}
 			if(working == null){
@@ -594,8 +597,10 @@
 				},success:function(msg){
 					console.log(msg);
 					alert('修改成功');
-					$(a).parent().remove();
-					$(a).parent().parent().find("span:eq(1)").text(username);
+					$('.manger').remove();
+					getworking();
+					// $(a).parent().remove();
+					// $(a).parent().parent().find('h3').hide();
 				},error:function(){
 
 				}
