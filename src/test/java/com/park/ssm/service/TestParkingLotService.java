@@ -1,8 +1,6 @@
 package com.park.ssm.service;
 
-import java.sql.SQLException;
-import java.util.Set;
-
+import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +21,7 @@ public class TestParkingLotService extends AutoRollBackTest {
 	private ParkingPositionDao parkingPositionDao;
 
 	@Test
-	public void testsaveParkingLot() throws SQLException {
+	public void testsaveParkingLot(){
 
 		int test_totNum = 100;
 
@@ -38,14 +36,14 @@ public class TestParkingLotService extends AutoRollBackTest {
 		service.saveParkingLot(parkingLot);
 		Assert.assertNotNull(parkingLot.getId());
 
-		Set<ParkingPosition> parkingPositions = parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
+		List<ParkingPosition> parkingPositions = parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
 		Assert.assertEquals(test_totNum, parkingPositions.size());
 
 		// throw new RuntimeException("test");
 	}
 
 	@Test
-	public void testsaveParkingLotSameTest() throws SQLException {
+	public void testsaveParkingLotSameTest() {
 
 		int test_totNum = 100;
 
@@ -60,14 +58,32 @@ public class TestParkingLotService extends AutoRollBackTest {
 		service.saveParkingLot(parkingLot);
 		Assert.assertNotNull(parkingLot.getId());
 
-		Set<ParkingPosition> parkingPositions = parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
+		List<ParkingPosition> parkingPositions = parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
 		Assert.assertEquals(test_totNum, parkingPositions.size());
 
 		// throw new RuntimeException("test");
 	}
 
-	// @Test
+	@Test(expected=RuntimeException.class)
 	public void saveSameName() {
+		//test data
+		int test_totNum = 100;
+
+		ParkingLot parkingLot = new ParkingLot(null, test_totNum);
+
+		parkingLot.setName("TEST");
+
+		parkingLot.setCost(22.0);
+		parkingLot.setCurrentPrice(33.0);
+		parkingLot.setLocation("LOCAL");
+
+		service.saveParkingLot(parkingLot);
+		Assert.assertNotNull(parkingLot.getId());
+
+		List<ParkingPosition> parkingPositions = parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
+		Assert.assertEquals(test_totNum, parkingPositions.size());
+
+		
 		ParkingLot parkingLot1 = new ParkingLot(null, 120), parkingLot2 = new ParkingLot(null, 100);
 		String name = "test_SameName";
 
@@ -81,28 +97,65 @@ public class TestParkingLotService extends AutoRollBackTest {
 		parkingLot2.setLocation("locaitonB");
 		parkingLot2.setCurrentPrice(44);
 
-		try {
-			service.saveParkingLot(parkingLot1);
-			service.saveParkingLot(parkingLot2);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		service.saveParkingLot(parkingLot1);
+		service.saveParkingLot(parkingLot2);
 	}
-	
-	
+
 	@Test
-	public void deleteParkingLot() throws SQLException {
-		//Test data
-		Integer id=1;
+	public void deleteParkingLot() {
+		// Test data
+		Integer id = null;
+
+		int test_totNum = 100;
+
+		ParkingLot parkingLot = new ParkingLot(null, test_totNum);
+
+		parkingLot.setName("TEST");
+
+		parkingLot.setCost(22.0);
+		parkingLot.setCurrentPrice(33.0);
+		parkingLot.setLocation("LOCAL");
+
+		service.saveParkingLot(parkingLot);
+		Assert.assertNotNull(parkingLot.getId());
+		id=parkingLot.getId();
 		
-		ParkingLot parkingLot=applicationContext.getBean(ParkingLotDao.class).loadParkingLotById(id);
+		List<ParkingPosition> parkingPositions = parkingPositionDao.loadParkingPositionByLotId(parkingLot.getId());
+		Assert.assertEquals(test_totNum, parkingPositions.size());
+
+		parkingLot = applicationContext.getBean(ParkingLotDao.class).loadParkingLotById(id);
+		
 		Assert.assertEquals(parkingLot.getState(), ParkingLotState.ACTIVE);
+
+		service.deleteParkingLot(parkingLot.getId());
+
+		parkingLot = applicationContext.getBean(ParkingLotDao.class).loadParkingLotById(id);
+
+		Assert.assertEquals(parkingLot.getState(), ParkingLotState.INACTIVE);
+	}
+
+	@Test(expected= RuntimeException.class)
+	public void testDeleteFail() {
+		// Test data
+		Integer id = 1;
+		
+		
+		ParkingLot parkingLot = applicationContext.getBean(ParkingLotDao.class).loadParkingLotById(id);
+		
+		Assert.assertEquals(parkingLot.getState(), ParkingLotState.ACTIVE);
+		for(ParkingPosition parkingPosition:parkingLot.getParkingPositions()) {
+			if(parkingPosition.getAccountId()!=null) {
+				parkingPosition.setAccountId(new Long(1));
+				break;
+			}
+		}
 		
 		service.deleteParkingLot(parkingLot.getId());
 		
-		parkingLot=applicationContext.getBean(ParkingLotDao.class).loadParkingLotById(id);
-		
+		parkingLot = applicationContext.getBean(ParkingLotDao.class).loadParkingLotById(id);
+
 		Assert.assertEquals(parkingLot.getState(), ParkingLotState.INACTIVE);
+
 	}
+
 }

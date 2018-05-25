@@ -18,7 +18,7 @@ public class TestParkingLotDao extends AutoRollBackTest {
 	@Autowired
 	private ParkingLotDao dao;
 	
-	//@Test
+	@Test
 	public void testLoadById() {
 		ParkingLot parkingLot=dao.loadParkingLotById(1);
 		System.out.println(parkingLot);
@@ -26,7 +26,7 @@ public class TestParkingLotDao extends AutoRollBackTest {
 	}
 	
 	@SuppressWarnings("serial")
-	//@Test
+	@Test
 	public void testListParkingLot() {
 		Map<String, Object> conditions=new HashMap<>();
 		conditions.put("totalPositionNum_max", Integer.MAX_VALUE);
@@ -46,7 +46,7 @@ public class TestParkingLotDao extends AutoRollBackTest {
 		
 	}
 	
-	//@Test
+	@Test
 	public void testUpdateParkingLot() {
 		ParkingLot parkingLot=dao.loadParkingLotById(1);
 		System.out.println(parkingLot);

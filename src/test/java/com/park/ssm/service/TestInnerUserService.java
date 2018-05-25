@@ -51,11 +51,8 @@ public class TestInnerUserService extends AutoRollBackTest {
 
 	@Test
 	public void testFindInnerUser() {
-		Encryption en=new Encryption();
-		String pwd=en.SHA512("123456"+"GSdOFMe9zJwt5wgygTgrMq2wIDrFHmHWz9USXYNJzdrzcGBVmd4FoCnuHZRIW9eYvkx7EMIKRiSZQP9rdwVKtKKlc2ZKUMZFlrfF3cnrSSpy9UHrZhHv9RmSHwUd5rE1");
-		InnerUser innerUser = innerUserService.findInnerUser("13075119722",pwd);
-		Assert.assertEquals("e3a6abab655f91888fb527411e931a1b45bfc2ddcc22de4d64d1118bfc47710019fd31ef6bd8ebf6ed9bba71bd35d0ed98a5a6ad613d9fbbb5d6376f4e6335cc", innerUser.getPassword());
-		
+		InnerUser innerUser = innerUserService.findInnerUser("13075119722", "123456");
+		Assert.assertEquals(2, innerUser.getTypeflag());
 	}
 
 	@Test
@@ -73,7 +70,7 @@ public class TestInnerUserService extends AutoRollBackTest {
 
 	@Test
 	public void testFindSaltByNickname() {
-		String salt = innerUserService.findSaltByNickname("12345678910");
+		String salt = innerUserService.findSaltByNickname("123");
 		Assert.assertEquals("123", salt);
 	}
 
