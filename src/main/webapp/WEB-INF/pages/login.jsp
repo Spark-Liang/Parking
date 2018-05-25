@@ -111,60 +111,17 @@ body {
 	</div>
 
 	<script type="text/javascript">
-		function checkName() {
-			//检测用账号
-			var uName = $('.userName').val().trim();
-			var nameLength = uName.length;
-			var regex = new RegExp("^[0-9a-zA_Z]+$");
-			var tip = document.getElementsByClassName('tip')[0];
-			var select = $('.login select').val();
-			if (nameLength < 1) {
-				tip.innerHTML = "请输入账号";
-				$('.userName').focus();
-				return;
-			} else if (nameLength > 16) {
-				tip.innerHTML = '账号长度不能超出16位';
-				$('.userName').focus();
-				return;
-			} else if (uName.indexOf(' ') !== -1) {
-				tip.innerHTML = '账号中间不能有空格';
-				$('.pass').focus();
-				return;
-			} else if (!regex.test(uName)) {
-				tip.innerHTML = "账号只能包含英文和数字";
-				$('.userName').focus();
-				return;
-			}
-		}
-
-		function login(a) {
-			//用户名和密码格式以及非空验证
-			var uName = $('.userName').val().trim();
-			var nameLength = uName.length;
-			var regex = new RegExp("^[0-9a-zA-Z]+$");
-			var tip = document.getElementsByClassName('tip')[0];
-			var select = $('.login select').val();
-			if (nameLength < 1) {
-				tip.innerHTML = "请输入账号";
-				$('.userName').focus();
-				return;
-			} else if (nameLength > 16) {
-				tip.innerHTML = '账号长度不能超出16位';
-				$('.userName').focus();
-				return;
-			} else if (!regex.test(uName)) {
-				tip.innerHTML = "账号只能包含英文和数字";
-				$('.userName').focus();
-				return;
-			} else if ($('.pass').val().trim().length < 1) {
-				tip.innerHTML = "请输入密码";
-				$('.pass').focus();
-				return;
-			} else if ($('.pass').val().trim().indexOf(' ') !== -1) {
-				tip.innerHTML = '密码中间不能有空格';
-				$('.pass').focus();
-				return;
-			}
+	var tip = document.getElementsByClassName('tip')[0];
+    var className = "userName";
+    var inputName = document.getElementsByClassName('userName')[0];
+    inputName.addEventListener("blur",function(){checkAdmin(className,tip);});//监听填写完账号后进行检测
+    inputName.addEventListener("change",function(){cleanTip(tip);});//监听修改账号或密码时清空出错提示
+    function login(a){
+        //密码格式以及非空验证
+        var pwdClass = "pass";
+        var result = checkPwd(pwdClass,tip);
+        //检测通过后通过ajax提交表单
+        if(result){
 			//ajax提交表单
 			$.ajax({
 				type : "POST",
@@ -223,6 +180,8 @@ body {
 
 			}*/
 		}
+    }
 	</script>
+	<script src = "js/check6.js"></script>
 </body>
 </html>
