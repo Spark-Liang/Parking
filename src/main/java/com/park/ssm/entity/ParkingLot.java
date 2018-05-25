@@ -77,11 +77,6 @@ public class ParkingLot {
 		return parkingPositions;
 	}
 	public void setParkingPositions(Set<ParkingPosition> parkingPositions) {
-		for(ParkingPosition tmp:parkingPositions) {
-			if(tmp.getParkingLot()==null) {
-				tmp.setParkingLot(this);
-			}
-		}
 		this.parkingPositions = parkingPositions;
 	}
 	

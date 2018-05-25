@@ -16,16 +16,16 @@
 	<result property="location" column="location" />
 	<result property="cost" column="cost" />
 	
-	<collection property="parkingPositions" column="id" javaType="java.util.HashSet" ofType="ParkingPosition" fetchType="lazy" select="loadParkingPosition">
+	<collection property="parkingPositions" column="id" javaType="java.util.HashSet" ofType="ParkingPosition" 
+		fetchType="lazy" select="loadParkingPosition">
 	</collection>
 </resultMap>
 
 <resultMap type="ParkingPosition" id="parkingPosition">
 	<id property="id" column="id"/>
 	<result property="state" column="state"  typeHandler="com.park.ssm.entity.type.ParkingPositionStateHandler"/>
-	<association property="account" javaType="Account">
-		<id property="id" column="accountId"/>
-	</association>
+	<result property="parkingLotId" column="parkingLotId" />
+	<result property="accountId" column="accountId" />
 </resultMap>
 
 

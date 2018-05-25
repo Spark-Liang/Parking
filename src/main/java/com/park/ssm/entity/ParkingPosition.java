@@ -4,48 +4,42 @@ import com.park.ssm.entity.type.ParkingPositionState;
 
 public class ParkingPosition {
 	private Long id;
-	private ParkingLot parkingLot;
-	private Account account;
+	private Long parkingLotId;
+	private Long accountId;
 	private ParkingPositionState state;
-	
-	public ParkingPosition() {}
-	public ParkingPosition(long id) {
-		this.id=id;
-	}
 	
 	public Long getId() {
 		return id;
 	}
-
-
-	public ParkingLot getParkingLot() {
-		return parkingLot;
+	public void setId(Long id) {
+		this.id = id;
 	}
-
-	public void setParkingLot(ParkingLot parkingLot) {
-		this.parkingLot = parkingLot;
+	public Long getParkingLotId() {
+		return parkingLotId;
 	}
-
-	public Account getAccount() {
-		return account;
+	public void setParkingLotId(Long parkingLotId) {
+		this.parkingLotId = parkingLotId;
 	}
-
-	public void setAccount(Account account) {
-		this.account = account;
+	public Long getAccountId() {
+		return accountId;
 	}
-
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
 	public ParkingPositionState getState() {
 		return state;
 	}
 	public void setState(ParkingPositionState state) {
 		this.state = state;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "ParkingPosition [id=" + id + ", parkingLot=" + parkingLot + ", account=" + account + ", state=" + state
-				+ "]";
+		return "ParkingPosition [id=" + id + ", parkingLotId=" + parkingLotId + ", accountId=" + accountId + ", state="
+				+ state + "]";
 	}
+	
+	
 	
 	
 }

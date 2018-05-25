@@ -7,8 +7,8 @@
 <resultMap type="ParkingPosition" id="parkingPositionRoughResult">
 	<id property="id" column="id"/>
 	<result property="state" column="state"  typeHandler="com.park.ssm.entity.type.ParkingPositionStateHandler"/>
-	<association property="parkingLot" column="parkingLotId" javaType="ParkingLot" fetchType="lazy" select="com.park.ssm.dao.ParkingLotDao.loadParkingLotById"/>
-	<association property="account" column="accountId" javaType="Account" fetchType="lazy" select="com.park.ssm.dao.AccountDao.loadAccountById" />
+	<result property="parkingLotId" column="parkingLotId" />
+	<result property="accountId" column="accountId" />
 </resultMap>
 
 
