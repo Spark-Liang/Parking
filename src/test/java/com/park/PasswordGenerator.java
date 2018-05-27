@@ -47,6 +47,9 @@ public class PasswordGenerator {
 				add(new Object[] {"12345678917","123456"});
 				add(new Object[] {"12345678918","123456"});
 				add(new Object[] {"12345678919","123456"});
+				add(new Object[] {"12345678910","123456"});
+				add(new Object[] {"15219326102","123456"});
+				add(new Object[] {"13075119722","123456"});
 			}
 		};
 	}

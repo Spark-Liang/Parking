@@ -5,7 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;  
+import org.apache.logging.log4j.LogManager;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class GlobalExceptionHandler {
-	private Logger logger=Logger.getLogger(this.getClass());
+	private Logger logger=LogManager.getLogger(this.getClass());
 	
 	@SuppressWarnings({ "rawtypes", "unchecked", "serial" })
 	@RequestMapping(value="error",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
