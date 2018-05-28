@@ -26,7 +26,7 @@
 	margin-left: 15px;
 }
 .operator-module1{
-	min-height: 180px;
+	min-height: 230px;
 	margin-top: 30px;
 	padding-left: 50px;
 }
@@ -61,28 +61,8 @@
 		</a> -->
 		<div class="operator-module1">
 			<h3>用户开卡</h3>
-			<form class="form-inline">
-				<div class="form-group">
-					<label for="exampleInputName2">手机号码</label>
-					<input type="text" class="form-control" id="exampleInputName2" placeholder="手机号码">
-				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">停车场</label>
-					<select class="form-control">
-						<option value=""></option>
-						<option value="">放大分</option>
-						<option value=""></option>
-						<option value=""></option>
-					</select>
-				</div>
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
-			
-		</div>
-		<div class="operator-module1" style="display: none;">
-			<h3>用户停卡</h3>
-			<form class="form-inline">
-				<div class="form-group">
+			<div class="col-md-3">
+			    <div class="form-group">
 					<label for="exampleInputName2">手机号码</label>
 					<input type="text" class="form-control" id="exampleInputName2" placeholder="手机号码">
 				</div>
@@ -90,13 +70,29 @@
 					<label for="exampleInputEmail2">停车场</label>
 					<select class="form-control parkaddress">
 						<option value=""></option>
-						<option value="">放大分</option>
-						<option value=""></option>
+					</select>
+				</div>
+				<button type="submit" class="btn btn-primary">Submit</button>		
+			</div>
+		</div>
+		<div class="operator-module1" >
+			<h3>用户停卡</h3>
+			<div class="col-md-3">
+			    <div class="form-group">
+					<label for="exampleInputName2">手机号码</label>
+					<input type="text" class="form-control" id="exampleInputName2" placeholder="手机号码">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputEmail2">停车场</label>
+					<select class="form-control parkaddress">
 						<option value=""></option>
 					</select>
 				</div>
 				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
+			</div>
+			<div class="col-md-6">
+			fds
+			</div>
 		</div>
 	</div>
 	
@@ -114,8 +110,8 @@
 					console.log(data.res);
 					var l = data.res.length;
 					for(var i = 0;i<l;i++){
-						$('.parkaddress').apppend(function(){
-							return "<option>"+data.res[i]+"</option>";
+						$('.parkaddress').append(function(){
+							return "<option value='"+data.res[i].id+"'>"+data.res[i].name+"</option>";
 						})
 					}
 					

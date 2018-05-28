@@ -407,11 +407,6 @@
 					//操作员
 					this.working = "操作员";
 				}
-				
-			// this.name = $('.add-manger input:eq(0)').val();
-			// this.money = $('.add-manger input:eq(1)').val();
-			// this.sex = $('input[name="sex"]:checked').val();
-			// this.position = $('input[name="position"]:checked').val();
 			console.log(this.name + this.username + this.working + this.idd);
 			}
 			else if(num == 2){
@@ -422,6 +417,7 @@
 				}else if(manger[3]==2){
 					this.working = "操作员";
 				}
+				this.idd = manger[5];
 			}
 		}
 
@@ -532,13 +528,14 @@
 						console.log(msg);
 						if(msg.msg == 1){
 							alert('添加成功');
+							mangerinf[5] = msg.msg.id;
 							var working = new manger(2,mangerinf);
 							working.mangeradd();
 						}else{
 							alert("手机号码已经存在");
 						}
 					},error:function(){
-						alert("添加失败")
+						alert("添加失败") 
 					}
 				})
 			}else{
