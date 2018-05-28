@@ -32,7 +32,9 @@ create table Account
 	,parkingPositionId bigint 
 	,cardId bigint unique key 
 	
+	
 	,state tinyint default 0
+	,stateStartDate datetime not null
 	,isParking bit not null default 0
 	,currentBillId bigint
 	

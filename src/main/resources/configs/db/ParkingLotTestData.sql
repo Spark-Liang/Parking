@@ -53,12 +53,14 @@ drop table if exists Account;
 create table Account
 (
 	id bigint primary key auto_increment
-	,userId bigint 
+	,userId bigint
 	,parkingLotId int 
 	,parkingPositionId bigint 
 	,cardId bigint unique key 
 	
+	
 	,state tinyint default 0
+	,stateStartDate datetime not null
 	,isParking bit not null default 0
 	,currentBillId bigint
 	
@@ -67,18 +69,18 @@ create table Account
 )engine=innodb auto_increment=1 charset='utf8';
 
 
-insert into Account(userId,parkingLotId,parkingPositionId,cardId)
+insert into Account(userId,parkingLotId,parkingPositionId,cardId,stateStartDate)
 values
- (1 ,1,1 ,1)
-,(2 ,1,2 ,2)
-,(3 ,1,3 ,3)
-,(4 ,1,4 ,4)
-,(5 ,2,5 ,5)
-,(6 ,2,6 ,6)
-,(7 ,2,7 ,7)
-,(8 ,3,8 ,8)
-,(9 ,3,9 ,9)
-,(10,3,10,10)
+ (1 ,1,1 ,1,curdate())
+,(2 ,1,2 ,2,curdate())
+,(3 ,1,3 ,3,curdate())
+,(4 ,1,4 ,4,curdate())
+,(5 ,2,5 ,5,curdate())
+,(6 ,2,6 ,6,curdate())
+,(7 ,2,7 ,7,curdate())
+,(8 ,3,8 ,8,curdate())
+,(9 ,3,9 ,9,curdate())
+,(10,3,10,10,curdate())
 ;
 
 
