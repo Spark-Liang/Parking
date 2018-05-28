@@ -26,7 +26,7 @@
 	margin-left: 15px;
 }
 .operator-module1{
-	min-height: 230px;
+	min-height: 280px;
 	margin-top: 30px;
 	padding-left: 50px;
 }
@@ -64,15 +64,19 @@
 			<div class="col-md-3">
 			    <div class="form-group">
 					<label for="exampleInputName2">手机号码</label>
-					<input type="text" class="form-control" id="exampleInputName2" placeholder="手机号码">
+					<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputName2">卡号</label>
+					<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="卡号">
 				</div>
 				<div class="form-group">
 					<label for="exampleInputEmail2">停车场</label>
-					<select class="form-control parkaddress">
+					<select class="form-control parkaddress input-sm">
 						<option value=""></option>
 					</select>
 				</div>
-				<button type="submit" class="btn btn-primary">Submit</button>		
+				<button type="submit" class="btn btn-primary btn-sm newcard">开卡</button>		
 			</div>
 		</div>
 		<div class="operator-module1" >
@@ -80,36 +84,19 @@
 			<div class="col-md-3">
 			    <div class="form-group">
 					<label for="exampleInputName2">手机号码</label>
-					<input type="text" class="form-control" id="exampleInputName2" placeholder="手机号码">
+					<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="手机号码">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputName2">卡号</label>
+					<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="卡号">
 				</div>
 				<div class="form-group">
 					<label for="exampleInputEmail2">停车场</label>
-					<select class="form-control parkaddress">
+					<select class="form-control parkaddress input-sm">
 						<option value=""></option>
 					</select>
 				</div>
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</div>
-			<div class="col-md-6 col-md-offset-1">
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th></th>
-							<th>停车场</th>
-							<th>手机号</th>
-							<th>操作</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>1</td>
-							<td>1</td>
-							<td>1</td>
-							<td><a>停卡</a></td>
-						</tr>
-						
-					</tbody>
-				</table>
+				<button type="submit" class="btn btn-primary btn-sm deletecard">停卡</button>
 			</div>
 		</div>
 	</div>
@@ -118,6 +105,7 @@
 		$(window).ready(function(){
 			var adminname = window.location.href.split("=")[2];
 			$('#admin-name span').text(adminname);
+			//获取停车场的信息到选择框中
 			$.ajax({
 				url:'parkinglot/list',
 				type:'GET',
@@ -137,7 +125,88 @@
 
 				}
 			})
+		});
+		
+		
+		//点击开卡按钮的操作
+		$('.newcard').click(function(){
+			var inf = new Array();
+			inf[0] = $(this).parent().find('input:eq(0)').val();
+			inf[1] = $(this).parent().find('input:eq(1)').val();
+			inf[2] = $(this).parent().find('select').val();
+			var check = checkinf(this,inf);
+			if(check == 1){
+				/* $.ajax({
+					url:'',
+					dataType:'json',
+					type:'GET',
+					data:{
+						
+					},success:function(){
+						
+					},error:function(){
+						
+					}
+				}) */
+			}
+			else{
+				alert('fdss')
+			}
 		})
+		//点击停卡按钮的操作
+		$('.deletecard').click(function(){
+			var inf = new Array();
+			inf[0] = $(this).parent().find('input:eq(0)').val();
+			inf[1] = $(this).parent().find('input:eq(1)').val();
+			inf[2] = $(this).parent().find('select').val();
+			var check = checkinf(this,inf);
+			if(check == 1){
+				/* $.ajax({
+					url:'',
+					dataType:'json',
+					type:'GET',
+					data:{
+						
+					},success:function(){
+						
+					},error:function(){
+						
+					}
+				}) */
+			}
+			else{
+				
+			}
+		})
+		//检查输入格式是否正确  b是按钮元素 a是传过来的数组
+		function checkinf(b,a) {
+			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
+			var num = 0;//用于判断最后是否全部正确
+			if(object.test(a[0])){
+				$(b).parent().find('input:eq(0)').parent().removeClass('has-error');
+			}else{
+				alert('手机格式有误');
+				$(b).parent().find('input:eq(0)').parent().addClass('has-error');num++;
+			}
+			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
+			if(object.test(a[1])){
+				$(b).parent().find('input:eq(1)').parent().removeClass('has-error');
+			}else{
+				alert('卡号格式有误');
+				$(b).parent().find('input:eq(1)').parent().addClass('has-error');num++
+			}
+			if(a[2]){
+				$(b).parent().find('select').parent().removeClass('has-error');
+			}else{
+				alert('没有选择停车场')
+				$(b).parent().find('select').parent().addClass('has-error');num++;
+			}
+			if(num==0){
+				return 1;
+			}else{
+				return 0;
+			}
+		}
 	</script>
 </body>
 
