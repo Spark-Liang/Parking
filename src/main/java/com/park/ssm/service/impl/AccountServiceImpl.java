@@ -24,7 +24,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public List<Account> findAccountrById(long userId) {
 		// TODO Auto-generated method stub
-		return accountdao.findAccountrById(userId);
+		return accountdao.findAccountrById(userId,null,null,null,null,null);
 	}
 	@Override
 	public User findUserByuserId(long userId) {

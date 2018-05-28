@@ -1,7 +1,7 @@
 package com.park.ssm.entity.type;
 
 public enum AccountState {
-	STOP(-1),NORMAL(0),UNPAY(1),PAYING(2);
+	STOP(-1),NORMAL(0);
 	
 	private int ind;
 	private AccountState(int ind) {

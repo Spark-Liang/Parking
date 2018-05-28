@@ -24,6 +24,7 @@ public class Account implements Serializable {
 	private Long cardId;
 	
 	private AccountState state;
+	private boolean isParking;
 	private Bill currentBill;
 	private List<Bill> bills;
 	
@@ -63,6 +64,12 @@ public class Account implements Serializable {
 	public void setState(AccountState state) {
 		this.state = state;
 	}
+	public boolean isParking() {
+		return isParking;
+	}
+	public void setParking(boolean isParking) {
+		this.isParking = isParking;
+	}
 	public Bill getCurrentBill() {
 		return currentBill;
 	}
@@ -74,6 +81,16 @@ public class Account implements Serializable {
 	}
 	public void setBills(List<Bill> bills) {
 		this.bills = bills;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
+	@Override
+	public String toString() {
+		return "Account [id=" + id + ", userId=" + userId + ", parkingLotId=" + parkingLotId + ", parkingPositionId="
+				+ parkingPositionId + ", cardId=" + cardId + ", state=" + state + ", isParking=" + isParking
+				+ ", currentBill=" + currentBill + ", bills=" + bills + "]";
 	}
 	
 	

@@ -4,45 +4,67 @@
 <mapper namespace="com.park.ssm.dao.BillDao">
 
 
-<sql id="sqlField">
-	id,userId,parkingLotId,accountId,price,billStartDate,billEndDate,isPaid
-</sql>
+	<sql id="sqlField">
+		id,userId,parkingLotId,accountId,price,billStartDate,billEndDate,isPaid
+	</sql>
 
-<!-- 通过id加载账单 -->
-<select id="loadBillByIdForUpdate" parameterType="Long" resultType="Bill">
-select 
-	<include refid="sqlField"/>
-from Bill
-where id=#{_parameter}	
-for update
-</select>
+	<!-- 通过id加载账单 -->
+	<select id="loadBillById" parameterType="Long" resultType="Bill">
+		select
+		<include refid="sqlField" />
+		from Bill
+		where id=#{_parameter}
+	</select>
+	<select id="loadBillByIdForUpdate" parameterType="Long"
+		resultType="Bill">
+		select
+		<include refid="sqlField" />
+		from Bill
+		where id=#{_parameter}
+		for update
+	</select>
 
-<!-- 通过id加载账单 -->
-<select id="listBillByUserId" parameterType="Long"  resultType="Bill">
-select 
-	<include refid="sqlField"/>
-from Bill
-where userId=#{_parameter}	
-</select>
+	<!-- 通过各種id組合加载账单 -->
+	<select id="listBillById"  resultType="Bill">
+		select
+		<include refid="sqlField" />
+		from Bill
+		<where>
+			<if test="userId != null">
+				and userId=#{userId}
+			</if>
+			<if test="accountId != null">
+				and accountId=#{accountId}
+			</if>
+			<if test="parkingLotId != null">
+				and parkingLotId=#{parkingLotId}
+			</if>
+		</where>
+		<if test="pageNum != null and pageSize != null">
+			limit ${(pageNum-1)*pageSize},#{pageSize}
+		</if>
+	</select>
+	<select id="countBillById" parameterType="Long" resultType="Integer">
+		select
+		 count(1)
+		from Bill
+		<where>
+			<if test="userId != null">
+				and useruserId}
+			</if>
+			<if test="accountId != null">
+				and accountId=#{accountId}
+			</if>
+			<if test="parkingLotId != null">
+				and parkingLotId=#{parkingLotId}
+			</if>
+		</where>
+	</select>
 
-<select id="listBillByAccountId" parameterType="Long" resultType="Bill">
-select 
-	<include refid="sqlField"/>
-from Bill
-where accoutId=#{_parameter}	
-</select>
-
-<select id="listBillByParkingLotId" parameterType="Integer"  resultType="Bill">
-select 
-	<include refid="sqlField"/>
-from Bill
-where parkingLotId=#{_parameter}	
-</select>
-
-<update id="updateBillStateById">
-update Bill 
-	set isPaid=1
-where id=#{_parameter}
-</update>
+	<update id="updateBillStateById">
+		update Bill
+		set isPaid=1
+		where id=#{_parameter}
+	</update>
 
 </mapper>

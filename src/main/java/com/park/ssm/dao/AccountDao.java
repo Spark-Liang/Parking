@@ -26,7 +26,37 @@ public interface AccountDao {
 	
 	public abstract int setAccountState(@Param("id") Long id,@Param("state")AccountState state); 
 	
-	public abstract List<Account> findAccountrById(long userId);
+	/**
+	 * 通过不同的id组合查找account
+	 * @param userId
+	 * @param parkingLotId
+	 * @param parkingPositionId
+	 * @param cardId
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public abstract List<Account> findAccountrById(@Param("userId")Long userId
+												,@Param("parkingLotId")Integer parkingLotId
+												,@Param("parkingPositionId")Long parkingPositionId
+												,@Param("cardId")Long cardId
+												,@Param("pageNum")Integer pageNum
+												,@Param("pageSize")Integer pageSize
+												);
+	/**
+	 * 查看通过不同的id组合查找account的总行数
+	 * @param parkingLotId
+	 * @param parkingPositionId
+	 * @param cardId
+	 * @param pageNum
+	 * @param pageSize
+	 * @return
+	 */
+	public abstract List<Account> countAccountrById(@Param("userId")Long userId
+												,@Param("parkingLotId")Integer parkingLotId
+												,@Param("parkingPositionId")Long parkingPositionId
+												,@Param("cardId")Long cardId
+												);
 	
 	public abstract int modifyAccount(Account account);
 	

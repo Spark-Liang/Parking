@@ -4,80 +4,112 @@
 <mapper namespace="com.park.ssm.dao.AccountDao">
 
 
-<resultMap type="Account" id="accountRoughResult">
-	<id property="id" column="id"/>
-	<result property="userId" column="userId"/>
-	<result property="parkingLotId" column="parkingLotId"/>
-	<result property="parkingPositionId" column="parkingPositionId"/>
-	<result property="cardId" column="cardId"/>
-	<result property="state" column="state" typeHandler="com.park.ssm.entity.type.AccountStateHandler"/>
-	<association property="currentBill"  column="currentBillId" fetchType="eager" 
-		select="selectInfoById" autoMapping="true" />
-		
-	<collection property="bills" column="id" fetchType="lazy" 
-		select="selectBillInfoByAccountId" autoMapping="true" />
-</resultMap>
+	<resultMap type="Account" id="accountRoughResult">
+		<id property="id" column="id" />
+		<result property="userId" column="userId" />
+		<result property="parkingLotId" column="parkingLotId" />
+		<result property="parkingPositionId" column="parkingPositionId" />
+		<result property="cardId" column="cardId" />
+		<result property="state" column="state"
+			typeHandler="com.park.ssm.entity.type.AccountStateHandler" />
+		<result property="isParking" column="isParking" />
+		<association property="currentBill" column="currentBillId"
+			fetchType="eager" select="com.park.ssm.dao.BillDao.loadBillById" />
 
-<!-- 加载Bill信息 -->
-<select id="selectBillInfoById" parameterType="Long">
-	select * from Bill
-	where id=#{_parameter}
-</select>
-<select id="selectBillInfoByAccountId" parameterType="Long">
-	select * from Bill
-	where accountId=#{_parameter}
-</select>
+		<collection property="bills" column="{accountId=id}"
+			ofType="Bill" fetchType="lazy" select="com.park.ssm.dao.BillDao.listBillById"
+			autoMapping="true" />
+	</resultMap>
+
+	<!-- dao相关sql -->
+	<sql id="sqlField">
+		id,userId,parkingLotId,parkingPositionId,cardId,state,isParking,currentBillId
+	</sql>
 
 
-<!-- dao相关sql -->
-<sql id="sqlField">
-	id,userId,parkingLotId,parkingPositionId,cardId,state,currentBillId
-</sql>
-
-
-<select id="loadAccountById" parameterType="long" resultMap="accountRoughResult">
-	select 
+	<select id="loadAccountById" parameterType="long" resultMap="accountRoughResult">
+		select
 		*
-	from Account
-	where id=#{_parameter}
-</select>
-<select id="loadAccountByIdForUpdate" parameterType="long" resultMap="accountRoughResult">
-	select 
+		from Account
+		where id=#{_parameter}
+	</select>
+	<select id="loadAccountByIdForUpdate" parameterType="long"
+		resultMap="accountRoughResult">
+		select
 		*
-	from Account
-	where id=#{_parameter}
-	for update
-</select>
+		from Account
+		where id=#{_parameter}
+		for update
+	</select>
 
-<select id="findAccountrById" parameterType="long" resultMap="accountRoughResult">
-	select 
+	<!-- 通过不同id组合查找account -->
+	<select id="findAccountrById" resultMap="accountRoughResult">
+		select
 		*
-	from Account
-	where userId=#{_parameter}
-</select>
-<select id="isNotExistCard" parameterType="long" resultMap="accountRoughResult">
-	select 
+		from Account
+		<where>
+			<if test="userId != null">
+				and userId=#{userId}
+			</if>
+			<if test="parkingLotId != null">
+				and parkingLotId=#{parkingLotId}
+			</if>
+			<if test="parkingPositionId != null">
+				and parkingPositionId=#{parkingPositionId}
+			</if>
+			<if test="cardId != null">
+				and cardId=#{cardId}
+			</if>
+		</where>
+		<if test="pageNum != null and pageSize != null">
+			limit ${(pageNum-1)*pageSize},#{pageSize}
+		</if>
+	</select>
+	<select id="countAccountrById" resultMap="accountRoughResult">
+		select
+			count(1)
+		from Account
+		<where>
+			<if test="userId != null">
+				and userId=#{userId}
+			</if>
+			<if test="parkingLotId != null">
+				and parkingLotId=#{parkingLotId}
+			</if>
+			<if test="parkingPositionId != null">
+				and parkingPositionId=#{parkingPositionId}
+			</if>
+			<if test="cardId != null">
+				and cardId=#{cardId}
+			</if>
+		</where>
+	</select>
+
+	<select id="isNotExistCard" parameterType="long" resultMap="accountRoughResult">
+		select
 		*
-	from Account
-	where cardId=#{_paramter}
-</select>
+		from Account
+		where cardId=#{_paramter}
+	</select>
 
 
-<insert id="insertAccount" parameterType="Account">
-insert into Account (id,userId,parkingLotId,parkingPositionId,cardId,state,currentBillId) values
-(#{id},#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},${state.getInd()},#{currentBillId})
-</insert>
+	<insert id="insertAccount" parameterType="Account">
+		insert into Account
+		(id,userId,parkingLotId,parkingPositionId,cardId,state,currentBillId)
+		values
+		(#{id},#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},${state.getInd()},#{currentBillId})
+	</insert>
 
-<update id="setAccountState">
-update Account
-	set state=${state.getInd()}
-where id=#{id}
-</update>
-  
-  <update id="modifyAccount" parameterType="Account">
-update Account
-	set cardId=${cardId}
-where userId=#{userId} and parkingLotId=${parkingLotId}
-</update>
-  
+	<update id="setAccountState">
+		update Account
+		set state=${state.getInd()}
+		where id=#{id}
+	</update>
+
+	<update id="modifyAccount" parameterType="Account">
+		update Account
+		set cardId=${cardId}
+		where userId=#{userId} and parkingLotId=${parkingLotId}
+	</update>
+
 </mapper>
