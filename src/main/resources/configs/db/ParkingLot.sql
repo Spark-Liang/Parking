@@ -27,25 +27,32 @@ alter table ParkingPosition add foreign key(accountId) references 账户表(id)
 create table Account
 (
 	id bigint primary key auto_increment
-	,userId bigint references User(id)
-	,parkingLotId int references ParkingLot(id)
-	,parkingPositionId bigint references ParkingPosition(id)
-	,cardId bigint
+	,userId bigint
+	,parkingLotId int 
+	,parkingPositionId bigint 
+	,cardId bigint unique key 
 	
 	,state tinyint default 0
+	,isParking bit not null default 0
 	,currentBillId bigint
 	
+	,index userId_idx(userId)
+	,index parkingLotId_idx(parkingLotId)
 )engine=innodb auto_increment=1 charset='utf8';
+
 
 create table Bill
 (
 	id bigint primary key auto_increment
-	,userId int key
+	,userId int 
 	,parkingLotId int 
-	,accountId bigint key
+	,accountId bigint 
 	
 	,price decimal(10,4)
 	,billStartDate datetime
 	,billEndDate datetime
 	,isPaid bit not null 
+
+	,index userId_idx(userId)
+	,index accountId_idx(accountId)
 )engine=innodb auto_increment=1 charset='utf8';

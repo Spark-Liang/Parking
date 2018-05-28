@@ -1,5 +1,13 @@
 use train_db;
+
+#global drop table
+
+drop table if exists Bill;
+drop table if exists Account;
+drop table if exists User;
+drop table if exists ParkingPosition;
 drop table if exists ParkingLot;
+
 create table ParkingLot
 (
 	id int primary key auto_increment
@@ -25,7 +33,7 @@ drop table if exists ParkingPosition;
 create table ParkingPosition
 (
 	id bigint primary key auto_increment
-	,parkingLotId int not null references ParkingLot(id)
+	,parkingLotId int not null
 	,accountId bigint
 	,state tinyint default 0 
 )engine=innodb auto_increment=1 charset='utf8';
@@ -41,18 +49,23 @@ values
 
 drop table if exists Account;
 
+
 create table Account
 (
 	id bigint primary key auto_increment
-	,userId bigint references User(id)
-	,parkingLotId int references ParkingLot(id)
-	,parkingPositionId bigint references ParkingPosition(id)
-	,cardId bigint
+	,userId bigint 
+	,parkingLotId int 
+	,parkingPositionId bigint 
+	,cardId bigint unique key 
 	
 	,state tinyint default 0
+	,isParking bit not null default 0
 	,currentBillId bigint
 	
+	,index userId_idx(userId)
+	,index parkingLotId_idx(parkingLotId)
 )engine=innodb auto_increment=1 charset='utf8';
+
 
 insert into Account(userId,parkingLotId,parkingPositionId,cardId)
 values
@@ -69,7 +82,7 @@ values
 ;
 
 
-alter table ParkingPosition add foreign key(accountId) references Account(id);
+
 
 
 drop table if exists User;
@@ -92,14 +105,23 @@ insert into User(userId,password,salt) values
 ,('12345678919','1f687b8762d0557c81b0a68031604bbc63d9a1a9cfc6bbe9975111da0f5f7dbcbf01ea400e0efd44ff512f27161d36ba58d833e62b5edc63f616b83ae91ea16f','bxZMMVlMQmYEDVAixgw0TB22uFCHAzUcOnfojAxZ1WUZ5XFzK33QRkj7SRhc4wlThA83QgDVtcZwWClxrJv4bLdgbyEG3IVkM7L9glxqlyZmkh58MOQ6beDmfS1AzQA2')
 ;
 
+drop table if exists Bill;
 
+create table Bill
+(
+	id bigint primary key auto_increment
+	,userId int 
+	,parkingLotId int 
+	,accountId bigint 
+	
+	,price decimal(10,4)
+	,billStartDate datetime
+	,billEndDate datetime
+	,isPaid bit not null 
 
-
-
-
-
-
-
+	,index userId_idx(userId)
+	,index accountId_idx(accountId)
+)engine=innodb auto_increment=1 charset='utf8';
 
 
 
