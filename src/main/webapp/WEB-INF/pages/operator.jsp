@@ -103,7 +103,9 @@
 	
 	<script type="text/javascript">
 		$(window).ready(function(){
-			var adminname = window.location.href.split("=")[2];
+			var href = decodeURI(window.location.href);
+			var adminname = href.split("=")[2];
+			alert(name)
 			$('#admin-name span').text(adminname);
 			//获取停车场的信息到选择框中
 			$.ajax({
