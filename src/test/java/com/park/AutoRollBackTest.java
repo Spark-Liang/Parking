@@ -1,10 +1,14 @@
 package com.park;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContextManager;
@@ -34,7 +38,9 @@ public class AutoRollBackTest extends AbstractTransactionalJUnit4SpringContextTe
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		testContextManager=new TestContextManager(ParameterizedSpringTest.class);
-		
+		ConfigurationSource source=new ConfigurationSource(new ClassPathResource("com/park/log4j2Test_Env.xml").getInputStream());
+		Configurator.initialize(null, source);
+		Configurator.setRootLevel(Level.ALL);
 	}
 	
 	@Before

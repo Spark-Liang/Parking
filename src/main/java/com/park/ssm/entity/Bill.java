@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author LZH
  *
  */
-@JsonIgnoreProperties(value= {"handler"},ignoreUnknown = true)
+@JsonIgnoreProperties(value= {"handler","serialVersionUID"},ignoreUnknown = true)
 public class Bill implements Serializable {
 	/**
 	 * 
@@ -28,56 +28,104 @@ public class Bill implements Serializable {
 	private Date billEndDate;
 	private boolean isPaid;
 	
-	
 	public Long getId() {
 		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
 	}
 	public Long getUserId() {
 		return userId;
 	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
 	public Integer getParkingLotId() {
 		return parkingLotId;
-	}
-	public void setParkingLotId(Integer parkingLotId) {
-		this.parkingLotId = parkingLotId;
 	}
 	public Long getAccountId() {
 		return accountId;
 	}
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
-	}
 	public Double getPrice() {
 		return price;
-	}
-	public void setPrice(Double price) {
-		this.price = price;
 	}
 	public Date getBillStartDate() {
 		return billStartDate;
 	}
-	public void setBillStartDate(Date billStartDate) {
-		this.billStartDate = billStartDate;
-	}
 	public Date getBillEndDate() {
 		return billEndDate;
-	}
-	public void setBillEndDate(Date billEndDate) {
-		this.billEndDate = billEndDate;
 	}
 	public boolean isPaid() {
 		return isPaid;
 	}
+	
 	public void setPaid(boolean isPaid) {
 		this.isPaid = isPaid;
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((accountId == null) ? 0 : accountId.hashCode());
+		result = prime * result + ((billEndDate == null) ? 0 : billEndDate.hashCode());
+		result = prime * result + ((billStartDate == null) ? 0 : billStartDate.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (isPaid ? 1231 : 1237);
+		result = prime * result + ((parkingLotId == null) ? 0 : parkingLotId.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Bill))
+			return false;
+		Bill other = (Bill) obj;
+		if (accountId == null) {
+			if (other.accountId != null)
+				return false;
+		} else if (!accountId.equals(other.accountId))
+			return false;
+		if (billEndDate == null) {
+			if (other.billEndDate != null)
+				return false;
+		} else if (!billEndDate.equals(other.billEndDate))
+			return false;
+		if (billStartDate == null) {
+			if (other.billStartDate != null)
+				return false;
+		} else if (!billStartDate.equals(other.billStartDate))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (isPaid != other.isPaid)
+			return false;
+		if (parkingLotId == null) {
+			if (other.parkingLotId != null)
+				return false;
+		} else if (!parkingLotId.equals(other.parkingLotId))
+			return false;
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
+			return false;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
+			return false;
+		return true;
+	}
 	
 	
 }

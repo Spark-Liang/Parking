@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.park.ssm.annotation.UnEditableField;
 import com.park.ssm.entity.type.ParkingLotState;
 
-@JsonIgnoreProperties(value= {"handler"},ignoreUnknown = true)
+@JsonIgnoreProperties(value= {"handler","serialVersionUID"},ignoreUnknown = true)
 public class ParkingLot implements Serializable{
 	/**
 	 */
@@ -18,7 +18,7 @@ public class ParkingLot implements Serializable{
 	@UnEditableField
 	private int totalPositionNum;
 	private double currentPrice;
-	private ParkingLotState state;
+	private ParkingLotState state=ParkingLotState.ACTIVE;
 	
 	//业务无关的详细信息
 	private String name;
@@ -92,5 +92,72 @@ public class ParkingLot implements Serializable{
 				+ ", cost=" + cost + ", state=" + state + ", name=" + name + ", location=" + location
 				+ ", parkingPositions=" + (parkingPositions!=null?parkingPositions.hashCode():null) + "]";
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cost == null) ? 0 : cost.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(currentPrice);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((parkingPositions == null) ? 0 : parkingPositions.hashCode());
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + totalPositionNum;
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof ParkingLot))
+			return false;
+		ParkingLot other = (ParkingLot) obj;
+		if (cost == null) {
+			if (other.cost != null)
+				return false;
+		} else if (!cost.equals(other.cost))
+			return false;
+		if (Double.doubleToLongBits(currentPrice) != Double.doubleToLongBits(other.currentPrice))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (parkingPositions == null) {
+			if (other.parkingPositions != null)
+				return false;
+		} else if (!parkingPositions.equals(other.parkingPositions))
+			return false;
+		if (state != other.state)
+			return false;
+		if (totalPositionNum != other.totalPositionNum)
+			return false;
+		return true;
+	}
+	
+	
+	
 
 }

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.park.ssm.entity.type.ParkingPositionState;
 
-@JsonIgnoreProperties(value= {"handler"},ignoreUnknown = true)
+@JsonIgnoreProperties(value= {"handler","serialVersionUID"},ignoreUnknown = true)
 public class ParkingPosition implements Serializable {
 	/**
 	 */
@@ -14,7 +14,7 @@ public class ParkingPosition implements Serializable {
 	private Long id;
 	private Long parkingLotId;
 	private Long accountId;
-	private ParkingPositionState state;
+	private ParkingPositionState state=ParkingPositionState.UNOCCUPIED;
 	
 	public Long getId() {
 		return id;

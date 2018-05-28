@@ -1,6 +1,7 @@
 package com.park.ssm.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,21 +13,21 @@ import com.park.ssm.annotation.UnEditableField;
 
 public class PersistentUtil {
 
-	/**合并两个对象的所有属性
+	/**把sourceObj中的和target的共同属性，从sourceObj中复制到target中
 	 * 
 	 * @param target 被更新属性的对象
 	 * @param newObj 提供更新的属性
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public static void merge(Object target,Object newObj) throws IllegalArgumentException, IllegalAccessException{
-		Set<Field> fieldSet=getCommendField(target.getClass(), newObj.getClass());
+	public static void merge(Object target,Object sourceObj) throws IllegalArgumentException, IllegalAccessException{
+		Set<Field> fieldSet=getCommendField(target.getClass(), sourceObj.getClass());
 		for(Field field:fieldSet) {
 			boolean accessiable=field.isAccessible();
 			field.setAccessible(true);
-			Object originValue=field.get(newObj);
-			if(originValue!=null) {
-				field.set(target,originValue);
+			Object sourceValue=field.get(sourceObj);
+			if(sourceValue!=null) {
+				field.set(target,sourceValue);
 			}
 			field.setAccessible(accessiable);
 		}
@@ -36,20 +37,25 @@ public class PersistentUtil {
 		Class<?> currentClass=clazz;
 		do {
 			Field[] fields=currentClass.getDeclaredFields();
-			fieldSet.addAll(Arrays.asList(fields));
+			for(Field field:fields) {
+				if(field.getModifiers()!= Modifier.STATIC) {
+					fieldSet.add(field);
+				}
+			}
+			
 			currentClass=currentClass.getSuperclass();
 		}while(!currentClass.equals(Object.class));
 		return fieldSet;
 	}
-	private static Set<Field> getCommendField(Class<?> targetClass,Class<?> originClass){
+	private static Set<Field> getCommendField(Class<?> targetClass,Class<?> sourceClass){
 		Set<Field> 
 			targetSet=getAllField(targetClass)
-			,originSet=getAllField(originClass);
+			,sourceSet=getAllField(sourceClass);
 		targetSet.removeIf(new Predicate<Field>() {
 			@Override
 			public boolean test(Field t) {
 				// TODO Auto-generated method stub
-				return !originSet.contains(t);
+				return !sourceSet.contains(t);
 			}
 		});
 		return targetSet;
@@ -77,7 +83,7 @@ public class PersistentUtil {
 		return object;
 	}
 	
-	/**查找两个对象之间共同的并且可以进行更新的属性Field中，存在的不同的Field
+	/**查找新对象和数据库中的对象属性中的差别，筛选出有差别的属性
 	 * 
 	 * @param oldObj 需要存储到数据库的对象
 	 * @param newObj 前端传入的有更新过信息的对象

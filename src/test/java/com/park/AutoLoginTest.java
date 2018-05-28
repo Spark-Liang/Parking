@@ -16,8 +16,8 @@ public class AutoLoginTest extends AutoRollBackTest{
 	};
 	protected MockHttpSession session=new MockHttpSession();
 	
-	@Before
-	public void setUpLogin() {
+	
+	public AutoLoginTest() {
 		session.setAttribute("innerUser", innerUser);
 	}
 	
