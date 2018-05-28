@@ -15,16 +15,16 @@ public class PersistentUtil {
 	/**合并两个对象的所有属性
 	 * 
 	 * @param target 被更新属性的对象
-	 * @param origin 提供更新的属性
+	 * @param newObj 提供更新的属性
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public static void merge(Object target,Object origin) throws IllegalArgumentException, IllegalAccessException{
-		Set<Field> fieldSet=getCommendField(target.getClass(), origin.getClass());
+	public static void merge(Object target,Object newObj) throws IllegalArgumentException, IllegalAccessException{
+		Set<Field> fieldSet=getCommendField(target.getClass(), newObj.getClass());
 		for(Field field:fieldSet) {
 			boolean accessiable=field.isAccessible();
 			field.setAccessible(true);
-			Object originValue=field.get(origin);
+			Object originValue=field.get(newObj);
 			if(originValue!=null) {
 				field.set(target,originValue);
 			}
@@ -79,15 +79,15 @@ public class PersistentUtil {
 	
 	/**查找两个对象之间共同的并且可以进行更新的属性Field中，存在的不同的Field
 	 * 
-	 * @param target 需要存储到数据库的对象
-	 * @param origin 前端传入的有更新过信息的对象
+	 * @param oldObj 需要存储到数据库的对象
+	 * @param newObj 前端传入的有更新过信息的对象
 	 * @return Map 返回属性不同的Map 没有需要进行更新的属性返回null
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public static Map<String, Object> different(Object target,Object origin) throws IllegalArgumentException, IllegalAccessException{
+	public static Map<String, Object> different(Object oldObj,Object newObj) throws IllegalArgumentException, IllegalAccessException{
 		Map<String, Object> result=new HashMap<>();
-		Set<Field> fieldSet=getCommendField(target.getClass(), origin.getClass());
+		Set<Field> fieldSet=getCommendField(oldObj.getClass(), newObj.getClass());
 		//查找共同Field中存在不同的Field
 		for(Field field:fieldSet) {
 			//判断是否能够更改
@@ -95,8 +95,8 @@ public class PersistentUtil {
 			field.setAccessible(true);
 			if(field.getAnnotation(UnEditableField.class)==null) {
 				//更新的对象当中属性不为null并且有不同
-				if(isDifferent(field,target,origin)) {
-					result.put(field.getName(), field.get(origin));
+				if(isDifferent(field,oldObj,newObj)) {
+					result.put(field.getName(), field.get(newObj));
 				}
 			}
 			//还原原始accessible
@@ -105,7 +105,7 @@ public class PersistentUtil {
 		return result.isEmpty()?null:result;
 	}
 	
-	private static boolean isDifferent(Field field,Object target,Object origin) throws IllegalArgumentException, IllegalAccessException {
-		return field.get(origin) != null && !field.get(target).equals(field.get(origin));
+	private static boolean isDifferent(Field field,Object target,Object newObj) throws IllegalArgumentException, IllegalAccessException {
+		return field.get(newObj) != null && !field.get(target).equals(field.get(newObj));
 	}
 }
