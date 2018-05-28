@@ -76,7 +76,7 @@
 				</div>
 				<div class="form-gorup">
 					<label>*密码</label> <input type="password" class="form-control pwd"
-						name="" placeholder="密码不能有空格并且长度不能小于6位">
+						name="" placeholder="password">
 				</div>
 				<div class="form-gorup">
 					<label>*确认密码</label> <input type="password" class="form-control pwd2"
@@ -474,40 +474,37 @@
 			var object = /^[\u4e00-\u9fa5\|\w]{2,10}$/g;
 			if (!object.test(a[0])) {
 				$('.add-manger input:eq(0)').parent().addClass('has-error');
-				num++;
 				alert("用户名错误");
-				return;
+				num++;
 			} else {
 				$('.add-manger input:eq(0)').parent().removeClass('has-error');
 			}
 			var object = /^1{1}[3-9]{2}[0-9]{8}$/g;
 			if (!object.test(a[1])) {
 				$('.add-manger input:eq(1)').parent().addClass('has-error');num++;
-				alert('手机号码格式有问题');return;
+				alert("手机格式有问题");
 			} else {
 				$('.add-manger input:eq(1)').parent().removeClass('has-error');
 			}
-			var object = /^\w{6,}$/g;
-			if(a[2]!=''&&a[4]!=''&&object.test(a[2])){
-				if (a[2] != a[4]){
-				 $(a).parent().find('input:eq(2)').parent().addClass('has-error');num++;
-				 alert('两次密码不一样！！');return;
-				}else{
-					$(a).parent().find('input:eq(2)').parent().removeClass('has-error');
-				}
-			}else{
-				num++;
-				$(a).parent().find('input:eq(2)').parent().addClass('has-error');
-				alert('密码不能有空格并且长度不能小于6位');
-				return;
+			if (a[2].length >= 6) {
+				$('.add-manger input:eq(2)').parent().removeClass('has-error');
+			} else {
+				$('.add-manger input:eq(2)').parent().addClass('has-error');num++;
 			}
 			if(a[3]==null){
 				$('#work-tip').parent().find('p').fadeIn();num++;
-				alert('职位不能为空');return;
 			}else{
 				$('#work-tip').parent().find('p').fadeOut();
 			}
-			
+			var object = /^\w{6,}$/g;
+			if (a[4] != a[2]||!object.test(a[2])) {
+				$('.add-manger input:eq(2)').parent().addClass('has-error');num++;
+				$('.add-manger input:eq(3)').parent().addClass('has-error');num++;
+				alert('密码填写错误');
+			} else {
+				$('.add-manger input:eq(3)').parent().removeClass('has-error');
+				$('.add-manger input:eq(2)').parent().removeClass('has-error');
+			}
 			if (num>0){
 				return 'error';
 			}else{
