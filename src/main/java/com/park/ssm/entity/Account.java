@@ -1,6 +1,7 @@
 package com.park.ssm.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -24,6 +25,7 @@ public class Account implements Serializable {
 	private Long cardId;
 	
 	private AccountState state;
+	private Date stateStartDate;
 	private boolean isParking;
 	private Bill currentBill;
 	private List<Bill> bills;
@@ -58,6 +60,12 @@ public class Account implements Serializable {
 	public void setCardId(Long cardId) {
 		this.cardId = cardId;
 	}
+	public Date getStateStartDate() {
+		return stateStartDate;
+	}
+	public void setStateStartDate(Date stateStartDate) {
+		this.stateStartDate = stateStartDate;
+	}
 	public AccountState getState() {
 		return state;
 	}
@@ -82,16 +90,14 @@ public class Account implements Serializable {
 	public void setBills(List<Bill> bills) {
 		this.bills = bills;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 	
 	@Override
 	public String toString() {
 		return "Account [id=" + id + ", userId=" + userId + ", parkingLotId=" + parkingLotId + ", parkingPositionId="
-				+ parkingPositionId + ", cardId=" + cardId + ", state=" + state + ", isParking=" + isParking
-				+ ", currentBill=" + currentBill + ", bills=" + bills + "]";
+				+ parkingPositionId + ", cardId=" + cardId + ", stateStartDate=" + stateStartDate + ", state=" + state
+				+ ", isParking=" + isParking + ", currentBill=" + currentBill + ", bills=" + bills + "]";
 	}
+	
 	
 	
 }

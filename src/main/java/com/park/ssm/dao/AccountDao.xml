@@ -23,7 +23,7 @@
 
 	<!-- dao相关sql -->
 	<sql id="sqlField">
-		id,userId,parkingLotId,parkingPositionId,cardId,state,isParking,currentBillId
+		id,userId,parkingLotId,parkingPositionId,cardId,state,stateStartDate,isParking,currentBillId
 	</sql>
 
 
@@ -95,9 +95,9 @@
 
 	<insert id="insertAccount" parameterType="Account">
 		insert into Account
-		(id,userId,parkingLotId,parkingPositionId,cardId,state,currentBillId)
+		(userId,parkingLotId,parkingPositionId,cardId,state,stateStartDate,currentBillId)
 		values
-		(#{id},#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},${state.getInd()},#{currentBillId})
+		(#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},${state.getInd()},curdate(),#{currentBill.Id})
 	</insert>
 
 	<update id="setAccountState">
@@ -106,10 +106,16 @@
 		where id=#{id}
 	</update>
 
-	<update id="modifyAccount" parameterType="Account">
+	<update id="modifyAccount" >
 		update Account
-		set cardId=${cardId}
-		where userId=#{userId} and parkingLotId=${parkingLotId}
+		<set>	
+			<if test="cardId != null">
+				cardId=#{cardId},
+			</if>
+			isParking=#{isParking},
+			stateStartDate=curdate(),
+		</set>
+		where id=#{id}
 	</update>
 
 </mapper>

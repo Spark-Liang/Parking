@@ -1,6 +1,7 @@
 package com.park.ssm.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
@@ -58,7 +59,7 @@ public interface AccountDao {
 												,@Param("cardId")Long cardId
 												);
 	
-	public abstract int modifyAccount(Account account);
+	public abstract int modifyAccount(@Param("map")Map<String, Object> different);
 	
 	public abstract int isNotExistCard(long cardId);
 }
