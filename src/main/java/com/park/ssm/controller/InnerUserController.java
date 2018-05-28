@@ -145,7 +145,11 @@ public class InnerUserController {
 				result = innerUserService.insertInnerUser(innerUser);
 				//System.out.println("++++++++++++++++++++++++++"+innerUser.getSalt());
 				if (result > 0) {
+					List<InnerUser> list = new ArrayList<>();
+					//list=innerUserService.findInnerUserByTypeflag();
 					map.put("msg", 1);
+					map.put("innerUser", innerUser);
+					System.out.println("------------------------------"+innerUser);
 				} else {
 					map.put("msg", 0);
 				}

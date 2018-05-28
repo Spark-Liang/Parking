@@ -7,20 +7,14 @@ import java.io.Serializable;
  *
  */
 public class InnerUser implements Serializable {
-	private int id;
+	private Integer id;
 	private String nickname;          //昵称即用户名，登陆时使用昵称，不允许重复
 	private String password;		  //密码，不允许低于8位
 	private int typeflag;			  //类型标记，1为admin，2为manager，3为operator
 	private String name;			  //用户真实姓名，允许同姓名
 	private String salt;		      //盐
 	
-	public String getSalt() {
-		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
+	
 
 	public InnerUser() {
 		
@@ -39,7 +33,7 @@ public class InnerUser implements Serializable {
 		this.salt=salt;
 	}
 	
-	public InnerUser(int id,String nickname,String password,int typeflag,String name){
+	public InnerUser(Integer id,String nickname,String password,int typeflag,String name){
 		this.id=id;
 		this.nickname=nickname;
 		this.password=password;
@@ -49,11 +43,11 @@ public class InnerUser implements Serializable {
 	}
 	
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -88,7 +82,14 @@ public class InnerUser implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getSalt() {
+		return salt;
+	}
 
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 	@Override
 	public String toString() {
 		return "InnerUser [id=" + id + ", nickname=" + nickname + ", password=" + password + ", typeflag=" + typeflag

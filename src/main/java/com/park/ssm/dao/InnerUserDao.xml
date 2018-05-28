@@ -25,13 +25,17 @@
 
 	<!-- 新增InnerUser -->
 	<insert id="addInnerUser" parameterType="com.park.ssm.entity.InnerUser">
+	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			<!-- SELECT LAST_INSERT_ID()：得到刚insert到数据表中的记录的主键值，只适用于自增主键 -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 		insert into
 		InnerUser(nickname,password,typeflag,name,salt)
 		values(#{nickname},#{password},#{typeflag},#{name},#{salt})
 	</insert>
 
 	<!-- 更新InnerUser信息,nickname不能更改 -->
-	<update id="updateInnerUserByNickname">
+	<update id="updateInnerUserByNickname" parameterType="com.park.ssm.entity.InnerUser">
 		update InnerUser set
 		nickname=#{nickname},
 		password=#{password},typeflag=#{typeflag},salt=#{salt}
