@@ -1,6 +1,7 @@
 package com.park.ssm.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,22 @@ public class InnerUserController {
 	public String loginPage() {
 		return "login";
 	}
-
+	
+	/**
+	 * 判断是否为季度第一天
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	private boolean setPriceOrNot() {
+		Date date=new Date();
+		int month=date.getMonth()+1;
+		int day=date.getDate();
+		if(day==1&&(month==1&&month==4&&month==7&&month==10)) {
+			return false;
+		}else {
+			return true;
+		}
+	}
 	/**
 	 * 登陆控制器
 	 * 
@@ -131,9 +147,9 @@ public class InnerUserController {
 	public String addInnerUser(InnerUser innerUser, HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
-		int id = admin.getTypeflag();
+		int typeflag = admin.getTypeflag();
 		Map<String, Object> map = new HashMap<>();
-		if (id == 0) {// admin的typefalg为0，只有admin才能添加
+		if (typeflag == 0) {// admin的typefalg为0，只有admin才能添加
 			try {
 				String password=innerUser.getPassword();
 				Encryption en=new Encryption();
@@ -143,10 +159,7 @@ public class InnerUserController {
 				password=en.SHA512(password);
 				innerUser.setPassword(password);
 				result = innerUserService.insertInnerUser(innerUser);
-				//System.out.println("++++++++++++++++++++++++++"+innerUser.getSalt());
 				if (result > 0) {
-					List<InnerUser> list = new ArrayList<>();
-					//list=innerUserService.findInnerUserByTypeflag();
 					map.put("msg", 1);
 					map.put("innerUser", innerUser);
 					System.out.println("------------------------------"+innerUser);
@@ -175,10 +188,9 @@ public class InnerUserController {
 	public String changeInnerUser(InnerUser innerUser, HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
-		int id = admin.getTypeflag();
-		//String oldNickname=innerUser.getNickname();
+		int typeflag = admin.getTypeflag();
 		Map<String, Object> map = new HashMap<>();
-		if (id == 0) {// admin的typefalg为0，只有admin才能修改
+		if (typeflag == 0) {// admin的typefalg为0，只有admin才能修改
 			try {
 				String password=innerUser.getPassword();
 				Encryption en=new Encryption();
@@ -215,9 +227,9 @@ public class InnerUserController {
 	public String deleteInnerUser(@RequestParam("nickname") String nickname, HttpSession session) {
 		int result = 0;
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
-		int id = admin.getTypeflag();
+		int typeflag = admin.getTypeflag();
 		Map<String, Object> map = new HashMap<>();
-		if (id == 0) {// admin的typefalg为0，只有admin才能删除
+		if (typeflag == 0) {// admin的typefalg为0，只有admin才能删除
 			try {
 				result = innerUserService.dropInnerUserByNickname(nickname);
 				if (result > 0) {
@@ -248,8 +260,8 @@ public class InnerUserController {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		List<InnerUser> list = new ArrayList<>();
 		Map<String, Object> map = new HashMap<>();
-		int id = admin.getTypeflag();
-		if (id == 0) {// admin的typefalg为0，只展示inneerUser给admin
+		int typeflag = admin.getTypeflag();
+		if (typeflag == 0) {// admin的typefalg为0，只展示inneerUser给admin
 			try {
 				list = innerUserService.findInnerUserByTypeflag();
 				if (!list.isEmpty()) {
@@ -280,7 +292,7 @@ public class InnerUserController {
 		InnerUser manager=(InnerUser)session.getAttribute("innerUser");
 		int id=manager.getTypeflag();
 		Map<String,Object> map=new HashMap<>();
-		if(id==1) {
+		if(id==1&&setPriceOrNot()) {
 			try {
 				parkingLotService.updateParkingLot(parkingLot);
 				map.put("msg", 1);

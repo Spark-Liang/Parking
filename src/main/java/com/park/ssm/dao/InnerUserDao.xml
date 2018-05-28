@@ -25,8 +25,8 @@
 
 	<!-- 新增InnerUser -->
 	<insert id="addInnerUser" parameterType="com.park.ssm.entity.InnerUser">
-	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-			<!-- SELECT LAST_INSERT_ID()：得到刚insert到数据表中的记录的主键值，只适用于自增主键 -->
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+			<!-- SELECT LAST_INSERT_ID()：获取刚insert到数据表中的记录的键值，只适用于自增键字段 -->
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		insert into
