@@ -19,15 +19,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <style type="text/css">
 body{
-	background: url(img/welcome.jpg) no-repeat;
 	background-size: 100%;
+	min-width:1000px;
 }
+img{
+	width:100%;
+	min-width:1000px;
+	height:100%;
+	z-index:-5;
+	position: fixed;
+}
+
 .welcome-mid{
-	margin: 20% auto;
+	margin: 0 auto;
 	width: 900px;
-	height: 250px;
-	position: relative;
-	overflow: hidden;
+	height: 800px;
+	padding-top:20%
 }
 .welcome-mid button{
 	min-width: 300px;
@@ -58,6 +65,7 @@ body{
 }
 </style>
 <body>
+	<img src='img/welcome.jpg'>
 	<div class="welcome-mid">
 		<h1>Welcome Parking manger system</h1>
 		<!-- <div class="welcome-opacity"></div> -->
@@ -66,4 +74,18 @@ body{
 	</div>
 
 
+
 </body>
+
+
+
+
+
+
+
+
+
+
+
+
+
