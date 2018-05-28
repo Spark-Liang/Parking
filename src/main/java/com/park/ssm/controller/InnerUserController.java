@@ -290,9 +290,9 @@ public class InnerUserController {
 	@Permission(value={Permission.Type.MANAGER})
 	public String changeParkingLotPrice(ParkingLot parkingLot,HttpSession session) {
 		InnerUser manager=(InnerUser)session.getAttribute("innerUser");
-		int id=manager.getTypeflag();
+		int typeflag=manager.getTypeflag();
 		Map<String,Object> map=new HashMap<>();
-		if(id==1&&setPriceOrNot()) {
+		if(typeflag==1&&setPriceOrNot()) {
 			try {
 				parkingLotService.updateParkingLot(parkingLot);
 				map.put("msg", 1);

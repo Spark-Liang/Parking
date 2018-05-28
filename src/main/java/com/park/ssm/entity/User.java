@@ -1,6 +1,12 @@
 package com.park.ssm.entity;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 主键
 	 */
@@ -13,24 +19,55 @@ public class User {
 	 * 密码
 	 */
 	private String password;
-	
+	/**
+	 * 盐
+	 */
+	private String salt;
+
+	public User() {
+
+	}
+
+	public User(Long userId, String password) {
+		this.userId = userId;
+		this.password = password;
+	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public Long getUserId() {
 		return userId;
 	}
+
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+
 	public String getPassword() {
 		return password;
 	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userId=" + userId + ", password=" + password + ", salt=" + salt + "]";
+	}
+
 }

@@ -97,7 +97,10 @@ public class InnerUserServiceImpl implements InnerUserService {
 		// TODO Auto-generated method stub
 		return innerUserDao.getInnerUserByTypeflag();
 	}
-
+	
+	/**
+	 * 根据nickname查找salt，并取出
+	 */
 	@Override
 	public String findSaltByNickname(String nickname) {
 		// TODO Auto-generated method stub

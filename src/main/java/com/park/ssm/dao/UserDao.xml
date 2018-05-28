@@ -4,12 +4,26 @@
 <mapper namespace="com.park.ssm.dao.UserDao">
 
 
-<select id="loadUserById" parameterType="long" resultType="User">
-	select 
+	<select id="loadUserById" parameterType="long" resultType="User">
+		select
 		*
-	from User
-	where userId=#{_parameter}
-</select>
+		from User
+		where userId=#{userId}
+	</select>
 
-
+	<select id="getUser" resultType="User">
+		select userId,password from User
+		<where>
+			userId=#{userId}
+			and
+			password=#{password}
+		</where>
+	</select>
+	
+	<select id="getSaltByUserId" resultType="java.lang.String">
+		select salt from User
+		<where>
+			userId=#{userId}
+		</where>
+	</select>
 </mapper>

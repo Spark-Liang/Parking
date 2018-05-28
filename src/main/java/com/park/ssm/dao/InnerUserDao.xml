@@ -34,7 +34,7 @@
 		values(#{nickname},#{password},#{typeflag},#{name},#{salt})
 	</insert>
 
-	<!-- 更新InnerUser信息,nickname不能更改 -->
+	<!-- 更新InnerUser信息,nickname能更改 -->
 	<update id="updateInnerUserByNickname" parameterType="com.park.ssm.entity.InnerUser">
 		update InnerUser set
 		nickname=#{nickname},

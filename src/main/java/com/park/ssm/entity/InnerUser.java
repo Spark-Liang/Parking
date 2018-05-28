@@ -7,6 +7,10 @@ import java.io.Serializable;
  *
  */
 public class InnerUser implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nickname;          //昵称即用户名，登陆时使用昵称，不允许重复
 	private String password;		  //密码，不允许低于8位
