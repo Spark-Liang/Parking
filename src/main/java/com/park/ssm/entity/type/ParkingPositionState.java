@@ -1,7 +1,7 @@
 package com.park.ssm.entity.type;
 
 public enum ParkingPositionState {
-	INACTIVE(-1),UNOCCUPIED(0),OCCUPIED(1);
+	INACTIVE(-1),UNOCCUPIED(0),OCCUPIED(1),ReadyForOCCUPIED(2);
 	
 	private int ind;
 	private ParkingPositionState(int ind) {

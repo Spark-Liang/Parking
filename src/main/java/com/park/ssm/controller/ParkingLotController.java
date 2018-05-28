@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,7 +90,7 @@ public class ParkingLotController {
 	 * 
 	 * */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value="list")
+	@RequestMapping(value="list",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	@Permission(value= {Type.ADMIN,Type.MANAGER,Type.OPERATOR})
 	public @ResponseBody Map listParkingLot(HttpServletRequest request) {
 		Map<String, String[]> params=request.getParameterMap();

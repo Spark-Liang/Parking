@@ -1,6 +1,7 @@
 package com.park.ssm.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +14,7 @@ import com.park.ssm.entity.Account;
 import com.park.ssm.entity.User;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.ParkTerminalService;
+import com.park.ssm.util.PersistentUtil;
 
 @Service
 public class ParkTerminalServiceImpl implements ParkTerminalService {
@@ -38,8 +40,16 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 		// 该停车卡能够正常使用，修改停车卡状态
 		Account accountForUpdate = accountDao.loadAccountByIdForUpdate(account.getId());
 		accountForUpdate.setParking(true);
-		accountDao.modifyAccount(account);
-
+		Map<String, Object> different=null;
+		try {
+			different = PersistentUtil.different(accountForUpdate,account);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(different!=null) {
+			accountDao.modifyAccount(different);
+		}
 		return null;
 	}
 
@@ -118,8 +128,16 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 		// 该停车卡能够正常提车，修改停车卡状态
 		Account accountForUpdate = accountDao.loadAccountByIdForUpdate(account.getId());
 		accountForUpdate.setParking(false);
-		accountDao.modifyAccount(account);
-
+		Map<String, Object> different=null;
+		try {
+			different = PersistentUtil.different(accountForUpdate,account);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(different!=null) {
+			accountDao.modifyAccount(different);
+		}
 		return null;
 	}
 
