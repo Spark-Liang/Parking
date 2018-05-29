@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.park.ssm.dao.AccountDao;
+import com.park.ssm.dao.BillDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
+import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 import com.park.ssm.service.AccountService;
 import com.park.ssm.util.PersistentUtil;
@@ -25,6 +27,9 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Autowired
 	private UserDao userdao;
+	
+	@Autowired
+	private BillDao billdao;
 	
 	@Override
 	public List<Account> findAccountrById(long userId) {
@@ -66,6 +71,11 @@ public class AccountServiceImpl implements AccountService {
 	public Account getCardMessage(long cardId) {
 		// TODO Auto-generated method stub
 		return accountdao.getCardMessage(cardId);
+	}
+	@Override
+	public Bill isNotPayBill(long userId) {
+		// TODO Auto-generated method stub
+		return billdao.isNotPayBill(userId);
 	}
 
 

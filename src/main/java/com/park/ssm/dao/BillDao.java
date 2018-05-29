@@ -3,6 +3,7 @@ package com.park.ssm.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.mybatis.spring.annotation.MapperScan;
 
 import com.park.ssm.entity.Bill;
 
@@ -17,6 +18,7 @@ import com.park.ssm.entity.Bill;
  * @author LZH
  *
  */
+@MapperScan
 public interface BillDao {
 	
 	public abstract Bill loadBillById(long id);
@@ -53,4 +55,11 @@ public interface BillDao {
 	 * @return
 	 */
 	public abstract int updateBillStateById(long id);
+	
+	/**
+	 * 更新对应的id的bill的ispaid状态为1
+	 * @param id
+	 * @return
+	 */
+	public abstract Bill isNotPayBill(@Param("userId")Long userId);
 }
