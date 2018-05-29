@@ -53,4 +53,11 @@ public interface BillDao {
 	 * @return
 	 */
 	public abstract int updateBillStateById(long id);
+	
+	/**
+	 * 更新对应的id的bill的ispaid状态为1
+	 * @param id
+	 * @return
+	 */
+	public abstract Bill isNotPayBill(@Param("userId")Long userId);
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.entity.Account;
+import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.AccountService;
@@ -120,29 +121,32 @@ public class UserController {
 		    	     Account cardMessage=new Account();
 		    	     cardMessage=accountService.getCardMessage(cardId);
 		    	     if(cardMessage!=null){
-			    		 falg=2;
-			    		 message="创建失败，该停车卡已与帐户绑定，请重新选择！";
+			    		 message="开卡失败，该停车卡已与帐户绑定，请重新选择！";
 		    	     }
 		    	     else {
-		    	    	 account.setUserId(user.getUserId());
-		    	    	 Integer lotId=new Integer(LotId);
-				    	 account.setParkingLotId(lotId);
-				    	 account.setCardId(cardId);
-				    	 account.setState(AccountState.getValueByInd(0));
-				    	 status=accountService.addNewCard(account);//添加新卡
-				    	 if(status>0) {
-				    		falg=1;
-				    		message="创建成功";
-				    	    result.put("cardId",cardId);
-				    	 }
-				    	 else {
-				    		 falg=2;
-				    		 message="系统出错，请联系技术部门！";
-				    	 }	 
+		    	    	 Bill bill=accountService.isNotPayBill(userId);
+		    	    	 if(bill!=null) {
+		    	    		 message="开卡失败，该账户存在未缴费的账单，请先支付帐单！";
+		    	    	 }
+		    	    	 else {
+		    	    		 account.setUserId(user.getUserId());
+			    	    	 Integer lotId=new Integer(LotId);
+					    	 account.setParkingLotId(lotId);
+					    	 account.setCardId(cardId);
+					    	 account.setState(AccountState.getValueByInd(0));
+					    	 status=accountService.addNewCard(account);//添加新卡
+					    	 if(status>0) {
+					    		falg=1;
+					    		message="开卡成功";
+					    	    result.put("cardId",cardId);
+					    	 }
+					    	 else {
+					    		 message="系统出错，请联系技术部门！";
+					    	 }	 
+		    	    	 }
 		    	     }
 		     }
 		     else {
-		    	    falg=3;
 		    	    message="请输入已存在的用户帐号！";
 				  }
 		     result.put("falg",falg);

@@ -50,7 +50,7 @@
 		from Bill
 		<where>
 			<if test="userId != null">
-				and userId=#{userId}
+				and user=#{userId}
 			</if>
 			<if test="accountId != null">
 				and accountId=#{accountId}
@@ -67,4 +67,12 @@
 		where id=#{_parameter}
 	</update>
 
+    <select id="isNotPayBill" parameterType="Long" resultType="Integer">
+    select count(id) from Bill
+    <where>
+    <if test="userId != null">
+				and user=#{userId}
+			</if>
+    </where>
+    </select>>
 </mapper>
