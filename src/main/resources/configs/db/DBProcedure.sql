@@ -1,19 +1,20 @@
 
 #生成bill的储存过程
 DELIMITER $
-create procedure generateBill()
+drop procedure if exists generateBill$
+create procedure generateBill(in billDate date)
 begin
-	
-	
+	start trainsaction;
 	#对非stop的账户生成当前bill的开始时间和结束时间
 	insert into Bill(userId,parkingLotId,accountId,price,billStartDate,billEndDate)
 	select 
 		a.userid as userId
 		,a.parkingLotId as parkingLotId
 		,a.id as accountId
-		,b.currentPrice as price
+		,b.currentPrice * datediff(billDate,a.stateStartDate)/getTotalDate(billDate)
+		as price
 		,a.stateStartDate as billStartDate
-		,date_sub(curdate(),INTERVAL 1 DAY) as billEndDate
+		,date_sub(billDate,INTERVAL 1 DAY) as billEndDate
 		
 	from 
 		(select *
@@ -53,8 +54,8 @@ begin
 end 
 $
 
-
-create procedure updateAllAccountState()
+drop procedure if exists updateAllAccountState$
+create procedure updateAllAccountState(in execDate date)
 begin
 	
 	#更新所有Account的状态，未支付账单的状态设为s，其他不变
@@ -64,8 +65,9 @@ begin
 		Bill b
 		on a.currentBillId=b.id
 	set 
-		a.state=-1
-	 	,a.stateStartDate=curdate()
+		a.parkingPositionId=null
+		,a.state=-1
+	 	,a.stateStartDate=execDate
 	where b.isPaid=0
 	;
 	#从停车位表中移除对应的Account

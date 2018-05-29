@@ -46,7 +46,7 @@ create table Account
 create table Bill
 (
 	id bigint primary key auto_increment
-	,userId int 
+	,userId bigint 
 	,parkingLotId int 
 	,accountId bigint 
 	

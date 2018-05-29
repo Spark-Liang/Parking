@@ -1,55 +1,38 @@
 package com.park;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.springframework.core.io.ClassPathResource;
-
 import com.park.ssm.util.Encryption;
 
 @RunWith(Parameterized.class)
 public class PasswordGenerator {
-	private static BufferedWriter writer;
-	
-	@BeforeClass
-	public static void setUp() throws IOException {
-		ClassPathResource resource=new ClassPathResource("com/park/password.txt");
-		File file=resource.getFile();
-		writer=new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	}
+
 	
 	
-	
+	@SuppressWarnings({ "unchecked", "serial", "rawtypes" })
 	@Parameters
 	public static Collection<Object[]> data(){
 		return new LinkedList() {
 			{
-				add(new Object[] {"12345678910","123456"});
-				add(new Object[] {"12345678911","123456"});
-				add(new Object[] {"12345678912","123456"});
-				add(new Object[] {"12345678913","123456"});
-				add(new Object[] {"12345678914","123456"});
-				add(new Object[] {"12345678915","123456"});
-				add(new Object[] {"12345678916","123456"});
-				add(new Object[] {"12345678917","123456"});
-				add(new Object[] {"12345678918","123456"});
-				add(new Object[] {"12345678919","123456"});
-				add(new Object[] {"12345678910","123456"});
-				add(new Object[] {"15219326102","123456"});
-				add(new Object[] {"13075119722","123456"});
+				add(new Object[] {"13745678910","123456"});
+				add(new Object[] {"13745678911","123456"});
+				add(new Object[] {"13745678912","123456"});
+				add(new Object[] {"13745678913","123456"});
+				add(new Object[] {"13745678914","123456"});
+				add(new Object[] {"13745678915","123456"});
+				add(new Object[] {"13745678916","123456"});
+				add(new Object[] {"13745678917","123456"});
+				add(new Object[] {"13745678918","123456"});
+				add(new Object[] {"13745678919","123456"});
+				add(new Object[] {"13745678920","123456"});
+				add(new Object[] {"13719326102","123456"});
+				add(new Object[] {"13775119722","123456"});
 			}
 		};
 	}
@@ -73,15 +56,6 @@ public class PasswordGenerator {
 		String realPassword=encryption.SHA512(password+salt);
 		valuesArr.add("(\'"+userId+"\',\'"+realPassword+"\',\'"+salt+"\')\n");
 
-	}
-	
-	@AfterClass
-	public static void finish() throws IOException {
-		String sql="insert into User(userId,password,salt) values\n";
-		String values=String.join(",", valuesArr);
-		System.out.println(sql+values);
-		//writer.write(sql+values);
-		//writer.flush();
 	}
 
 }
