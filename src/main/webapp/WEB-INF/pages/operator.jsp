@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <script src="js/jquery-3.3.1.js"></script>
 <script src="js/bootstrap.min.js"></script>
-
+<script src="js/AllUseTools.js"></script>
 </head>
 
 <style type="text/css">
@@ -46,6 +46,9 @@
 .search-inf a{
 	font-size:12px;
 }
+.search-inf p{
+	margin-bottom: 0px;
+}
 </style>
 <script type="text/javascript">
 	
@@ -64,7 +67,7 @@
 			<li><a onclick="skip(0)">用户开卡或停卡</a></li>
 			<li><a onclick="skip(1)">换卡以及支付帐单</a></li>
 		</ol>
-		<div class="operator-module1" style="display: none;">
+		<div class="operator-module1" >
 			<div class="operator-module1-1">
 				<h3>用户开卡</h3>
 				<div class="col-md-3">
@@ -106,7 +109,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="operator-module2" >
+		<div class="operator-module2" style="display: none;" >
 			<div class="operator-module1-1 search-show">
 				<h3>搜索停车卡信息</h3>
 				<div class="col-md-12">
@@ -123,26 +126,12 @@
 					<p>手机号：<span>fds</span></p>
 					<p>停车场：<span>fsafda</span></p>
 					<p>卡状态：<span>fds</span></p>
-					<a>更换停车卡</a><br/><a>支付帐单</a>
-				</div>
-				<div class="alert alert-success col-md-3 search-inf">
-					<h4>卡号：<span>44444</span></h4>
-					<p>手机号：<span>fds</span></p>
-					<p>停车场：<span>fsafda</span></p>
-					<p>手机号：<span>fds</span></p>
-					<p>停车场：<span>fsafda</span></p>
-				</div>
-				<div class="alert alert-success col-md-3 search-inf">
-					<h4>卡号：<span>44444</span></h4>
-					<p>手机号：<span>fds</span></p>
-					<p>停车场：<span>fsafda</span></p>
-					<p>手机号：<span>fds</span></p>
-					<p>停车场：<span>fsafda</span></p>
+					<a onclick="updateCard(this)">更换停车卡</a><br/><a onclick="paymoney(this)">支付帐单</a>
 				</div>
 			</div>
 	</div>
 	</div>
-	
+
 	<script type="text/javascript">
 		//两个模块之间的跳转
 		function skip(num) {
@@ -191,7 +180,7 @@
 			inf[1] = $(this).parent().find('input:eq(1)').val();
 			inf[2] = $(this).parent().find('select').val();
 			var check = checkinf(this,inf);
-			if(1){
+			if(check==1){
 				 $.ajax({
 					url:'user/addNewCard',
 					dataType:'json',
@@ -254,7 +243,7 @@
 				alert('手机格式有误');
 				$(b).parent().find('input:eq(0)').parent().addClass('has-error');num++;
 			}
-			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
+			var object = /^\d{7}$/;
 			if(object.test(a[1])){
 				$(b).parent().find('input:eq(1)').parent().removeClass('has-error');
 			}else{
@@ -277,7 +266,7 @@
 		$('.search-card').click(function(){
 			var iphone = $(this).parent().find('input:eq(0)').val();
 			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
-			if(1){
+			if(object.test(iphone)){
 				$(this).parent().find('input:eq(0)').parent().removeClass('has-error');
 				/* $.ajax({
 					url:'user/getAllAccount',
@@ -309,6 +298,22 @@
 				$(this).parent().find('input:eq(0)').parent().addClass('has-error');
 			}
 		})
+		
+		//模块2
+		//点击更换停车卡按钮触发的事件 a是元素自身
+ 		function updateCard(a){
+			$('.edit-money').remove();
+			id = 33;
+			content ="请输入手机号码"
+			$(a).parent().find('h4').after(function (){
+				return NumEdit(id,content);
+			});
+		}
+		
+		//点击支付帐单的触发事件 
+		function paymoney(){
+			
+		}
 	</script>
 </body>
 
