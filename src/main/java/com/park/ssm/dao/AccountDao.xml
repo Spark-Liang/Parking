@@ -118,4 +118,12 @@
 		where id=#{id}
 	</update>
 
+
+<select id="getCardMessage" resultMap="accountRoughResult">
+	select 
+		*
+	from Account
+	where cardId=#{_paramter}
+</select>
+
 </mapper>

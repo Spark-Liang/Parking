@@ -62,4 +62,6 @@ public interface AccountDao {
 	public abstract int modifyAccount(@Param("map")Map<String, Object> different);
 	
 	public abstract int isNotExistCard(long cardId);
+	
+	public abstract Account getCardMessage(long cardId);
 }

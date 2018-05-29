@@ -57,5 +57,11 @@ public class AccountServiceImpl implements AccountService {
 		return accountdao.isNotExistCard(cardId);
 	}
 
+	@Override
+	public Account getCardMessage(long cardId) {
+		// TODO Auto-generated method stub
+		return accountdao.getCardMessage(cardId);
+	}
+
 
 }

@@ -138,22 +138,30 @@
 			inf[2] = $(this).parent().find('select').val();
 			var check = checkinf(this,inf);
 			if(check == 1){
-				/* $.ajax({
-					url:'',
+				 $.ajax({
+					url:'user/addNewCard',
 					dataType:'json',
-					type:'GET',
+					type:'post',
 					data:{
-						
-					},success:function(){
-						
-					},error:function(){
-						
+						"userId":inf[0],"cardId":inf[1],"LotId":inf[2]
+					},success:function(result){
+						if(result!=null){
+							if(result.falg==1){
+								alert("新的卡号为:"+result.cardId);
+							}
+							alert(result.message);
+						}
+						else{
+							alert(" 系统出错，请联系技术部门！");
+						}
+					},error:function(result){
+						alert(result.message);
 					}
-				}) */
+				}) 
 			}
-			else{
-				alert('fdss')
-			}
+			//else{
+				//alert('fdss')
+			//}
 		})
 		//点击停卡按钮的操作
 		$('.deletecard').click(function(){

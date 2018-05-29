@@ -58,4 +58,28 @@ public class TestAccountDao extends AutoRollBackTest {
 		dao.modifyAccount(different);
 		
 	}
+
+//	@Test
+	public void testAddNewCard() {//测试增加新停车卡
+		Account account=new Account();
+		long userId=18826237365l;
+		account.setUserId(userId);
+		account.setParkingLotId(1);
+		account.setCardId(123456789l);
+		account.setState(AccountState.NORMAL);
+		int falg=0;
+		falg=dao.insertAccount(account);
+		System.out.println(falg);
+	}
+	
+	@Test
+	public void testchangeNewCard() {//测试更换停车卡
+		long cardId=1l;
+		Account account=dao.getCardMessage(cardId);
+		System.out.println("停车场编号为："+account.getParkingLotId()+"停车位编号为："+account.getParkingPositionId());
+		account.setCardId(100l);
+//		int result=dao.modifyAccount(account);
+//		System.out.println("数据库更新条数为："+result);
+//		System.out.println("新的停车卡号："+account.getCardId());
+	}
 }
