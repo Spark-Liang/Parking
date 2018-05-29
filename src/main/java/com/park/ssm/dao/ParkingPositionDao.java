@@ -56,6 +56,13 @@ public interface ParkingPositionDao {
 	/**删除停车位，即设置停车位状态为INACTIVE*/
 	public abstract int deleteParkingPositionByLotId(int id);
 	
-	
+	/**
+	 * 
+	 * @param parkingPosition
+	 * 获取现在该停车场已被占用的停车位数量
+	 * @param parkingLotId 停车场id 
+	 * @return
+	 */
+	public abstract int getPositionNum(int parkingLotId);
 	
 }

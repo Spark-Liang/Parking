@@ -101,7 +101,7 @@ public class UserController {
 	
 	/**
 	 * 操作员
-	 * 根据客户ID创建特定停车场的停车卡
+	 * 开停车卡的校验流程
 	 * LotId   停车场ID
 	 * userId  客户ID 
 	 * cardId  停车卡卡号
@@ -133,31 +133,23 @@ public class UserController {
 			if(falg!=2){
 			User user=accountService.findUserByuserId(userId);//判断客户帐户是否存在
 		     if(user!=null){  
-		    	     Account cardMessage=new Account();
-		    	     cardMessage=accountService.getCardMessage(cardId);
-		    	     if(cardMessage!=null){
-			    		 message="开卡失败，该停车卡已与帐户绑定，请重新选择！";
-		    	     }
+		    	 int bill=accountService.isNotPayBill(userId);//判断是否存在未支付的账单
+    	    	 if(bill>0) {
+    	    		 message="开卡失败，该账户存在未缴费的账单，请先支付帐单！";
+    	    	 }
 		    	     else {
-		    	    	 int bill=accountService.isNotPayBill(userId);//判断是否存在未支付的账单
-		    	    	 if(bill>0) {
-		    	    		 message="开卡失败，该账户存在未缴费的账单，请先支付帐单！";
-		    	    	 }
-		    	    	 else {
-		    	    		 account.setUserId(user.getUserId());
-			    	    	 Integer lotId=new Integer(LotId);
-					    	 account.setParkingLotId(lotId);
-					    	 account.setCardId(cardId);
-					    	 account.setState(AccountState.getValueByInd(0));
-					    	 status=accountService.addNewCard(account);//添加新卡
-					    	 if(status>0) {
-					    		falg=1;
-					    		message="开卡成功";
-					    	    result.put("cardId",cardId);
-					    	 }
-					    	 else {
-					    		 message="系统出错，请联系技术部门！";
-					    	 }	 
+		    	    	 Account cardMessage=new Account();
+			    	     cardMessage=accountService.getCardMessage(cardId);
+			    	     if(cardMessage!=null){
+				    		 message="开卡失败，该停车卡已与帐户绑定，请重新选择！";
+			    	     }
+		    	    	 else{
+		    	    		 if(accountService.isNotFullPosition(LotId)){//该停车场的停车位是否已经满了
+		    	    			 message="无法开卡，该停车场已无空余停车位！";
+		    	    		 }
+		    	    		 else{
+		    	    			 falg=1;
+		    	    		 } 	 
 		    	    	 }
 		    	     }
 		     }
@@ -175,6 +167,38 @@ public class UserController {
 		return JSON.toJSONString(result);
 	}
 	
+
+	/**
+	 * 操作员
+	 * 根据客户ID创建特定停车场的停车卡
+	 */
+	@RequestMapping(value = "addCard", method = { RequestMethod.POST })
+	@ResponseBody
+	@Permission(value= {Permission.Type.ADMIN,Permission.Type.OPERATOR})
+	public String addCard(@RequestParam("LotId") int LotId ,@RequestParam("userId") long userId,@RequestParam("cardId") long cardId ) {
+		Map result=new HashMap();
+		Account account=new Account();
+		String message="";
+		int falg=0;
+		int status=0;
+		account.setUserId(userId);
+	    Integer lotId=new Integer(LotId);
+	    account.setParkingLotId(lotId);
+	    account.setCardId(cardId);
+	    account.setState(AccountState.getValueByInd(0));
+	    status=accountService.addNewCard(account);//添加新卡
+		 if(status>0) {
+			falg=1;
+			message="开卡成功";
+		    result.put("cardId",cardId);
+		 }
+		 else {
+			 message="系统出错，请联系技术部门！";
+		 }
+		 result.put("falg",falg);
+		 result.put("message",message);
+		return JSON.toJSONString(result);
+	}
 	
 
 	/**

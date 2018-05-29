@@ -90,4 +90,9 @@ public interface ParkingLotDao {
 	 * @param id 停车场id
 	 * */
 	public abstract int deleteParkingLot(int id);
+	/**
+	 * 获取停车场的停车位数量
+	 * @param id 停车场id
+	 * */
+	public abstract int getTotalLotNum(int id);
 }

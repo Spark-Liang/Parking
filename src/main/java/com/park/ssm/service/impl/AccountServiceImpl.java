@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.park.ssm.dao.AccountDao;
 import com.park.ssm.dao.BillDao;
+import com.park.ssm.dao.ParkingLotDao;
+import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.Bill;
@@ -30,6 +32,12 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Autowired
 	private BillDao billdao;
+	
+	@Autowired 
+	private ParkingLotDao parkinglotdao;
+	
+	@Autowired
+	private ParkingPositionDao parkingpositiondao;
 	
 	@Override
 	public List<Account> findAccountrById(long userId) {
@@ -69,13 +77,24 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Account getCardMessage(long cardId) {
-		// TODO Auto-generated method stub
 		return accountdao.getCardMessage(cardId);
 	}
+	
 	@Override
 	public int isNotPayBill(long userId) {
-		// TODO Auto-generated method stub
 		return billdao.isNotPayBill(userId);
+	}
+	
+	@Override
+	public Boolean isNotFullPosition(int id) {
+		int LotNum=parkinglotdao.getTotalLotNum(id);//停车场规定的停车位数量
+		int PositionNum=parkingpositiondao.getPositionNum(id);//现今已被占用的停车位数量
+		if(PositionNum>=LotNum) {
+			return true;
+		}
+		else{
+			return false;	
+		}
 	}
 
 

@@ -98,5 +98,8 @@ update ParkingPosition
 where parkingLotId=#{_parameter}
 </update>
  
+<select id="getPositionNum" parameterType="long" resultType="Integer">
+    select count(id) from ParkingPosition where where parkingLotId=#{parkingLotId}
+</select>
 
 </mapper>

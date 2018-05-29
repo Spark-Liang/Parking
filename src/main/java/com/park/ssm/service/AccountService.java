@@ -20,5 +20,7 @@ public interface AccountService {
 	
 	public Account getCardMessage(long cardId);//根据停车卡号获取帐户信息
 
-	public int isNotPayBill(long userId);//
+	public int isNotPayBill(long userId);//根据用户ID查看该用户是否存在未缴费的账单
+	
+	public Boolean isNotFullPosition(int id);//根据停车场编号判断是否有空余车位
 }

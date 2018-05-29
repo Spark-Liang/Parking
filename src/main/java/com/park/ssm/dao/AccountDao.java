@@ -65,8 +65,14 @@ public interface AccountDao {
 	 * @return
 	 */
 	public abstract int modifyAccount(@Param("id")Long id,@Param("map")Map<String, Object> different);
-	
+	/**
+	 * @param cardId
+	 * 查询是否存在此卡
+	 */
 	public abstract int isNotExistCard(long cardId);
-	
+	/**
+	 * @param cardId
+	 * 获取停车卡信息
+	 */
 	public abstract Account getCardMessage(long cardId);
 }
