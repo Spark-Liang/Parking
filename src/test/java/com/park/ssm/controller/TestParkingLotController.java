@@ -5,15 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hamcrest.core.IsEqual;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.results.ResultMatchers;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -31,7 +27,6 @@ import junit.framework.Assert;
 //使用MockMvcRequestBuilders的静态方法生成mockrequest
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.*;
 
 public class TestParkingLotController extends AutoLoginTest {
 	
@@ -97,14 +92,10 @@ public class TestParkingLotController extends AutoLoginTest {
 		MockMvcResultHandlers.print(System.out).handle(mockRequest.andReturn());
 		mockRequest.andExpect(status().isOk());
 		
-		
-		
-		ParkingLotDao dao=applicationContext.getBean(ParkingLotDao.class);
-		
+
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testUpdate() throws Exception {
 		//测试参数
