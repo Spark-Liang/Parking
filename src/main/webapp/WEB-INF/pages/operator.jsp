@@ -25,19 +25,26 @@
 	display: inline-block;
 	margin-left: 15px;
 }
-.operator-module1{
+.operator-module1-1{
 	min-height: 280px;
-	margin-top: 30px;
+	margin-top: 10px;
 	padding-left: 50px;
 }
-.operator-module1 h3{
+.operator-module1-1 h3{
 	font-size: 22px;
 	font-weight: 600;
 	border-bottom: 2px solid grey;
 	margin-bottom: 20px;
 }
-.operator-module1 select{
+.operator-module1-1 select{
 	min-width: 220px;
+}
+.search-inf{
+	margin-top:30px;
+	margin-right:20px;
+}
+.search-inf a{
+	font-size:12px;
 }
 </style>
 <script type="text/javascript">
@@ -53,59 +60,106 @@
 	<div class="container container-style">
 		<h1 id='admin-name'>Hello,<span>XXX</span></h1>
 		<p class="text-info">你的身份是操作员,可以操作以下数据</p>
-<!-- 		<a class="operator-btn">
-			<button class="btn btn-primary btn-block">用户开卡</button>
-		</a>
-		<a class="operator-btn">
-			<button class="btn btn-danger btn-block">用户停卡</button>
-		</a> -->
-		<div class="operator-module1">
-			<h3>用户开卡</h3>
-			<div class="col-md-3">
-			    <div class="form-group">
-					<label for="exampleInputName2">手机号码</label>
-					<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
+		<ol class="breadcrumb">
+			<li><a onclick="skip(0)">用户开卡或停卡</a></li>
+			<li><a onclick="skip(1)">换卡以及支付帐单</a></li>
+		</ol>
+		<div class="operator-module1" style="display: none;">
+			<div class="operator-module1-1">
+				<h3>用户开卡</h3>
+				<div class="col-md-3">
+				    <div class="form-group">
+						<label for="exampleInputName2">手机号码</label>
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputName2">卡号</label>
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="卡号">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail2">停车场</label>
+						<select class="form-control parkaddress input-sm">
+							<option value=""></option>
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary btn-sm newcard">开卡</button>		
 				</div>
-				<div class="form-group">
-					<label for="exampleInputName2">卡号</label>
-					<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="卡号">
+			</div>
+			<div class="operator-module1-1" >
+				<h3>用户停卡</h3>
+				<div class="col-md-3">
+				    <div class="form-group">
+						<label for="exampleInputName2">手机号码</label>
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="手机号码">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputName2">卡号</label>
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="卡号">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail2">停车场</label>
+						<select class="form-control parkaddress input-sm">
+							<option value=""></option>
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary btn-sm deletecard">停卡</button>
 				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">停车场</label>
-					<select class="form-control parkaddress input-sm">
-						<option value=""></option>
-					</select>
-				</div>
-				<button type="submit" class="btn btn-primary btn-sm newcard">开卡</button>		
 			</div>
 		</div>
-		<div class="operator-module1" >
-			<h3>用户停卡</h3>
-			<div class="col-md-3">
-			    <div class="form-group">
-					<label for="exampleInputName2">手机号码</label>
-					<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="手机号码">
+		<div class="operator-module2" >
+			<div class="operator-module1-1 search-show">
+				<h3>搜索停车卡信息</h3>
+				<div class="col-md-12">
+					<form class="form-inline">
+						<div class="form-group">
+							<label for="exampleInputName2">手机号</label>
+							<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="手机号">
+						</div>
+						<button type="button" class="btn btn-primary btn-sm search-card">搜索</button>		
+					</form>
 				</div>
-				<div class="form-group">
-					<label for="exampleInputName2">卡号</label>
-					<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="卡号">
+				<div class="alert alert-success col-md-3 search-inf">
+					<h4>卡号：<span>44444</span></h4>
+					<p>手机号：<span>fds</span></p>
+					<p>停车场：<span>fsafda</span></p>
+					<p>卡状态：<span>fds</span></p>
+					<a>更换停车卡</a><br/><a>支付帐单</a>
 				</div>
-				<div class="form-group">
-					<label for="exampleInputEmail2">停车场</label>
-					<select class="form-control parkaddress input-sm">
-						<option value=""></option>
-					</select>
+				<div class="alert alert-success col-md-3 search-inf">
+					<h4>卡号：<span>44444</span></h4>
+					<p>手机号：<span>fds</span></p>
+					<p>停车场：<span>fsafda</span></p>
+					<p>手机号：<span>fds</span></p>
+					<p>停车场：<span>fsafda</span></p>
 				</div>
-				<button type="submit" class="btn btn-primary btn-sm deletecard">停卡</button>
+				<div class="alert alert-success col-md-3 search-inf">
+					<h4>卡号：<span>44444</span></h4>
+					<p>手机号：<span>fds</span></p>
+					<p>停车场：<span>fsafda</span></p>
+					<p>手机号：<span>fds</span></p>
+					<p>停车场：<span>fsafda</span></p>
+				</div>
 			</div>
-		</div>
+	</div>
 	</div>
 	
 	<script type="text/javascript">
+		//两个模块之间的跳转
+		function skip(num) {
+			if (num == 0) {
+				$('.operator-module1').show();
+				$('.operator-module2').hide();
+
+			} else if (num == 1) {
+				$('.operator-module2').show();
+				$('.operator-module1').hide();
+				
+			}
+		}
+		//页面刷新加载信息
 		$(window).ready(function(){
 			var href = decodeURI(window.location.href);
 			var adminname = href.split("=")[2];
-			//alert(name)
 			$('#admin-name span').text(adminname);
 			//获取停车场的信息到选择框中
 			$.ajax({
@@ -137,7 +191,7 @@
 			inf[1] = $(this).parent().find('input:eq(1)').val();
 			inf[2] = $(this).parent().find('select').val();
 			var check = checkinf(this,inf);
-			if(check == 1){
+			if(1){
 				 $.ajax({
 					url:'user/addNewCard',
 					dataType:'json',
@@ -219,6 +273,42 @@
 				return 0;
 			}
 		}
+		
+		$('.search-card').click(function(){
+			var iphone = $(this).parent().find('input:eq(0)').val();
+			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
+			if(1){
+				$(this).parent().find('input:eq(0)').parent().removeClass('has-error');
+				/* $.ajax({
+					url:'user/getAllAccount',
+					dataType:'json',
+					type:'POST',
+					data:{
+						'userId':iphone
+					},success:function(json){
+						
+						console.log(json);
+						var l = json.data.length;
+						for(var i =0;i<l;i++){
+							$('.search-show').append(function (){
+								return "<div class='alert alert-success col-md-3 search-inf'>"
+								+"<h4>卡号：<span>"+卡号+"</span></h4>"
+								+"<p>手机号：<span>"+卡号+"</span></p>"
+								+"<p>停车场：<span>"+卡号+"</span></p>"
+								+"<p>卡状态：<span>"+卡号+"</span></p>"
+								+"<a>更换停车卡</a><br/><a>支付帐单</a>"
+							+"</div>";
+							})
+						}
+					},error:function(){
+						
+					}
+				})  */
+			}else{
+				alert('手机号格式出错');
+				$(this).parent().find('input:eq(0)').parent().addClass('has-error');
+			}
+		})
 	</script>
 </body>
 
