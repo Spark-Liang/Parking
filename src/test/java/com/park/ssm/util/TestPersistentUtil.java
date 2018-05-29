@@ -32,15 +32,15 @@ public class TestPersistentUtil extends AutoRollBackTest{
 	@Test
 	public void testMerge() throws IllegalArgumentException, IllegalAccessException {
 		//test data
-		ParkingLot parkingLotTarget=new ParkingLot();
-		PersistentUtil.merge(parkingLotTarget, parkingLot);
+		ParkingLot parkingLotOld=new ParkingLot();
+		PersistentUtil.merge(parkingLotOld, parkingLot,ParkingLot.class);
 		
-		Assert.assertEquals(parkingLotTarget.getId(), parkingLot.getId());
-		Assert.assertEquals(parkingLotTarget.getCurrentPrice(), parkingLot.getCurrentPrice());
-		Assert.assertEquals(parkingLotTarget.getLocation(), parkingLot.getLocation());
-		Assert.assertEquals(parkingLotTarget.getName(), parkingLot.getName());
-		Assert.assertEquals(parkingLotTarget.getTotalPositionNum(), parkingLot.getTotalPositionNum());
-		Assert.assertEquals(parkingLotTarget.getState(), parkingLot.getState());
+		Assert.assertEquals(parkingLotOld.getId(), parkingLot.getId());
+		Assert.assertEquals(parkingLotOld.getCurrentPrice(), parkingLot.getCurrentPrice());
+		Assert.assertEquals(parkingLotOld.getLocation(), parkingLot.getLocation());
+		Assert.assertEquals(parkingLotOld.getName(), parkingLot.getName());
+		Assert.assertEquals(parkingLotOld.getTotalPositionNum(), parkingLot.getTotalPositionNum());
+		Assert.assertEquals(parkingLotOld.getState(), parkingLot.getState());
 	}
 	
 	@Test
@@ -48,13 +48,13 @@ public class TestPersistentUtil extends AutoRollBackTest{
 		//test data
 		double cost=111,currentPrice=999;
 		
-		ParkingLot parkingLotTarget=new ParkingLot();
-		PersistentUtil.merge(parkingLotTarget, parkingLot);
+		ParkingLot parkingLotOld=new ParkingLot();
+		PersistentUtil.merge(parkingLotOld, parkingLot,ParkingLot.class);
 		
 		parkingLot.setCost(cost);
 		parkingLot.setCurrentPrice(currentPrice);
 		
-		Map<String, Object> different= PersistentUtil.different(parkingLotTarget, parkingLot);
+		Map<String, Object> different= PersistentUtil.different(parkingLotOld, parkingLot,ParkingLot.class);
 		
 		Assert.assertNotNull(different.get("cost"));
 		Assert.assertNotNull(different.get("currentPrice"));

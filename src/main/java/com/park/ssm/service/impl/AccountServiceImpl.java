@@ -15,7 +15,6 @@ import com.park.ssm.dao.ParkingLotDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
-import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 import com.park.ssm.service.AccountService;
 import com.park.ssm.util.PersistentUtil;
@@ -59,14 +58,14 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	public int modifyAccount(Account account) {
 		
-		Account accountForUpdate = accountdao.loadAccountByIdForUpdate(account.getId());
+		Account accountInDB = accountdao.loadAccountByIdForUpdate(account.getId());
 		Map<String, Object> different=null;
 		try {
-			different = PersistentUtil.different(account,accountForUpdate);
+			different = PersistentUtil.different(accountInDB,account,Account.class);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			logger.info(e);
 		}
-		return accountdao.modifyAccount(accountForUpdate.getId(),different);
+		return accountdao.modifyAccount(account.getId(),different);
 	}
 	
 	@Override

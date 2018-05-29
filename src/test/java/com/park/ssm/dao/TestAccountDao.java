@@ -39,32 +39,32 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(account.getUserId(), accountInDB.getUserId());
 	}
 	
-//	@Test
+	@Test
 	public void testListById() {
 		//test data
-		Long userId=1L;
+		Long userId=13745678911L;
 		
 		List<Account> accounts=dao.findAccountrById(userId, null, null, null, null, null);
 		Assert.assertNotNull(accounts);
 		Assert.assertEquals(false, accounts.isEmpty());
 	}
 	
-//	@Test
+	@Test
 	public void testUpdate() throws IllegalArgumentException, IllegalAccessException {
 		//test data
 		Long id=1L;
 		
 		Account accountInDB=dao.loadAccountById(id);
 		Account account=new Account();
-		PersistentUtil.merge(account, accountInDB);
+		PersistentUtil.<Account>merge(account, accountInDB,Account.class);
 		account.setState(AccountState.STOP);
-		Map<String, Object> different=PersistentUtil.different(accountInDB, account);
+		Map<String, Object> different=PersistentUtil.different(accountInDB, account,Account.class);
 		dao.modifyAccount(account.getId(),different);
 		Account newAccountInDB=dao.loadAccountById(account.getId());
 		assertEquals(newAccountInDB.getState(), AccountState.STOP);
 	}
 
-//	@Test
+	@Test
 	public void testAddNewCard() {//测试增加新停车卡
 		Account account=new Account();
 		long userId=18826237365l;
@@ -77,19 +77,26 @@ public class TestAccountDao extends AutoRollBackTest {
 		System.out.println(falg);
 	}
 	
-//	@Test
-	public void testchangeNewCard() {//测试更换停车卡
-		long cardId=1l;
+	@Test
+	public void testchangeNewCard() throws IllegalArgumentException, IllegalAccessException {//测试更换停车卡
+		long cardId=13745678911l;
 		Account account=dao.getCardMessage(cardId);
+		Assert.assertNotNull(account);
 		System.out.println("停车场编号为："+account.getParkingLotId()+"停车位编号为："+account.getParkingPositionId());
+		Account accountInDB=new Account();
+		PersistentUtil.<Account>merge(account, accountInDB,Account.class);
 		account.setCardId(100l);
-//		int result=dao.modifyAccount(account);
+		Map<String, Object> different=PersistentUtil.different(accountInDB, account, Account.class);
+		int result=dao.modifyAccount(account.getId(),different);
+		Assert.assertEquals(1, result);
+		Account newAccount=dao.loadAccountById(account.getId());
+		assertEquals(account.getCardId(),newAccount.getCardId());
 //		System.out.println("数据库更新条数为："+result);
 //		System.out.println("新的停车卡号："+account.getCardId());
 	}
 	
 	
-	@Test
+	//@Test
 	public void testDate() {//测试日期是否相等
 		String times = new SimpleDateFormat("MMdd").format(new Date());
 		String exetime = "0529";

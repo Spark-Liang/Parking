@@ -38,19 +38,23 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 			return reason;
 		}
 		// 该停车卡能够正常使用，修改停车卡状态
-		Account accountForUpdate = accountDao.loadAccountByIdForUpdate(account.getId());
-		accountForUpdate.setParking(true);
-		Map<String, Object> different=null;
 		try {
-			different = PersistentUtil.different(account,accountForUpdate);
+			Account accountInDB = accountDao.loadAccountByIdForUpdate(account.getId());
+			account=new Account();
+			PersistentUtil.<Account>merge(account, accountInDB,Account.class);
+			account.setParking(true);
+			
+			Map<String, Object> different=null;
+			different = PersistentUtil.different(accountInDB,account,Account.class);
+			if(different!=null) {
+				accountDao.modifyAccount(account.getId(),different);
+			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			reason="系统内部错误，原因："+e.getMessage();
+			logger.info(e);
 		}
-		if(different!=null) {
-			accountDao.modifyAccount(accountForUpdate.getId(),different);
-		}
-		return null;
+		return reason;
 	}
 
 	/**
@@ -126,19 +130,23 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 			return reason;
 		}
 		// 该停车卡能够正常提车，修改停车卡状态
-		Account accountForUpdate = accountDao.loadAccountByIdForUpdate(account.getId());
-		accountForUpdate.setParking(false);
-		Map<String, Object> different=null;
 		try {
-			different = PersistentUtil.different(account,accountForUpdate);
+			Account accountInDB = accountDao.loadAccountByIdForUpdate(account.getId());
+			account=new Account();
+			PersistentUtil.<Account>merge(account, accountInDB,Account.class);
+			account.setParking(false);
+			
+			Map<String, Object> different=null;
+			different = PersistentUtil.different(accountInDB,account,Account.class);
+			if(different!=null) {
+				accountDao.modifyAccount(account.getId(),different);
+			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			reason="系统内部错误，原因："+e.getMessage();
+			logger.info(e);
 		}
-		if(different!=null) {
-			accountDao.modifyAccount(accountForUpdate.getId(),different);
-		}
-		return null;
+		return reason;
 	}
 
 	private String canPick(Integer parkingLotId, Account account) {
