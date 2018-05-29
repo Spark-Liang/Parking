@@ -15,24 +15,66 @@
 </head>
 <body>
 	<p>停车：
-	<form action="">
+	<form id="parkForm">
 		<label>停车场id：</label><input name="parkingLotId" type="text" size="8" /><br>
 		<label>停车卡号码：</label><input name="cardId" type="text" size="8" /><br>
-		<button id="parkCar" type="submit">停车</button>
+		<button id="parkCar" >停车</button>
 	</form>
 	<p>提车：
 	<form action="">
 		<label>停车场id：</label><input name="parkingLotId" type="text" size="8" /><br>
 		<label>停车卡号码：</label><input name="cardId" type="text" size="8" /><br>
-		<button id="pickCar" type="submit">提车</button>
+		<button id="pickCar">提车</button>
 	</form>
 
 </body>
 
 <script>
 	$(window).ready(function() {
-		alert("停车成功")
-		alert("停车失败")
-	})
+		$("#parkCar").click(function(){
+			//ajax提交表单
+			$.ajax({
+				type : "POST",
+				dataType : "json",
+				url : "parkTerminal/park", //提交的地址  
+				data : $('#parkForm').serialize(),
+				error : function(request) {  
+				},
+				success : function(response) {
+					if(response.error != null && response.error != ""){
+						alert("停车失败，原因:"+response.error);
+						return;
+					}
+					if(response.reason != null && response.reason != ""){
+						alert("停车失败，原因:"+response.reason);
+						return;
+					}
+					alert("停车成功");
+				}
+			});
+		});
+		$("#pickCar").click(function(){
+			//ajax提交表单
+			$.ajax({
+				type : "POST",
+				dataType : "json",
+				url : "pickTerminal/pick", //提交的地址  
+				data : $('#pickForm').serialize(),
+				error : function(request) {  
+				},
+				success : function(response) {
+					if(response.error != null && response.error != ""){
+						alert("提车失败，原因:"+response.error);
+						return;
+					}
+					if(response.reason != null && response.reason != ""){
+						alert("提车失败，原因:"+response.reason);
+						return;
+					}
+					alert("提车成功");
+				}
+			});
+		});
+	});
 </script>
 </html>
