@@ -236,7 +236,7 @@ public class UserController {
 	 * 跳转到User登陆界面
 	 * @return
 	 */
-	@RequestMapping(value="userLogin")
+	@RequestMapping(value="toUserLogin")
 	@Permission(value= {},haveControl=false)
 	public String toUserLogin() {
 		return "userLogin";
