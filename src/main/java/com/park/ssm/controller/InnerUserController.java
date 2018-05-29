@@ -24,6 +24,12 @@ import com.park.ssm.service.InnerUserService;
 import com.park.ssm.service.ParkingLotService;
 import com.park.ssm.util.Encryption;
 
+/**
+ * InnerUser控制器
+ * 实现员工的相关功能
+ * @author ASNPHX4
+ *
+ */
 @Controller
 @RequestMapping("inneruser")
 public class InnerUserController {

@@ -23,6 +23,7 @@ import com.park.ssm.util.Encryption;
 
 /**
  * User控制器
+ * 实现user的相关功能
  * @author ASNPHX4
  *
  */
@@ -36,6 +37,7 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
 	/**
 	 * 操作员
 	 * 根据客户ID获取客户的所有帐户信息
@@ -228,5 +230,29 @@ public class UserController {
 		} else {
 			return JSON.toJSONString(null);
 		}
+	}
+	
+	/**
+	 * 跳转到User登陆界面
+	 * @return
+	 */
+	@RequestMapping(value="userLogin")
+	@Permission(value= {},haveControl=false)
+	public String toUserLogin() {
+		return "userLogin";
+	}
+	
+	/**
+	 * User退出登陆功能
+	 * 消除session
+	 * @param session
+	 * @return 跳转到User登陆界面
+	 */
+	@RequestMapping(value="userLogout")
+	@Permission(value= {},haveControl=false)
+	public String userLogout(HttpSession session) {
+		session.removeAttribute("user");
+		session.invalidate();
+		return "userLogin";
 	}
 }
