@@ -1,12 +1,8 @@
 package com.park.ssm.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-
-import javax.enterprise.inject.Model;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.alibaba.fastjson.JSON;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.User;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.AccountService;
+import com.park.ssm.service.UserService;
+import com.park.ssm.util.Encryption;
 
+/**
+ * User控制器
+ * @author ASNPHX4
+ *
+ */
 @Controller
 @RequestMapping("user")
 public class UserController {
@@ -32,7 +33,9 @@ public class UserController {
 	
 	@Autowired
 	private AccountService accountService;
-
+	
+	@Autowired
+	private UserService userService;
 	/**
 	 * 操作员
 	 * 根据客户ID获取客户的所有帐户信息
@@ -192,5 +195,38 @@ public class UserController {
 			result.put("message"," 系统出错，请联系技术部门！");
 		}
 		return JSON.toJSONString(result);
+	}
+	
+	/**
+	 * User登陆控制器
+	 * @param userId 用户登陆的id，11位手机号码
+	 * @param password 登陆密码6-16位，不包含空格
+	 * @param session  登陆成功后写入session
+	 * @return Json格式的user对象
+	 */
+	@RequestMapping(value = "userLogin", method = { RequestMethod.POST })
+	@ResponseBody
+	public String login(String userId, String password,HttpSession session) {
+		User user = new User();
+		Encryption en=new Encryption();
+		if (null != userId.trim() && !"".equals(userId.trim())) {
+			if (null != password && !"".equals(password)) {
+				try {
+					Long luserId=Long.parseLong(userId);
+					String salt=userService.findSaltByUserId(luserId);
+					String passwordAndSalt=en.SHA512(password.trim()+salt);
+					user = userService.findUser(luserId, passwordAndSalt);
+				} catch (Exception e) {
+					return JSON.toJSONString(null);
+				}
+			}
+		}
+		if (null != user) {
+			session.setAttribute("user", user);
+			System.out.println(user.toString());
+			return JSON.toJSONString(user);
+		} else {
+			return JSON.toJSONString(null);
+		}
 	}
 }

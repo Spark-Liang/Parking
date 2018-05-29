@@ -165,7 +165,7 @@
     </div>
     <div class="container container-style" >
         <h1>Hello,<span id='manger-name'></span></h1>
-        <p class="text-info">你的身份是经理,可以操作以下数据</p>
+        <p class="text-info">您的身份是经理,可以操作以下数据</p>
         <div class="moudle-one moudle1 " >
             <h4>停车场管理</h4>
             <!-- <div class="admin-block">
@@ -287,7 +287,7 @@
                  +"<p>地址："+json.res[i].location+"</p>"
                  +"<p>总停车位："+json.res[i].totalPositionNum+"</p>"
                  +"<div class='parking-money'>"
-                 +"<p>停车费：<span>"+json.res[i].currentPrice+"</span>￥/月<img onclick='editmoney(this)' data-value='"+json.res[i].id+"' class='pull-right' src='img/manger-editor.svg'></p>"
+                 +"<p>停车费：￥<span>"+json.res[i].currentPrice+"</span>元/月<img onclick='editmoney(this)' data-value='"+json.res[i].id+"' class='pull-right' src='img/manger-editor.svg'></p>"
                  +"</div>"
                 /*  +"<button class='btn btn-md btn-block btn-primary btn-use' onclick='usagecheck(this)'>查看使用情况</button>" */
                  +"<button class='btn btn-md btn-block btn-primary' onclick='moneycheck(this)'>查看销售和收入</button>"

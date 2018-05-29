@@ -62,13 +62,12 @@ public class InnerUserController {
 	 *            登陆的nickname，nickname唯一
 	 * @param password
 	 *            密码
-	 * @param typeflag
-	 *            权限控制
+	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "login", method = { RequestMethod.POST })
 	@ResponseBody
-	public String login(HttpSession session, String nickname, String password) {
+	public String login(HttpSession session, String nickname,String password) {
 		InnerUser innerUser = new InnerUser();
 		//int intTypeflag = Integer.parseInt(typeflag.trim());
 		Encryption en=new Encryption();

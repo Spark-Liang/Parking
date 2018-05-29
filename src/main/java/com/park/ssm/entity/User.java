@@ -2,6 +2,11 @@ package com.park.ssm.entity;
 
 import java.io.Serializable;
 
+/**
+ * 外部用户即停车场持卡停车用户实体类
+ * @author ASNPHX4
+ *
+ */
 public class User implements Serializable{
 	/**
 	 * 
