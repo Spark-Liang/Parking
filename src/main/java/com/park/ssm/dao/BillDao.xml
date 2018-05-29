@@ -50,7 +50,7 @@
 		from Bill
 		<where>
 			<if test="userId != null">
-				and useruserId}
+				and userId=#{userId}
 			</if>
 			<if test="accountId != null">
 				and accountId=#{accountId}

@@ -32,7 +32,10 @@ public class TestAccountDao extends AutoRollBackTest {
 		dao.insertAccount(account);
 		Assert.assertNotNull(account.getId());
 		Account accountInDB=dao.loadAccountById(account.getId());
-		//assertEquals(account, accountInDB);
+		assertEquals(account.getCardId(), accountInDB.getCardId());
+		assertEquals(account.getParkingLotId(), accountInDB.getParkingLotId());
+		assertEquals(account.getParkingPositionId(), accountInDB.getParkingPositionId());
+		assertEquals(account.getUserId(), accountInDB.getUserId());
 	}
 	
 	@Test
@@ -41,8 +44,8 @@ public class TestAccountDao extends AutoRollBackTest {
 		Long userId=1L;
 		
 		List<Account> accounts=dao.findAccountrById(userId, null, null, null, null, null);
-		//Assert.assertNotNull(accounts);
-		//Assert.assertEquals(false, accounts.isEmpty());
+		Assert.assertNotNull(accounts);
+		Assert.assertEquals(false, accounts.isEmpty());
 	}
 	
 	@Test
@@ -55,7 +58,8 @@ public class TestAccountDao extends AutoRollBackTest {
 		PersistentUtil.merge(account, accountInDB);
 		account.setState(AccountState.STOP);
 		Map<String, Object> different=PersistentUtil.different(accountInDB, account);
-		dao.modifyAccount(different);
-		
+		dao.modifyAccount(account.getId(),different);
+		Account newAccountInDB=dao.loadAccountById(account.getId());
+		assertEquals(newAccountInDB.getState(), AccountState.STOP);
 	}
 }

@@ -58,8 +58,13 @@ public interface AccountDao {
 												,@Param("parkingPositionId")Long parkingPositionId
 												,@Param("cardId")Long cardId
 												);
-	
-	public abstract int modifyAccount(@Param("map")Map<String, Object> different);
+	/**
+	 * 修改对应id的account
+	 * @param id
+	 * @param different 通过PersistentUtil方法得到的当前新的Account与数据库中的Account不同的属性集
+	 * @return
+	 */
+	public abstract int modifyAccount(@Param("id")Long id,@Param("map")Map<String, Object> different);
 	
 	public abstract int isNotExistCard(long cardId);
 }

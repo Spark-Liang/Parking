@@ -95,9 +95,9 @@
 
 	<insert id="insertAccount" parameterType="Account" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
 		insert into Account
-		(userId,parkingLotId,parkingPositionId,cardId,stateStartDate,currentBillId)
+		(userId,parkingLotId,parkingPositionId,cardId,stateStartDate)
 		values
-		(#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},curdate(),#{currentBill.Id})
+		(#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},curdate())
 	</insert>
 
 	<update id="setAccountState">
@@ -110,10 +110,14 @@
 		update Account
 		set
 		<foreach collection="map" index="key" item="value" separator=",">
-			#{key}=#{value}
-			<if test="key.equals(&quot;state&quot;)">
-				,stateStartDate=curdate()
-			</if>
+			<choose>
+				<when test="key.equals(&quot;state&quot;)">
+					${key}=#{value.ind},stateStartDate=curdate()
+				</when>
+				<otherwise>
+					${key}=#{value}
+				</otherwise>
+			</choose>
 		</foreach>
 		where id=#{id}
 	</update>
