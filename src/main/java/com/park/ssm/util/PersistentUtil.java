@@ -2,7 +2,6 @@ package com.park.ssm.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,7 +15,7 @@ public class PersistentUtil {
 	/**把sourceObj中的和target的共同属性，从sourceObj中复制到target中
 	 * 
 	 * @param target 被更新属性的对象
-	 * @param newObj 提供更新的属性
+	 * @param sourceObj 提供更新的属性的对象
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
@@ -37,12 +36,13 @@ public class PersistentUtil {
 		Class<?> currentClass=clazz;
 		do {
 			Field[] fields=currentClass.getDeclaredFields();
+			//获取能够进行排除的Field的modifier
+			int modifier=Modifier.STATIC | Modifier.FINAL;
 			for(Field field:fields) {
-				if(field.getModifiers()!= Modifier.STATIC) {
+				if((field.getModifiers() & modifier)==0) {
 					fieldSet.add(field);
 				}
 			}
-			
 			currentClass=currentClass.getSuperclass();
 		}while(!currentClass.equals(Object.class));
 		return fieldSet;
@@ -85,7 +85,7 @@ public class PersistentUtil {
 	
 	/**查找新对象和数据库中的对象属性中的差别，筛选出有差别的属性
 	 * 
-	 * @param oldObj 需要存储到数据库的对象
+	 * @param oldObj 数据库中的旧对象
 	 * @param newObj 前端传入的有更新过信息的对象
 	 * @return Map 返回属性不同的Map 没有需要进行更新的属性返回null
 	 * @throws IllegalArgumentException

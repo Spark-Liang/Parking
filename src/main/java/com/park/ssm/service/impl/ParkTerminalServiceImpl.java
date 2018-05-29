@@ -42,13 +42,13 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 		accountForUpdate.setParking(true);
 		Map<String, Object> different=null;
 		try {
-			different = PersistentUtil.different(accountForUpdate,account);
+			different = PersistentUtil.different(account,accountForUpdate);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(different!=null) {
-			accountDao.modifyAccount(different);
+			accountDao.modifyAccount(accountForUpdate.getId(),different);
 		}
 		return null;
 	}
@@ -130,13 +130,13 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 		accountForUpdate.setParking(false);
 		Map<String, Object> different=null;
 		try {
-			different = PersistentUtil.different(accountForUpdate,account);
+			different = PersistentUtil.different(account,accountForUpdate);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(different!=null) {
-			accountDao.modifyAccount(different);
+			accountDao.modifyAccount(accountForUpdate.getId(),different);
 		}
 		return null;
 	}
