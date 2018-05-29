@@ -119,7 +119,7 @@ create table Bill
 	,price decimal(10,4)
 	,billStartDate datetime
 	,billEndDate datetime
-	,isPaid bit not null 
+	,isPaid bit not null default 0 
 
 	,index userId_idx(userId)
 	,index accountId_idx(accountId)
