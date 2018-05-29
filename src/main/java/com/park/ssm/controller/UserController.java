@@ -1,5 +1,7 @@
 package com.park.ssm.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +106,7 @@ public class UserController {
 	 * userId  客户ID 
 	 * cardId  停车卡卡号
 	 * message 返回的结果信息
-	 * falg    返回的操作是否成功的标志{0:异常状况，服务器出现错误，1：停车卡创建成功，2:停车卡创建失败，3：不存在此用户，请重新输入}
+	 * falg    返回的操作是否成功的标志
 	 */
 	@RequestMapping(value = "addNewCard", method = { RequestMethod.POST })
 	@ResponseBody
@@ -116,6 +118,19 @@ public class UserController {
 		int falg=0;
 		int status=0;
 		try {
+			String times = new SimpleDateFormat("MMdd").format(new Date());
+//			String times = "0401";
+			String exetime = "";
+			String a[]= {"0101","0401","0701","1001"};
+			for(int i=0;i<3;i++) {
+				exetime=a[i];
+				if(times.equals(exetime)){//判断是否为出帐单的日子，出账单日无法办卡
+					 message="系统正在生成账单，无法办理开卡业务！";
+					 falg=2;
+					 break;
+				}
+			}
+			if(falg!=2){
 			User user=accountService.findUserByuserId(userId);//判断客户帐户是否存在
 		     if(user!=null){  
 		    	     Account cardMessage=new Account();
@@ -124,7 +139,7 @@ public class UserController {
 			    		 message="开卡失败，该停车卡已与帐户绑定，请重新选择！";
 		    	     }
 		    	     else {
-		    	    	 int bill=accountService.isNotPayBill(userId);
+		    	    	 int bill=accountService.isNotPayBill(userId);//判断是否存在未支付的账单
 		    	    	 if(bill>0) {
 		    	    		 message="开卡失败，该账户存在未缴费的账单，请先支付帐单！";
 		    	    	 }
@@ -149,6 +164,7 @@ public class UserController {
 		     else {
 		    	    message="请输入已存在的用户帐号！";
 				  }
+		     }
 		     result.put("falg",falg);
 			 result.put("message",message);
 		}catch(Exception e) {

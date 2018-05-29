@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.park.AutoRollBackTest;
+import java.text.SimpleDateFormat;
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.util.PersistentUtil;
@@ -21,7 +22,7 @@ public class TestAccountDao extends AutoRollBackTest {
 	private AccountDao dao;
 	
 	
-	@Test
+//	@Test
 	public void tesAddAndtLoadById() {
 		//test data
 		Account account=new Account();
@@ -38,7 +39,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(account.getUserId(), accountInDB.getUserId());
 	}
 	
-	@Test
+//	@Test
 	public void testListById() {
 		//test data
 		Long userId=1L;
@@ -48,7 +49,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		Assert.assertEquals(false, accounts.isEmpty());
 	}
 	
-	@Test
+//	@Test
 	public void testUpdate() throws IllegalArgumentException, IllegalAccessException {
 		//test data
 		Long id=1L;
@@ -76,7 +77,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		System.out.println(falg);
 	}
 	
-	@Test
+//	@Test
 	public void testchangeNewCard() {//测试更换停车卡
 		long cardId=1l;
 		Account account=dao.getCardMessage(cardId);
@@ -86,4 +87,13 @@ public class TestAccountDao extends AutoRollBackTest {
 //		System.out.println("数据库更新条数为："+result);
 //		System.out.println("新的停车卡号："+account.getCardId());
 	}
+	
+	
+	@Test
+	public void testDate() {//测试日期是否相等
+		String times = new SimpleDateFormat("MMdd").format(new Date());
+		String exetime = "0529";
+		System.out.println(times.equals(exetime));
+	}
+
 }

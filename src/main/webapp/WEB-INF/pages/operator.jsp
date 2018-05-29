@@ -105,7 +105,7 @@
 		$(window).ready(function(){
 			var href = decodeURI(window.location.href);
 			var adminname = href.split("=")[2];
-			alert(name)
+			//alert(name)
 			$('#admin-name span').text(adminname);
 			//获取停车场的信息到选择框中
 			$.ajax({
@@ -147,9 +147,11 @@
 					},success:function(result){
 						if(result!=null){
 							if(result.falg==1){
-								alert("新的卡号为:"+result.cardId);
+								alert(result.message+","+"新的卡号为:"+result.cardId);
 							}
-							alert(result.message);
+							else{
+								alert(result.message);
+							}		
 						}
 						else{
 							alert(" 系统出错，请联系技术部门！");
