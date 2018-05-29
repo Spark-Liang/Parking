@@ -19,6 +19,7 @@ public interface AccountService {
 	public int isNotExistCard(long cardId);//是否已存在该停车卡
 	
 	public Account getCardMessage(long cardId);//根据停车卡号获取帐户信息
+
 	
 	public Bill isNotPayBill(long userId);
 }
