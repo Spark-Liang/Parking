@@ -124,8 +124,8 @@ public class UserController {
 			    		 message="开卡失败，该停车卡已与帐户绑定，请重新选择！";
 		    	     }
 		    	     else {
-		    	    	 Bill bill=accountService.isNotPayBill(userId);
-		    	    	 if(bill!=null) {
+		    	    	 int bill=accountService.isNotPayBill(userId);
+		    	    	 if(bill>0) {
 		    	    		 message="开卡失败，该账户存在未缴费的账单，请先支付帐单！";
 		    	    	 }
 		    	    	 else {

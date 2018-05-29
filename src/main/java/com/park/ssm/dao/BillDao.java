@@ -61,5 +61,5 @@ public interface BillDao {
 	 * @param id
 	 * @return
 	 */
-	public abstract Bill isNotPayBill(@Param("userId")Long userId);
+	public abstract int  isNotPayBill(@Param("userId")Long userId);
 }

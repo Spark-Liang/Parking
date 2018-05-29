@@ -71,8 +71,8 @@
     select count(id) from Bill
     <where>
     <if test="userId != null">
-				and userId=#{userId}
-			</if>
+		and userId=#{userId}
+	</if>
     </where>
     </select>
 </mapper>

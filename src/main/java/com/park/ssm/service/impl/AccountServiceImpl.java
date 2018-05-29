@@ -73,7 +73,7 @@ public class AccountServiceImpl implements AccountService {
 		return accountdao.getCardMessage(cardId);
 	}
 	@Override
-	public Bill isNotPayBill(long userId) {
+	public int isNotPayBill(long userId) {
 		// TODO Auto-generated method stub
 		return billdao.isNotPayBill(userId);
 	}

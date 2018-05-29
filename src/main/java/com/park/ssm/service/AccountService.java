@@ -20,5 +20,5 @@ public interface AccountService {
 	
 	public Account getCardMessage(long cardId);//根据停车卡号获取帐户信息
 
-	public Bill isNotPayBill(long userId);//
+	public int isNotPayBill(long userId);//
 }
