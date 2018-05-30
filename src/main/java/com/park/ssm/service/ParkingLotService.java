@@ -44,8 +44,9 @@ public interface ParkingLotService {
 	 * “cost_max”“cost_min”表示cost的边界
 	 * @param pageNum 页数 default 1
 	 * @param pageSize 每页行数 default 20
+	 * @param withPosition 表示返回的停车场是否包含停车位信息,当值为true则是包含
 	 * */
-	public abstract List<ParkingLot> listParkingLot(Map<String, Object> conditions,Integer pageNum,Integer pageSize);
+	public abstract List<ParkingLot> listParkingLot(Map<String, Object> conditions,Integer pageNum,Integer pageSize,boolean withPosition);
 	
 	/**
 	 * 查看符合条件的parkinglot总数

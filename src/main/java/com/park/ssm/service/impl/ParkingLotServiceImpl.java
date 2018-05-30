@@ -18,6 +18,7 @@ import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.ParkingPosition;
 import com.park.ssm.entity.type.ParkingLotState;
 import com.park.ssm.service.ParkingLotService;
+import com.park.ssm.util.PersistentUtil;
 
 
 @Service
@@ -61,7 +62,7 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 	
 	@SuppressWarnings({ "rawtypes", "unchecked", "serial" })
 	@Override
-	public List<ParkingLot> listParkingLot(Map<String, Object> conditions, Integer pageNum, Integer pageSize) {
+	public List<ParkingLot> listParkingLot(Map<String, Object> conditions, Integer pageNum, Integer pageSize,boolean withPosition) {
 		// TODO Auto-generated method stub
 		
 		conditions.put(CONDITION.STATES.getName(), new LinkedList() {
@@ -74,7 +75,19 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 			pageSize=20;
 		}
 		List<ParkingLot> resList=null;
-		resList=parkingLotDao.listParkingLot(conditions, pageNum, pageSize);
+		List<ParkingLot> ListInDB=parkingLotDao.listParkingLot(conditions, pageNum, pageSize);
+		if(withPosition==false) {
+			try {
+				for(ParkingLot parkingLot:ListInDB) {
+					ParkingLot tmpParking=new ParkingLot();
+					PersistentUtil.merge(tmpParking, parkingLot, ParkingLot.class);
+				}
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				logger.info(e);
+			}
+		}else {
+			resList=ListInDB;
+		}
 		return resList;
 	}
 	
