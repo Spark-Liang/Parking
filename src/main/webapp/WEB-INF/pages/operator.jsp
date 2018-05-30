@@ -188,9 +188,22 @@
 					data:{
 						"userId":inf[0],"cardId":inf[1],"LotId":inf[2]
 					},success:function(result){
+						//con为真的情况下
+						console.log(result);
 						if(result!=null){
 							if(result.falg==1){
-								alert(result.message+","+"新的卡号为:"+result.cardId);
+								$.ajax({
+									url:'user/addcard',
+									dataType:'json',
+									type:'post',
+									data:{
+										"userId":inf[0],"cardId":inf[1],"LotId":inf[2]
+									},success:function(){
+										alert(result.message+","+"新的卡号为:"+result.cardId);
+									},error:function(){
+										
+									}
+								});
 							}
 							else{
 								alert(result.message);
