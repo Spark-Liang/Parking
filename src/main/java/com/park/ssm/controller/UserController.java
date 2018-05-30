@@ -182,7 +182,6 @@ public class UserController {
 		Map result=new HashMap();
 		Account account=new Account();
 		String message="";
-		int falg=0;
 		int status=0;
 		account.setUserId(userId);
 	    Integer lotId=new Integer(LotId);
@@ -191,14 +190,12 @@ public class UserController {
 	    account.setState(AccountState.getValueByInd(0));
 	    status=accountService.addNewCard(account);//添加新卡
 		 if(status>0) {
-			falg=1;
 			message="开卡成功";
 		    result.put("cardId",cardId);
 		 }
 		 else {
 			 message="系统出错，请联系技术部门！";
 		 }
-		 result.put("falg",falg);
 		 result.put("message",message);
 		return JSON.toJSONString(result);
 	}
