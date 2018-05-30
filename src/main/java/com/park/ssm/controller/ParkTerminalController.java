@@ -31,11 +31,9 @@ public class ParkTerminalController {
 		String reason=parkTerminalService.park(parkingLotId, cardId);
 		if(reason!=null) {
 			result.put("res", false);
-			result.put("reason", reason);
 		}else {
 			result.put("res", true);
 		}
-		
 		return result;
 	}
 	
@@ -47,7 +45,6 @@ public class ParkTerminalController {
 		String reason=parkTerminalService.pick(parkingLotId, cardId);
 		if(reason!=null) {
 			result.put("res", false);
-			result.put("reason", reason);
 		}else {
 			result.put("res", true);
 		}

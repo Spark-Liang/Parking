@@ -85,7 +85,7 @@ public class ParkingLotController {
 	 * “cost_max”“cost_min”表示cost的边界
 	 * @param pageNum 页数 default 1
 	 * @param pageSize 每页行数 default 20
-	 * 
+	 * @param withPosition 表示返回的停车场是否包含停车位信息,当值为true则是包含
 	 * @return JSON ｛"res":结果 "totalRowNum":符合条件的行数｝
 	 * 
 	 * */
@@ -107,8 +107,16 @@ public class ParkingLotController {
 			pageNum=new Integer(params.get("pageNum")[0]);
 			pageSize=new Integer(params.get("pageSize")[0]);
 		}
+		//提取是否需要详细的parkingLot信息
+		String[] tmpWithPositionParamArr=params.get("withPosition");
+		boolean withPosition;
+		if(tmpWithPositionParamArr!=null) {
+			withPosition=Boolean.valueOf(tmpWithPositionParamArr[0]);
+		}else {
+			withPosition=false;
+		}
+		List<ParkingLot> res=parkingLotService.listParkingLot(conditions, pageNum, pageSize,withPosition);
 		
-		List<ParkingLot> res=parkingLotService.listParkingLot(conditions, pageNum, pageSize);
 		Map result=new HashMap();
 		result.put("res", res);
 		result.put("totalRowNum", parkingLotService.countParkingLot(conditions));
