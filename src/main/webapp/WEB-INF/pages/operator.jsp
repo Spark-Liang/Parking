@@ -64,8 +64,9 @@
 		<h1 id='admin-name'>Hello,<span>XXX</span></h1>
 		<p class="text-info">您的身份是操作员,可以操作以下数据</p>
 		<ol class="breadcrumb">
-			<li><a onclick="skip(0)">用户开卡或停卡</a></li>
-			<li><a onclick="skip(1)">换卡以及支付帐单</a></li>
+			<li><a onclick="skip(0)">用户开卡</a></li>
+			<li><a onclick="skip(1)">用户停卡</a></li>
+			<li><a onclick="skip(2)">换卡以及支付帐单</a></li>
 		</ol>
 		<div class="operator-module1" >
 			<div class="operator-module1-1">
@@ -88,6 +89,9 @@
 					<button type="submit" class="btn btn-primary btn-sm newcard">开卡</button>		
 				</div>
 			</div>
+			
+		</div>
+		<div class="operator-module2" style="display: none;">
 			<div class="operator-module1-1" >
 				<h3>用户停卡</h3>
 				<div class="col-md-3">
@@ -109,7 +113,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="operator-module2" style="display: none;" >
+		<div class="operator-module3" style="display: none;" >
 			<div class="operator-module1-1 search-show">
 				<h3>搜索停车卡信息</h3>
 				<div class="col-md-12">
@@ -129,7 +133,7 @@
 					<a onclick="updateCard(this)">更换停车卡</a><br/><a onclick="paymoney(this)">支付帐单</a>
 				</div>
 			</div>
-	</div>
+		</div>
 	</div>
 
 	<script type="text/javascript">
@@ -138,11 +142,17 @@
 			if (num == 0) {
 				$('.operator-module1').show();
 				$('.operator-module2').hide();
+				$('.operator-module3').hide();
 
 			} else if (num == 1) {
 				$('.operator-module2').show();
 				$('.operator-module1').hide();
+				$('.operator-module3').hide();
 				
+			} else if(num == 2){
+				$('.operator-module3').show();
+				$('.operator-module1').hide();
+				$('.operator-module2').hide();
 			}
 		}
 		//页面刷新加载信息
@@ -317,7 +327,7 @@
  		function updateCard(a){
 			$('.edit-money').remove();
 			id = 33;
-			content ="请输入手机号码"
+			content ="请输入新的卡号"
 			$(a).parent().find('h4').after(function (){
 				return NumEdit(id,content);
 			});
