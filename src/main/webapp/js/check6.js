@@ -30,7 +30,7 @@ function checkName(className,tip){
         var name = document.getElementsByClassName(className)[0];
         var uName = name.value.trim();
         var nameLength = uName.length;
-        var object = /^1{1}[3-9]{2}[0-9]{8}$/g;
+        var object = /^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/g;
         if (nameLength < 1) {
             tip.innerHTML = "账号不能为空";
             name.focus();
