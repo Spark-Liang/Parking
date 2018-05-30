@@ -12,15 +12,10 @@
 <meta charset="UTF-8">
 <title>管理员管理页面</title>
 <link rel="stylesheet" href="css/admin.css">
-<link rel="stylesheet"
-	href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
-	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-	crossorigin="anonymous">
+<link rel="stylesheet" href="css/bootstrap.min.css">
 <script src="js/jquery-3.3.1.js"></script>
-<script
-	src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
-	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-	crossorigin="anonymous"></script>
+<script src="js/aopDefind.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
 </head>
 
@@ -53,10 +48,6 @@
 						name="" placeholder="(输入3位数或以上)">
 				</div>
 				<br/>
-				<!--<div class="form-gorup">
-					<label>*状态:</label> <input type="radio" name="zt" value="可用">可用
-					<input type="radio" name="zt" value="不可用">不可用
-				</div>-->
 				<button class="btn btn-md btn-primary" type="button">提交</button>
 				<a class="add-block-one-close">关闭</a>
 			</form>
@@ -113,20 +104,6 @@
 			<div class="admin-block addparking">
 				<img src="img/admin-add.svg">
 			</div>
-			<div class="admin-block">
-				<div>
-				    <img id="close-adminblock" src="img/manger-close.svg" onClick='closeadminblock(this,1)' data-value='fdsa'>
-					<h3>停车场1</h3>
-					地址：
-					<p></p>
-					停车位：
-					<p></p>
-					成本：
-					<p></p>
-					<!--状态：
-					<p></p>-->
-				</div>
-			</div>
 		</div>
 		<!-- admin管理工作人员模块 -->
 		<div class="moudle-one moudle2" style="display: none;">
@@ -134,18 +111,6 @@
 			<div class="admin-block addparking">
 				<img src="img/admin-add.svg">
 			</div>
-			<!--<div class="admin-block opperation">
-				<div>
-				    <img id='close-adminblock' src='img/manger-close.svg' onClick='closeadminblock(this,2)'>
-				    <h3>Johnay</h3>
-				    <p>用户名：</p>
-					<p>密码：</p>
-					<p>职位：</p>
-					<button class="btn btn-md btn-block btn-primary"
-						onclick="editoperation(this)">编辑</button>
-				</div>
-				<a>fdsa</a>
-			</div>-->
 		</div>
 
 	</div>
@@ -169,16 +134,16 @@
 
 		         },success:function(responce){
 		        	 var res=responce.res;
-		        	 if(responce.error){
+/* 		        	 if(responce.error){
 
-		        	 }else{
+		        	 }else{ */
 		        	 console.log(res);
 		        	 var length = res.length;
 		        	 for (var i = 0;i<length;i++){
 			           	var tmpParking=new parking(res[i]);
 			           	tmpParking.parkingadd();
 		        	 }
-		        	 }
+		        	/*  } */
 		         },error:function(){
 		         	alert('获取失败')
 		         }
@@ -266,12 +231,11 @@
 						data:{
 							'id':id
 						},success:function(data){
-							if(data.error){
+							/* if(data.error){
 								alert('停车场存在帐户以及车辆')
-							}else{
+							}else{ */
 								$(a).parent().parent().remove();
-							}
-					     
+							/* } */
 						},error:function(){
 							console.log('error');
 						}
@@ -296,7 +260,7 @@
 							console.log(msg);
 							$(a).parent().parent().remove();
 						},error:function(){
-							alert('error')
+							alert('删除失败')
 						}
 					})
 				}/*else{
@@ -355,15 +319,12 @@
 					'totalPositionNum':parkinginf[2],
 					'cost':parkinginf[3],
 				},success:function(res){
-					if(res.error){
-						alert('停车场名称重复')
-					}else{
-						console.log(res);
+					console.log(res);
 					var data = res.parkingLot;
 					var tmpParking=new parking(data);
 		           	tmpParking.parkingadd();
 					alert('停车场添加成功');
-					}
+					$('.add-block,.add-block2').hide();
 				},error:function(){
 
 				}
@@ -439,34 +400,6 @@
 										+ "<button class='btn btn-md btn-block btn-primary' onclick='editmanger(this)' data-idd='"+ idd +"'>编辑</button>"
 										+ "</div>" + "</div>"
 							})
-			// $.ajax({
-			//     url:'parkinglot/add',
-			//     type:'GET',
-			//     dataType:'json',
-			//     data:{
-			//         'totalPositionNum':this.parknum,
-			//         'currentPrice': '',
-			//         'name':this.parkname,
-			//         'location':this.parkaddress,
-			//         'cost':this.parkmoney
-			//     },success:function(res){
-			//         $('.moudle1').append(function(){
-			//     return "<div class='admin-block' >"
-			//     +"<div>"
-			//         +"<h3>"+parkname+"</h3>"
-			//         +"<p>地址："+parkaddress+"</p>"
-			//         +"<p>停车位："+parknum+"</p>"
-			//         +"<p>成本："+parkmoney+"</p>"
-			//         +"<p>状态："+parkname+"</p>"
-			//         +"<button class='btn btn-md btn-block btn-primary' onclick='editadmin(this)'>编辑</button>"
-			//     +"</div>"
-			//     +"</div>"
-			// })
-			//         })
-			//     }，error:function(){
-
-			//     }
-			// });
 		}
 		//检查添加员工的信息是否合规
 		function checkNewWorker(a){
@@ -537,6 +470,7 @@
 							mangerinf[5] = msg.innerUser.id;
 							var working = new manger(2,mangerinf);
 							working.mangeradd();
+							$('.add-block,.add-block2').hide();
 						}else{
 							alert("手机号码已经存在");
 						}
@@ -673,19 +607,6 @@
 			} else if (num == 1) {
 				$('.moudle2').show();
 				$('.moudle1').hide();
-				//获取经工作人员的信息
-				// $.ajax({
-				// 	url:'',
-				// 	type:'GET',
-				// 	dataType:'json',
-				// 	data:{
-
-				// 	},success:function(data){
-
-				// 	},error:function(){
-
-				// 	}
-				// })
 			}
 		}
 
