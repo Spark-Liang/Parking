@@ -189,8 +189,8 @@ public class UserController {
 	    account.setCardId(cardId);
 	    if(LotId!=0&&userId!=0&&cardId!=0){
 	    	 account.setState(AccountState.getValueByInd(0));
-	 	    status=accountService.addNewCard(account);//添加新卡
-	 		 if(status>0) {
+	 	    status=accountService.addNewCard(account,LotId);//添加新卡
+	 		 if(status>0) { 
 	 			message="开卡成功";
 	 		    result.put("cardId",cardId);
 	 		 }

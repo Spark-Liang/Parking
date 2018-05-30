@@ -53,6 +53,15 @@ public interface ParkingPositionDao {
 	public int updateParkingPosition(@Param("id")Long id,@Param("parkingposition") ParkingPosition parkingPosition);
 	
 	
+	/**
+	 * 
+	 * @param parkingPosition
+	 * @return
+	 */
+	public int updateParkingPositionByLotId(@Param("parkingLotId")int parkingLotId,@Param("parkingposition") ParkingPosition parkingPosition);
+	
+	
+	
 	/**删除停车位，即设置停车位状态为INACTIVE*/
 	public abstract int deleteParkingPositionByLotId(int id);
 	

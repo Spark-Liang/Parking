@@ -90,6 +90,17 @@ update ParkingPosition
 where id=#{id}
 </update>
 
+<update id="updateParkingPositionByLotId" parameterType="int">
+update ParkingPosition
+	<set>
+		<if test="parkingposition.accountId != null">
+		 accountId=#{parkingposition.accountId}
+		</if>
+	</set>
+where parkingLotId=#{parkingLotId}
+</update>
+
+
 
  
 <update id="deleteParkingPositionByLotId" parameterType="int">
@@ -100,7 +111,7 @@ where parkingLotId=#{_parameter}
  
 <select id="getPositionNum"  resultType="Integer">
     select count(id) from ParkingPosition where parkingLotId=#{parkingLotId} 
-      and accountId=null
+      and accountId is null
 </select>
 
 <select id="getPositionNumByUser" resultType="Integer">

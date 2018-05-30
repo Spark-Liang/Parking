@@ -15,6 +15,7 @@ import com.park.ssm.dao.ParkingLotDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
+import com.park.ssm.entity.ParkingPosition;
 import com.park.ssm.entity.User;
 import com.park.ssm.service.AccountService;
 import com.park.ssm.util.PersistentUtil;
@@ -50,9 +51,22 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	@Transactional
-	public int addNewCard(Account account) {
-		
-		return accountdao.insertAccount(account);
+	public int addNewCard(Account account,int LotId) {
+		int successAccount=accountdao.insertAccount(account);
+		if(successAccount==0) {
+		   	throw new RuntimeException("添加新的停车卡事务异常，新增停车卡失败");
+		}
+		else {
+			ParkingPosition parkingPosition=new ParkingPosition();
+			parkingPosition.setAccountId(account.getId());
+			int successParkingPosition=parkingpositiondao.updateParkingPositionByLotId(LotId,parkingPosition);
+			if(successParkingPosition==0) {
+			   	throw new RuntimeException("更新停车位事务异常，更新停车位状态失败");
+			}
+			else {
+				return 1;
+			}
+		}
 	}
 	@Override
 	@Transactional
@@ -69,6 +83,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
+	@Transactional
 	public int isNotExistCard(long cardId) {
 		
 		return accountdao.isNotExistCard(cardId);
@@ -80,11 +95,13 @@ public class AccountServiceImpl implements AccountService {
 	}
 	
 	@Override
+	@Transactional
 	public int isNotPayBill(long userId) {
 		return billdao.isNotPayBill(userId);
 	}
 	
 	@Override
+	@Transactional
 	public Boolean isNotFullPosition(int id) {
 		int PositionNum=parkingpositiondao.getPositionNum(id);//查看该停车场是否有空余车位
 		if(PositionNum==0) {
@@ -100,6 +117,7 @@ public class AccountServiceImpl implements AccountService {
 //	}
 
 	@Override
+	@Transactional
 	public int getPositionNumByUser(long userId) {
 		return accountdao.getAccountNum(userId);
 	}

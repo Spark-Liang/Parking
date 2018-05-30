@@ -12,7 +12,7 @@ public interface AccountService {
 	
 	public User findUserByuserId(long userId);//根据用户ID获取用户基础信息
 	
-	public int addNewCard(Account account);//为客户新建停车卡
+	public int addNewCard(Account account,int LotId);//为客户新建停车卡
 	
 	public int modifyAccount(Account account);//修改客户的帐户信息
 	
