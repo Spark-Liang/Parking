@@ -8,4 +8,5 @@ public interface UserService {
 	public User findUserById(Long userId);//根据Id查找User
 	
 	public String findSaltByUserId(Long userId);//查找salt
+	
 }

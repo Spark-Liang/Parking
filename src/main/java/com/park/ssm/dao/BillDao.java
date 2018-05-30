@@ -62,4 +62,6 @@ public interface BillDao {
 	 * @return
 	 */
 	public abstract int  isNotPayBill(@Param("userId")Long userId);
+	
+	public List<Bill> listBillByUserId(Long userId);//根据用户显示其所有账单
 }
