@@ -3,14 +3,10 @@ package com.park.ssm.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
-
 import com.park.AutoRollBackTest;
-import com.park.MainTest;
 import com.park.ssm.entity.InnerUser;
 import com.park.ssm.util.Encryption;
 
@@ -73,15 +69,20 @@ public class TestInnerUserService extends AutoRollBackTest {
 		String salt = innerUserService.findSaltByNickname("123");
 		Assert.assertEquals("123", salt);
 	}
-
+	
+	/**
+	 * 增加admin的测试用例方法
+	 * 去掉@Rollback(false)的注释即可写入到MySQL
+	 * setNickname中的号码不能重复
+	 */
 	@Test
 	//@Rollback(false)
 	public void InsertSalt() {
 		InnerUser innerUser = new InnerUser();
-		innerUser.setNickname("12345678910");
+		innerUser.setNickname("13745678910");
 		innerUser.setPassword("123456");
 		innerUser.setTypeflag(0);
-		innerUser.setName("MeiSSi");
+		innerUser.setName("Hacker");
 		String password = innerUser.getPassword();
 		Encryption en = new Encryption();
 		String salt = en.createSalt();

@@ -1,6 +1,7 @@
 package com.park.ssm.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.Bill;
@@ -26,8 +28,8 @@ import com.park.ssm.service.UserService;
 import com.park.ssm.util.Encryption;
 
 /**
- * User控制器
- * 实现user的相关功能
+ * User控制器 实现user的相关功能
+ * 
  * @author ASNPHX4
  *
  */
@@ -35,240 +37,214 @@ import com.park.ssm.util.Encryption;
 @RequestMapping("user")
 public class UserController {
 
-	
 	@Autowired
 	private AccountService accountService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private BillService billService;
+
 	/**
-	 * 操作员
-	 * 根据客户ID获取客户的停车卡信息（拥有卡号的账户）
-	 * userId  客户ID 
-	 * message 返回的结果信息
+	 * 操作员 根据客户ID获取客户的停车卡信息（拥有卡号的账户） userId 客户ID message 返回的结果信息
 	 */
 	@RequestMapping(value = "getAllAccount", method = { RequestMethod.POST })
 	@ResponseBody
 	public String getAllAccount(@RequestParam("userId") long userId) {
-		Map result=new HashMap();
-		String message="";
+		Map result = new HashMap();
+		String message = "";
 		try {
-			User user=accountService.findUserByuserId(userId);//判断客户帐户是否存在
-			if(user!=null){
-				List<Account> list=accountService.findAccountrById(userId);
+			User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
+			if (user != null) {
+				List<Account> list = accountService.findAccountrById(userId);
 				result.put("list", list);
-			}
-			else {
-				message="不存在此用户";
+			} else {
+				message = "不存在此用户";
 			}
 			result.put("message", message);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message"," 服务器出现错误");
+			result.put("message", " 服务器出现错误");
 		}
 		return JSON.toJSONString(result);
 	}
-	
 
 	/**
-	 * 操作员
-	 * 根据客户ID获取客户的特定停车场的停车卡信息（即帐号信息 ）
-	 * userId  客户ID 
-	 * message 返回的结果信息
+	 * 操作员 根据客户ID获取客户的特定停车场的停车卡信息（即帐号信息 ） userId 客户ID message 返回的结果信息
 	 */
 	@RequestMapping(value = "getCardMessage", method = { RequestMethod.POST })
 	@ResponseBody
 	public String getCardMessage(@RequestParam("cardId") long cardId) {
-		Map result=new HashMap();
-		Account account=new Account();
-		String message="";
+		Map result = new HashMap();
+		Account account = new Account();
+		String message = "";
 		try {
-			    account=accountService.getCardMessage(cardId);
-				result.put("account", account);//前端判断account是否为空即可
-				if(account==null) {
-					message="不存在此卡，请重新输入！";
-				}
-			    result.put("message", message);
-		}catch(Exception e) {
+			account = accountService.getCardMessage(cardId);
+			result.put("account", account);// 前端判断account是否为空即可
+			if (account == null) {
+				message = "不存在此卡，请重新输入！";
+			}
+			result.put("message", message);
+		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message"," 服务器出现错误");
+			result.put("message", " 服务器出现错误");
 		}
 		return JSON.toJSONString(result);
 	}
-	
-	
-	
-	
+
 	/**
-	 * 操作员
-	 * 开停车卡的校验流程
-	 * LotId   停车场ID
-	 * userId  客户ID 
-	 * cardId  停车卡卡号
-	 * message 返回的结果信息
-	 * falg    返回的操作是否成功的标志{0：系统出错，1：允许开卡，2：账户或卡号存在问题，无法开卡}
+	 * 操作员 开停车卡的校验流程 LotId 停车场ID userId 客户ID cardId 停车卡卡号 message 返回的结果信息 falg
+	 * 返回的操作是否成功的标志{0：系统出错，1：允许开卡，2：账户或卡号存在问题，无法开卡}
 	 */
 	@RequestMapping(value = "addNewCard", method = { RequestMethod.POST })
 	@ResponseBody
-	@Permission(value= {Permission.Type.ADMIN,Permission.Type.OPERATOR})
-	public String addNewCard(@RequestParam("LotId") int LotId ,@RequestParam("userId") long userId,@RequestParam("cardId") long cardId ) {
-		Map result=new HashMap();
-		Account account=new Account();
-		String message="";
-		int falg=0;
-		int status=0;
+	@Permission(value = { Permission.Type.ADMIN, Permission.Type.OPERATOR })
+	public String addNewCard(@RequestParam("LotId") int LotId, @RequestParam("userId") long userId,
+			@RequestParam("cardId") long cardId) {
+		Map result = new HashMap();
+		Account account = new Account();
+		String message = "";
+		int falg = 0;
+		int status = 0;
 		try {
 			String times = new SimpleDateFormat("MMdd").format(new Date());
-//			String times = "0401";
+			// String times = "0401";
 			String exetime = "";
-			String a[]= {"0101","0401","0701","1001"};
-			for(int i=0;i<3;i++) {
-				exetime=a[i];
-				if(times.equals(exetime)){//判断是否为出帐单的日子，出账单日无法办卡
-					 message="系统正在生成账单，无法办理开卡业务！";
-					 falg=2;
-					 break;
+			String a[] = { "0101", "0401", "0701", "1001" };
+			for (int i = 0; i < 3; i++) {
+				exetime = a[i];
+				if (times.equals(exetime)) {// 判断是否为出帐单的日子，出账单日无法办卡
+					message = "系统正在生成账单，无法办理开卡业务！";
+					falg = 2;
+					break;
 				}
 			}
-			if(falg!=2){
-			User user=accountService.findUserByuserId(userId);//判断客户帐户是否存在
-		     if(user!=null){  
-		    	 int bill=accountService.isNotPayBill(userId);//判断是否存在未支付的账单
-    	    	 if(bill>0) {
-    	    		 message="开卡失败，该账户存在未缴费的账单，请先支付帐单！";
-    	    	 }
-		    	     else {
-		    	    	 Account cardMessage=new Account();
-			    	     cardMessage=accountService.getCardMessage(cardId);
-			    	     if(cardMessage!=null){
-				    		 message="开卡失败，该停车卡已与帐户绑定，请重新选择！";
-			    	     }
-		    	    	 else{
-		    	    		 if(accountService.isNotFullPosition(LotId)){//该停车场的停车位是否已经满了
-		    	    			 message="无法开卡，该停车场已无空余停车位！";
-		    	    		 }
-		    	    		 else{
-		    	    			 falg=1;
-//		    	    			 long accountId=account.getId();
-		    	    			 int PositionNum=accountService.getPositionNumByUser(userId);
-		    	    			 message="当前用户已在该停车场订了"+PositionNum+"个停车位，确认要继续开卡吗?";
-		    	    		 } 	 
-		    	    	 }
-		    	     }
-		     }
-		     else {
-		    	    message="请输入已存在的用户帐号！";
-				  }
-		     }
-		     result.put("falg",falg);
-			 result.put("message",message);
-		}catch(Exception e) {
+			if (falg != 2) {
+				User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
+				if (user != null) {
+					int bill = accountService.isNotPayBill(userId);// 判断是否存在未支付的账单
+					if (bill > 0) {
+						message = "开卡失败，该账户存在未缴费的账单，请先支付帐单！";
+					} else {
+						Account cardMessage = new Account();
+						cardMessage = accountService.getCardMessage(cardId);
+						if (cardMessage != null) {
+							message = "开卡失败，该停车卡已与帐户绑定，请重新选择！";
+						} else {
+							if (accountService.isNotFullPosition(LotId)) {// 该停车场的停车位是否已经满了
+								message = "无法开卡，该停车场已无空余停车位！";
+							} else {
+								falg = 1;
+								// long accountId=account.getId();
+								int PositionNum = accountService.getPositionNumByUser(userId);
+								message = "当前用户已在该停车场订了" + PositionNum + "个停车位，确认要继续开卡吗?";
+							}
+						}
+					}
+				} else {
+					message = "请输入已存在的用户帐号！";
+				}
+			}
+			result.put("falg", falg);
+			result.put("message", message);
+		} catch (Exception e) {
 			e.printStackTrace();
-			falg=0;
-			result.put("message"," 系统出错，请联系技术部门！");
+			falg = 0;
+			result.put("message", " 系统出错，请联系技术部门！");
 		}
 		return JSON.toJSONString(result);
 	}
-	
 
 	/**
-	 * 操作员
-	 * 根据客户ID创建特定停车场的停车卡
+	 * 操作员 根据客户ID创建特定停车场的停车卡
 	 */
 	@RequestMapping(value = "addCard", method = { RequestMethod.POST })
 	@ResponseBody
-	@Permission(value= {Permission.Type.ADMIN,Permission.Type.OPERATOR})
-	public String addCard(@RequestParam("LotId") int LotId ,@RequestParam("userId") long userId,@RequestParam("cardId") long cardId ) {
-		Map result=new HashMap();
-		Account account=new Account();
-		String message="";
-		int status=0;
+	@Permission(value = { Permission.Type.ADMIN, Permission.Type.OPERATOR })
+	public String addCard(@RequestParam("LotId") int LotId, @RequestParam("userId") long userId,
+			@RequestParam("cardId") long cardId) {
+		Map result = new HashMap();
+		Account account = new Account();
+		String message = "";
+		int status = 0;
 		account.setUserId(userId);
-	    Integer lotId=new Integer(LotId);
-	    account.setParkingLotId(lotId);
-	    account.setCardId(cardId);
-	    if(LotId!=0&&userId!=0&&cardId!=0){
-	    	 account.setState(AccountState.getValueByInd(0));
-	 	    status=accountService.addNewCard(account);//添加新卡
-	 		 if(status>0) {
-	 			message="开卡成功";
-	 		    result.put("cardId",cardId);
-	 		 }
-	 		 else {
-	 			 message="系统出错，请联系技术部门！";
-	 		 }
-	    }
-	    else {
-	    	 message="输入数据有误，请重新输入！";
-	    }
-		 result.put("message",message);
+		Integer lotId = new Integer(LotId);
+		account.setParkingLotId(lotId);
+		account.setCardId(cardId);
+		if (LotId != 0 && userId != 0 && cardId != 0) {
+			account.setState(AccountState.getValueByInd(0));
+			status = accountService.addNewCard(account);// 添加新卡
+			if (status > 0) {
+				message = "开卡成功";
+				result.put("cardId", cardId);
+			} else {
+				message = "系统出错，请联系技术部门！";
+			}
+		} else {
+			message = "输入数据有误，请重新输入！";
+		}
+		result.put("message", message);
 		return JSON.toJSONString(result);
 	}
-	
 
 	/**
-	 * 操作员
-	 * 根据客户ID，更换新的停车卡(创建新的卡号，代替旧的卡)
-	 * LotId    停车场Id
-	 * userId   客户ID 
-	 * message  返回的结果信息
+	 * 操作员 根据客户ID，更换新的停车卡(创建新的卡号，代替旧的卡) LotId 停车场Id userId 客户ID message 返回的结果信息
 	 */
 	@RequestMapping(value = "changeCard", method = { RequestMethod.POST })
 	@ResponseBody
-	public String changeCard(@RequestParam("OldCardId")long OldCardId,@RequestParam("NewCardId")long NewCardId){
-		Map result=new HashMap();
-		String message="";
-		int status=0;
+	public String changeCard(@RequestParam("OldCardId") long OldCardId, @RequestParam("NewCardId") long NewCardId) {
+		Map result = new HashMap();
+		String message = "";
+		int status = 0;
 		try {
-			Account account=accountService.getCardMessage(OldCardId);
-			if(account!=null) {
-				Account NewCardAccount=accountService.getCardMessage(OldCardId);
-				if(NewCardAccount!=null) {
-					 message="创建失败，该停车卡已与帐户绑定，请重新输入！";
-				}
-				else {
+			Account account = accountService.getCardMessage(OldCardId);
+			if (account != null) {
+				Account NewCardAccount = accountService.getCardMessage(OldCardId);
+				if (NewCardAccount != null) {
+					message = "创建失败，该停车卡已与帐户绑定，请重新输入！";
+				} else {
 					account.setCardId(NewCardId);
-			        status=accountService.modifyAccount(account);//更换新的停车卡
-			        if(status>0) {
-			        	message="更换成功！";
-			         }
-			         else {
-			        	 message=" 系统出错，请联系技术部门！";
-			         }
+					status = accountService.modifyAccount(account);// 更换新的停车卡
+					if (status > 0) {
+						message = "更换成功！";
+					} else {
+						message = " 系统出错，请联系技术部门！";
+					}
 				}
-			}
-			else {
-				message="该停车卡不存在，请重新输入！";
+			} else {
+				message = "该停车卡不存在，请重新输入！";
 			}
 			result.put("message", message);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message"," 系统出错，请联系技术部门！");
+			result.put("message", " 系统出错，请联系技术部门！");
 		}
 		return JSON.toJSONString(result);
 	}
-	
+
 	/**
 	 * User登陆控制器
-	 * @param userId 用户登陆的id，11位手机号码
-	 * @param password 登陆密码6-16位，不包含空格
-	 * @param session  登陆成功后写入session
+	 * 
+	 * @param userId
+	 *            用户登陆的id，11位手机号码
+	 * @param password
+	 *            登陆密码6-16位，不包含空格
+	 * @param session
+	 *            登陆成功后写入session
 	 * @return Json格式的user对象
 	 */
 	@RequestMapping(value = "userLogin", method = { RequestMethod.POST })
 	@ResponseBody
-	public String login(String userId, String password,HttpSession session) {
+	public String login(String userId, String password, HttpSession session) {
 		User user = new User();
-		Encryption en=new Encryption();
+		Encryption en = new Encryption();
 		if (null != userId.trim() && !"".equals(userId.trim())) {
 			if (null != password && !"".equals(password)) {
 				try {
-					Long luserId=Long.parseLong(userId);
-					String salt=userService.findSaltByUserId(luserId);
-					String passwordAndSalt=en.SHA512(password.trim()+salt);
+					Long luserId = Long.parseLong(userId);
+					String salt = userService.findSaltByUserId(luserId);
+					String passwordAndSalt = en.SHA512(password.trim() + salt);
 					user = userService.findUser(luserId, passwordAndSalt);
 				} catch (Exception e) {
 					return JSON.toJSONString(null);
@@ -283,28 +259,47 @@ public class UserController {
 			return JSON.toJSONString(null);
 		}
 	}
-	
+
 	/**
 	 * 跳转到User登陆界面
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value="toUserLogin")
-	@Permission(value= {},haveControl=false)
+	@RequestMapping(value = "toUserLogin")
+	@Permission(value = {}, haveControl = false)
 	public String toUserLogin() {
 		return "userLogin";
 	}
-	
+
 	/**
-	 * User退出登陆功能
-	 * 消除session
+	 * User退出登陆功能 消除session
+	 * 
 	 * @param session
 	 * @return 跳转到User登陆界面
 	 */
-	@RequestMapping(value="userLogout")
-	@Permission(value= {},haveControl=false)
+	@RequestMapping(value = "userLogout")
+	@Permission(value = {}, haveControl = false)
 	public String userLogout(HttpSession session) {
 		session.removeAttribute("user");
 		session.invalidate();
 		return "userLogin";
+	}
+
+	@RequestMapping(value = "checkBillInfo", method = RequestMethod.GET)
+	@ResponseBody
+	public String checkBillInfo(@PathVariable("userId") Long userId) {
+		Map<String, Object> map = new HashMap<>();
+		List<Bill> list = new ArrayList<>();
+		list = billService.findBillByUserId(userId);
+		String message="您还没有账单";
+		if (!list.isEmpty()) {
+			map.put("msg", list);
+		} else if(list.isEmpty()){
+			map.put("msg",message);
+		}else {
+			map.put("msg", "error");
+		}
+		String strBillInfo = new JSONObject(map).toString();
+		return strBillInfo;
 	}
 }
