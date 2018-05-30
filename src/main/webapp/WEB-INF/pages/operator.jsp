@@ -203,13 +203,13 @@
 						if(result!=null){
 							if(result.falg==1){
 								$.ajax({
-									url:'user/addcard',
+									url:'user/addCard',
 									dataType:'json',
 									type:'post',
 									data:{
 										"userId":inf[0],"cardId":inf[1],"LotId":inf[2]
-									},success:function(){
-										alert(result.message+","+"新的卡号为:"+result.cardId);
+									},success:function(data){
+										alert(data.message+","+"新的卡号为:"+data.cardId);
 									},error:function(){
 										
 									}
