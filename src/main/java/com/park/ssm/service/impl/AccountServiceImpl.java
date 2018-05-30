@@ -86,9 +86,8 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	public Boolean isNotFullPosition(int id) {
-		int LotNum=parkinglotdao.getTotalLotNum(id);//停车场规定的停车位数量
-		int PositionNum=parkingpositiondao.getPositionNum(id);//现今已被占用的停车位数量
-		if(PositionNum>=LotNum) {
+		int PositionNum=parkingpositiondao.getPositionNum(id);//查看该停车场是否有空余车位
+		if(PositionNum==0) {
 			return true;
 		}
 		else{

@@ -99,8 +99,8 @@ where parkingLotId=#{_parameter}
 </update>
  
 <select id="getPositionNum"  resultType="Integer">
-    select count(id) from ParkingPosition 
-    where parkingLotId=#{parkingLotId}
+    select count(id) from ParkingPosition where parkingLotId=#{parkingLotId} 
+      and accountId=null
 </select>
 
 <select id="getPositionNumByUser" resultType="Integer">

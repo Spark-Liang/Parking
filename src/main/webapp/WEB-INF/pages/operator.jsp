@@ -223,6 +223,7 @@
 						console.log(result);
 						if(result!=null){
 							if(result.falg==1){
+								alert(result.message);
 								$.ajax({
 									url:'user/addCard',
 									dataType:'json',

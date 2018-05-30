@@ -67,7 +67,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(newAccountInDB.getState(), AccountState.STOP);
 	}
 
-	@Test
+//	@Test
 	public void testAddNewCard() {//测试增加新停车卡
 		Account account=new Account();
 		long userId=18826237365l;
@@ -108,6 +108,16 @@ public class TestAccountDao extends AutoRollBackTest {
 		String times = new SimpleDateFormat("MMdd").format(new Date());
 		String exetime = "0529";
 		System.out.println(times.equals(exetime));
+	}
+//	@Test
+	public void testgetAllcard() {//测试获取所有的card
+		long userId=13745678910l;
+		List<Account> list=dao.findAccountrById(userId,null,null,null,null,null);
+	}
+	@Test
+	public void testgetCardMessage() {
+		long cardId=1l;
+		Account account=dao.getCardMessage(cardId);
 	}
 
 }

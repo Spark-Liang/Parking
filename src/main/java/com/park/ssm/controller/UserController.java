@@ -43,7 +43,7 @@ public class UserController {
 	
 	/**
 	 * 操作员
-	 * 根据客户ID获取客户的所有帐户信息
+	 * 根据客户ID获取客户的停车卡信息（拥有卡号的账户）
 	 * userId  客户ID 
 	 * message 返回的结果信息
 	 */
@@ -187,15 +187,20 @@ public class UserController {
 	    Integer lotId=new Integer(LotId);
 	    account.setParkingLotId(lotId);
 	    account.setCardId(cardId);
-	    account.setState(AccountState.getValueByInd(0));
-	    status=accountService.addNewCard(account);//添加新卡
-		 if(status>0) {
-			message="开卡成功";
-		    result.put("cardId",cardId);
-		 }
-		 else {
-			 message="系统出错，请联系技术部门！";
-		 }
+	    if(LotId!=0&&userId!=0&&cardId!=0){
+	    	 account.setState(AccountState.getValueByInd(0));
+	 	    status=accountService.addNewCard(account);//添加新卡
+	 		 if(status>0) {
+	 			message="开卡成功";
+	 		    result.put("cardId",cardId);
+	 		 }
+	 		 else {
+	 			 message="系统出错，请联系技术部门！";
+	 		 }
+	    }
+	    else {
+	    	 message="输入数据有误，请重新输入！";
+	    }
 		 result.put("message",message);
 		return JSON.toJSONString(result);
 	}
