@@ -173,7 +173,7 @@
 	where id=#{_parameter}
 </update>
 
-<select id="getTotalLotNum" parameterType="Long" resultType="Integer">
+<select id="getTotalLotNum" parameterType="int" resultType="Integer">
          select totalPositionNum from ParkingLot where id=#{id}
 </select>
 </mapper>

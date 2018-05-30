@@ -24,5 +24,8 @@ public interface AccountService {
 	
 	public Boolean isNotFullPosition(int LotId);//根据停车场编号判断是否有空余车位
 	
-	public int getPositionNumByUser(long accountId,int LotId);//
+//	public int getPositionNumByUser(long accountId,int LotId);//
+	
+	public int getPositionNumByUser(long userId);//获取用户在该停车场的停车卡数量
+	
 }

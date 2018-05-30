@@ -63,7 +63,7 @@ public interface ParkingPositionDao {
 	 * @param parkingLotId 停车场id 
 	 * @return
 	 */
-	public abstract int getPositionNum(@Param("LotId")int LotId);
+	public abstract int getPositionNum(@Param("parkingLotId")int parkingLotId);
 	
 	/**
 	 * 

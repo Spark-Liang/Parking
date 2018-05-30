@@ -75,4 +75,10 @@ public interface AccountDao {
 	 * 获取停车卡信息
 	 */
 	public abstract Account getCardMessage(long cardId);
+	/**
+	 * @param userId
+	 * 获取用户在该停车场的停车卡数量
+	 */
+	public abstract int getAccountNum(long userId);
+	
 }

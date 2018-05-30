@@ -130,4 +130,11 @@
 	where cardId=#{_paramter}
 </select>
 
+<select id="getAccountNum" resultType="Integer">
+	select 
+		count(id)
+	from Account
+	where userId=#{_paramter}
+</select>
+
 </mapper>

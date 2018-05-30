@@ -106,7 +106,7 @@ public class UserController {
 	 * userId  客户ID 
 	 * cardId  停车卡卡号
 	 * message 返回的结果信息
-	 * falg    返回的操作是否成功的标志
+	 * falg    返回的操作是否成功的标志{0：系统出错，1：允许开卡，2：账户或卡号存在问题，无法开卡}
 	 */
 	@RequestMapping(value = "addNewCard", method = { RequestMethod.POST })
 	@ResponseBody
@@ -149,8 +149,8 @@ public class UserController {
 		    	    		 }
 		    	    		 else{
 		    	    			 falg=1;
-		    	    			 long accountId=account.getId();
-		    	    			 int PositionNum=accountService.getPositionNumByUser(accountId,LotId);
+//		    	    			 long accountId=account.getId();
+		    	    			 int PositionNum=accountService.getPositionNumByUser(userId);
 		    	    			 message="当前用户已在该停车场订了"+PositionNum+"个停车位，确认要继续开卡吗?";
 		    	    		 } 	 
 		    	    	 }

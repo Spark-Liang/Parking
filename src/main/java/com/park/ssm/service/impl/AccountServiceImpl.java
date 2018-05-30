@@ -95,10 +95,13 @@ public class AccountServiceImpl implements AccountService {
 			return false;	
 		}
 	}
+//	@Override
+//	public int getPositionNumByUser(long accountId, int LotId) {
+//		return parkingpositiondao.getPositionNumByUser(accountId,LotId);
+//	}
+
 	@Override
-	public int getPositionNumByUser(long accountId, int LotId) {
-		return parkingpositiondao.getPositionNumByUser(accountId,LotId);
+	public int getPositionNumByUser(long userId) {
+		return accountdao.getAccountNum(userId);
 	}
-
-
 }
