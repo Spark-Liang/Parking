@@ -1,5 +1,6 @@
 package com.park.ssm.service.impl;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -77,10 +78,12 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 		List<ParkingLot> resList=null;
 		List<ParkingLot> ListInDB=parkingLotDao.listParkingLot(conditions, pageNum, pageSize);
 		if(withPosition==false) {
+			resList=new ArrayList<>(ListInDB.size());
 			try {
 				for(ParkingLot parkingLot:ListInDB) {
 					ParkingLot tmpParking=new ParkingLot();
 					PersistentUtil.merge(tmpParking, parkingLot, ParkingLot.class);
+					resList.add(tmpParking);
 				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				logger.info(e);
