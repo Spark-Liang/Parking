@@ -21,6 +21,9 @@ public class TestAccountDao extends AutoRollBackTest {
 	@Autowired
 	private AccountDao dao;
 	
+	@Autowired
+	private ParkingPositionDao parkingpositiondao;
+	
 	
 //	@Test
 	public void tesAddAndtLoadById() {
@@ -39,7 +42,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(account.getUserId(), accountInDB.getUserId());
 	}
 	
-	@Test
+//	@Test
 	public void testListById() {
 		//test data
 		Long userId=13745678911L;
@@ -49,7 +52,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		Assert.assertEquals(false, accounts.isEmpty());
 	}
 	
-	@Test
+//	@Test
 	public void testUpdate() throws IllegalArgumentException, IllegalAccessException {
 		//test data
 		Long id=1L;
@@ -68,6 +71,8 @@ public class TestAccountDao extends AutoRollBackTest {
 	public void testAddNewCard() {//测试增加新停车卡
 		Account account=new Account();
 		long userId=18826237365l;
+		long id=2l;
+		account.setId(id);
 		account.setUserId(userId);
 		account.setParkingLotId(1);
 		account.setCardId(123456789l);
@@ -75,9 +80,11 @@ public class TestAccountDao extends AutoRollBackTest {
 		int falg=0;
 		falg=dao.insertAccount(account);
 		System.out.println(falg);
+		int num=parkingpositiondao.getPositionNumByUser(id,1);
+		System.out.println("数量为"+num);
 	}
 	
-	@Test
+//	@Test
 	public void testchangeNewCard() throws IllegalArgumentException, IllegalAccessException {//测试更换停车卡
 		long cardId=13745678911l;
 		Account account=dao.getCardMessage(cardId);

@@ -63,6 +63,15 @@ public interface ParkingPositionDao {
 	 * @param parkingLotId 停车场id 
 	 * @return
 	 */
-	public abstract int getPositionNum(int parkingLotId);
+	public abstract int getPositionNum(@Param("LotId")int LotId);
+	
+	/**
+	 * 
+	 * @param parkingPosition
+	 * 获取该用户已经在该停车场占用的停车位数量
+	 * @param parkingLotId 停车场id 
+	 * @return
+	 */
+	public abstract int getPositionNumByUser(@Param("accountId")long accountId,@Param("parkingLotId")int parkingLotId);
 	
 }
