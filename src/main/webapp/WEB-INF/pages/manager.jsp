@@ -161,7 +161,7 @@
     </div>
     <div class="dh">
         <label>Parking management system</label>
-        <a class="btn btn-primary btn-md" href="login.html">退出</a>
+        <a class="btn btn-primary btn-md" href="<%=basePath%>inneruser/logout">退出</a>
     </div>
     <div class="container container-style" >
         <h1>Hello,<span id='manger-name'></span></h1>

@@ -184,24 +184,22 @@ public class UserController {
 		String message="";
 		int status=0;
 		account.setUserId(userId);
-	    Integer lotId=new Integer(LotId);
-	    account.setParkingLotId(lotId);
-	    account.setCardId(cardId);
-	    if(LotId!=0&&userId!=0&&cardId!=0){
-	    	 account.setState(AccountState.getValueByInd(0));
-	 	    status=accountService.addNewCard(account,LotId);//添加新卡
-	 		 if(status>0) { 
-	 			message="开卡成功";
-	 		    result.put("cardId",cardId);
-	 		 }
-	 		 else {
-	 			 message="系统出错，请联系技术部门！";
-	 		 }
-	    }
-	    else {
-	    	 message="输入数据有误，请重新输入！";
-	    }
-		 result.put("message",message);
+		Integer lotId = new Integer(LotId);
+		account.setParkingLotId(lotId);
+		account.setCardId(cardId);
+		if (LotId != 0 && userId != 0 && cardId != 0) {
+			account.setState(AccountState.getValueByInd(0));
+			status = accountService.addNewCard(account,LotId);// 添加新卡
+			if (status > 0) {
+				message = "开卡成功";
+				result.put("cardId", cardId);
+			} else {
+				message = "系统出错，请联系技术部门！";
+			}
+		} else {
+			message = "输入数据有误，请重新输入！";
+		}
+		result.put("message", message);
 		return JSON.toJSONString(result);
 	}
 	

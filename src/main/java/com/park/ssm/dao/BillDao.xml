@@ -6,14 +6,15 @@
 		<id property="id" column="userId"></id>
 		<result property="billStartDate" column="billStartDate"></result>
 		<result property="billEndDate" column="billStartDate"></result>
+		<result property="price" column="price"></result>
 		<result property="isPaid" column="isPaid"></result>
-		<collection property="account" ofType="Account">
+		<collection property="account" ofType="Account" >
 			<id property="id" column="userId"></id>
 			<result property="cardId" column="cardId"></result>
-			<collection property="parkingLot" ofType="ParkingLot">
+			<association  property="parkingLot" javaType="ParkingLot">
 				<id property="id" column="id"></id>
 				<result property="name" column="name"></result>
-			</collection>
+			</association >
 		</collection>
 	</resultMap>
 
@@ -89,7 +90,7 @@
 		</where>
 	</select>
 	<select id="listBillByUserId" resultMap="billResultMap">
-		select b.userId,a.cardId,p.name,b.billStartDate,b.billEndDate,b.isPaid
+		select b.userId,a.cardId,p.name,b.billStartDate,b.billEndDate,b.price,b.isPaid
 		from Account a,ParkingLot p,Bill b
 		<where> a.userId=b.userId
 			and b.parkingLotId=p.id
