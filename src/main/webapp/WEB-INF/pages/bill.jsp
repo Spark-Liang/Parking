@@ -52,7 +52,7 @@
             type: "GET",
             dateType: "json",
             url:"",
-            date{
+            data:{
 
             },success:function(responce){
                 var res=responce.res;

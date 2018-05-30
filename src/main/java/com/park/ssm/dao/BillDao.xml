@@ -2,7 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--客户映射 指定到dao接口 -->
 <mapper namespace="com.park.ssm.dao.BillDao">
-
+	<resultMap type="bill" id="billResultMap">
+		<id property="id" column="userId"></id>
+		<result property="billStartDate" column="billStartDate"></result>
+		<result property="billEndDate" column="billStartDate"></result>
+		<result property="isPaid" column="isPaid"></result>
+		<collection property="account" ofType="Account">
+			<id property="id" column="userId"></id>
+			<result property="cardId" column="cardId"></result>
+			<collection property="parkingLot" ofType="ParkingLot">
+				<id property="id" column="id"></id>
+				<result property="name" column="name"></result>
+			</collection>
+		</collection>
+	</resultMap>
 
 	<sql id="sqlField">
 		id,userId,parkingLotId,accountId,price,billStartDate,billEndDate,isPaid
@@ -25,7 +38,7 @@
 	</select>
 
 	<!-- 通过各種id組合加载账单 -->
-	<select id="listBillById"  resultType="Bill">
+	<select id="listBillById" resultType="Bill">
 		select
 		<include refid="sqlField" />
 		from Bill
@@ -46,7 +59,7 @@
 	</select>
 	<select id="countBillById" parameterType="Long" resultType="Integer">
 		select
-		 count(1)
+		count(1)
 		from Bill
 		<where>
 			<if test="userId != null">
@@ -67,12 +80,21 @@
 		where id=#{_parameter}
 	</update>
 
-    <select id="isNotPayBill" parameterType="Long" resultType="Integer">
-    select count(id) from Bill
-    <where>
-    <if test="userId != null">
-		and userId=#{userId}
-	</if>
-    </where>
-    </select>
+	<select id="isNotPayBill" parameterType="Long" resultType="Integer">
+		select count(id) from Bill
+		<where>
+			<if test="userId != null">
+				and userId=#{userId}
+			</if>
+		</where>
+	</select>
+	<select id="listBillByUserId" resultMap="billResultMap">
+		select b.userId,a.cardId,p.name,b.billStartDate,b.billEndDate,b.isPaid
+		from Account a,ParkingLot p,Bill b
+		<where> a.userId=b.userId
+			and b.parkingLotId=p.id
+			and b.userId=#{userId}
+		</where>
+	</select>
+
 </mapper>

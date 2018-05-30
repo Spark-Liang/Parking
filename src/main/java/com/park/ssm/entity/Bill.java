@@ -2,6 +2,7 @@ package com.park.ssm.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -19,25 +20,34 @@ public class Bill implements Serializable {
 	
 	private Long id;
 	//信息相关
-	private Long userId;
-	private Integer parkingLotId;
-	private Long accountId;
+	private Account userId;
+	private ParkingLot parkingLotId;
+	private Account accountId;
 	//计费相关
 	private Double price;
 	private Date billStartDate;
 	private Date billEndDate;
 	private boolean isPaid;
 	
+	private List<Account> account;
+	
+	public List<Account> getAccount() {
+		return account;
+	}
+	public void setAccount(List<Account> account) {
+		this.account = account;
+	}
+	
 	public Long getId() {
 		return id;
 	}
-	public Long getUserId() {
+	public Account getUserId() {
 		return userId;
 	}
-	public Integer getParkingLotId() {
+	public ParkingLot getParkingLotId() {
 		return parkingLotId;
 	}
-	public Long getAccountId() {
+	public Account getAccountId() {
 		return accountId;
 	}
 	public Double getPrice() {

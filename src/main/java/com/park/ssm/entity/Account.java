@@ -29,6 +29,15 @@ public class Account implements Serializable {
 	private boolean isParking;
 	private Bill currentBill;
 	private List<Bill> bills;
+	
+	private List<ParkingLot> parkingLot;
+	
+	public List<ParkingLot> getParkingLot() {
+		return parkingLot;
+	}
+	public void setParkingLot(List<ParkingLot> parkingLot) {
+		this.parkingLot = parkingLot;
+	}
 	public Long getId() {
 		return id;
 	}
