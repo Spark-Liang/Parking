@@ -32,7 +32,7 @@ function checkName(className,tip){
         var nameLength = uName.length;
         var object = /^1{1}[3-9]{2}[0-9]{8}$/g;
         if (nameLength < 1) {
-            tip.innerHTML = "请输入账号";
+            tip.innerHTML = "账号不能为空";
             name.focus();
             return false;
         }else if(!object.test(uName)){
@@ -59,7 +59,7 @@ function checkPwd(className,tip){
    
     
     if(passLength < 1){
-        tip.innerHTML = "请输入密码";
+        tip.innerHTML = "密码不能为空";
         pass.focus();
         return false;
     
