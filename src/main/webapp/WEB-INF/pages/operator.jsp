@@ -49,11 +49,32 @@
 .search-inf p{
 	margin-bottom: 0px;
 }
+.pay-money{
+	width: 300px;
+	height: 250px;
+	top:30%;
+	left:35%;
+	position:fixed;
+	display:none;
+}
+.pay-money h4{
+	text-align:center;
+	font-weight:600;
+}
 </style>
 <script type="text/javascript">
 	
 </script>
 <body>
+	<div class="pay-money alert alert-info">
+		<h4>确认支付帐单</h4>
+		<p>卡号：<span></span><p>
+		<p>停车场：<span></span><p>
+		<h3>支付金额：<span></span></h3>
+		<br/>
+		<a class="btn btn-block btn-primary">支付</a>
+		<a>取消</a>
+	</div>
 	<!-- 导航条 -->
 	<div class="dh">
 		<label>Parking management system</label> <a
@@ -203,7 +224,7 @@
 						if(result!=null){
 							if(result.falg==1){
 								$.ajax({
-									url:'user/addcard',
+									url:'user/addCard',
 									dataType:'json',
 									type:'post',
 									data:{
@@ -335,8 +356,12 @@
 		
 		//点击支付帐单的触发事件 
 		function paymoney(){
-			
+			$('.pay-money').fadeIn();
 		}
+		//关闭支付帐单的弹框
+		$('.pay-money a:eq(1)').click(function (){
+			$('.pay-money').fadeOut();
+		})
 	</script>
 </body>
 
