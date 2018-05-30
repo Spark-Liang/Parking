@@ -22,6 +22,7 @@ public class BillServiceImpl implements BillService {
 	@Override
 	public List<Bill> findBillByUserId(Long userId) {
 		// TODO Auto-generated method stub
+		System.out.println("-----------------------"+billDao.listBillByUserId(userId));
 		return billDao.listBillByUserId(userId);
 	}
 

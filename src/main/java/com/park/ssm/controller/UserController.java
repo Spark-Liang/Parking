@@ -21,6 +21,7 @@ import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.AccountService;
+import com.park.ssm.service.BillService;
 import com.park.ssm.service.UserService;
 import com.park.ssm.util.Encryption;
 
@@ -41,6 +42,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private BillService billService;
 	/**
 	 * 操作员
 	 * 根据客户ID获取客户的停车卡信息（拥有卡号的账户）

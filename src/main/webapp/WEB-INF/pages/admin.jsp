@@ -102,7 +102,7 @@
 	<!-- 导航条 -->
 	<div class="container container-style">
 		<h1 id='admin-name'>Hello,<span>XXX</span></h1>
-		<p class="text-info">你的身份是管理员,可以操作以下数据</p>
+		<p class="text-info">您的身份是管理员,可以操作以下数据</p>
 		<ol class="breadcrumb">
 			<li><a onclick="skip(0)">停车场管理</a></li>
 			<li><a onclick="skip(1)">人员管理</a></li>
