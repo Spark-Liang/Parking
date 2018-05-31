@@ -44,7 +44,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		HandlerMethod handlerMethod=(HandlerMethod)handler;
 		Method method=handlerMethod.getMethod();
 		Permission permission=method.getAnnotation(Permission.class)!=null?method.getAnnotation(Permission.class):method.getDeclaringClass().getAnnotation(Permission.class);
-		if(permission==null) {
+		if(permission==null || permission.haveControl()==false) {
 			//不需要进行权限控制
 			return true;
 		}
@@ -86,10 +86,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	 * @return
 	 */
 	private boolean checkPermission(Permission permission,InnerUser innerUser) {
-		//判断注解的方法是否需要权限控制
+/*		//判断注解的方法是否需要权限控制
 		if(permission.haveControl()==false) {
 			return true;
-		}
+		}*/
 		int typeflag=innerUser.getTypeflag();
 		for(Permission.Type permissionRole:permission.value()) {
 			if(permissionRole.getInd()==typeflag){

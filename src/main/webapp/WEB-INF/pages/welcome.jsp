@@ -69,7 +69,7 @@ img{
 	<div class="welcome-mid">
 		<h1>Welcome Parking manger system</h1>
 		<!-- <div class="welcome-opacity"></div> -->
-		<button class="btn btn-lg btn-primary center-block">我是用户</button>
+		<a href="user/touserlogin"><button class="btn btn-lg btn-primary center-block">我是用户</button></a>
 		<p><a href="inneruser/page">登录后台管理系统</a></p>
 	</div>
 

@@ -265,7 +265,7 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "toUserLogin")
+	@RequestMapping("touserlogin")
 	@Permission(value = {}, haveControl = false)
 	public String toUserLogin() {
 		return "userLogin";
