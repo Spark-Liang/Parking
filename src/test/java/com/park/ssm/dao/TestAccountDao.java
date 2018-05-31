@@ -26,7 +26,7 @@ public class TestAccountDao extends AutoRollBackTest {
 	
 	
 //	@Test
-	public void tesAddAndtLoadById() {
+	/*public void tesAddAndtLoadById() {
 		//test data
 		Account account=new Account();
 		account.setCardId(123L);
@@ -40,7 +40,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(account.getParkingLotId(), accountInDB.getParkingLotId());
 		assertEquals(account.getParkingPositionId(), accountInDB.getParkingPositionId());
 		assertEquals(account.getUserId(), accountInDB.getUserId());
-	}
+	}*/
 	
 //	@Test
 	public void testListById() {
@@ -69,19 +69,12 @@ public class TestAccountDao extends AutoRollBackTest {
 
 //	@Test
 	public void testAddNewCard() {//测试增加新停车卡
-		Account account=new Account();
-		long userId=18826237365l;
-		long id=2l;
-		account.setId(id);
-		account.setUserId(userId);
-		account.setParkingLotId(1);
-		account.setCardId(123456789l);
-		account.setState(AccountState.NORMAL);
-		int falg=0;
-		falg=dao.insertAccount(account);
-		System.out.println(falg);
-		int num=parkingpositiondao.getPositionNumByUser(id,1);
-		System.out.println("数量为"+num);
+		Map<String,Object> paramMap=new HashMap<>();
+		
+		dao.addNewCard(paramMap);
+		int flag=(int) paramMap.get("flag");
+		//int num=parkingpositiondao.getPositionNumByUser(id,1);
+		//System.out.println("数量为"+num);
 	}
 	
 //	@Test

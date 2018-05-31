@@ -162,30 +162,32 @@ public class UserController {
 	@RequestMapping(value = "addCard", method = { RequestMethod.POST })
 	@ResponseBody
 	@Permission(value = { Permission.Type.ADMIN, Permission.Type.OPERATOR })
-	public String addCard(@RequestParam("LotId") int LotId, @RequestParam("userId") long userId,
-			@RequestParam("cardId") long cardId) {
-		Map result = new HashMap();
+	public Map addCard(@RequestParam("LotId") Integer lotId, @RequestParam("userId") Long userId,
+			@RequestParam("cardId") Long cardId) {
+		Map<String,Object> result = new HashMap();
 		Account account = new Account();
 		String message = "";
-		int status = 0;
 		account.setUserId(userId);
-		Integer lotId = new Integer(LotId);
 		account.setParkingLotId(lotId);
 		account.setCardId(cardId);
-		if (LotId != 0 && userId != 0 && cardId != 0) {
+		if (lotId != 0 && userId != 0 && cardId != 0) {
 			account.setState(AccountState.getValueByInd(0));
-			status = accountService.addNewCard(account, LotId);// 添加新卡
-			if (status > 0) {
+			Long accountId=null;
+			try {
+				accountId = accountService.addNewCard(cardId, userId, lotId);
 				message = "开卡成功";
 				result.put("cardId", cardId);
-			} else {
-				message = "系统出错，请联系技术部门！";
+				result.put("accountId", accountId);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				message=e.getMessage();
 			}
+			
 		} else {
 			message = "输入数据有误，请重新输入！";
 		}
 		result.put("message", message);
-		return JSON.toJSONString(result);
+		return result;
 	}
 
 	/**

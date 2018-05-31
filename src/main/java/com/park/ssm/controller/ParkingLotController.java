@@ -64,7 +64,7 @@ public class ParkingLotController {
 	 * @return JSON {”res”: “true”(成功) “false”(失败) “parkingLot”：添加成功之后的parkingLot }
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value="add")
+	@RequestMapping(value="add",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public @ResponseBody Map addParkingLot(ParkingLot parkingLot) {
 		boolean res=false;
 		Map result=new HashMap();
@@ -130,7 +130,7 @@ public class ParkingLotController {
 	 * @return JSON {”res”: “true”(成功) “false”(失败) “parkingLot”：更新之后的parkingLot }
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value="update")
+	@RequestMapping(value="update",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	@Permission(value= {Permission.Type.ADMIN,Permission.Type.MANAGER})
 	public @ResponseBody Map updateParkingLot(ParkingLot parkingLot) {
 		Map result=new HashMap();
@@ -151,7 +151,7 @@ public class ParkingLotController {
 	 * @return String JSON ｛"res":结果 ｝
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value="delete")
+	@RequestMapping(value="delete",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public @ResponseBody Map deleteParkingLot(@RequestParam("id") Integer[] ids) {
 		Map result=new HashMap();
 		boolean res=false;
@@ -179,7 +179,7 @@ public class ParkingLotController {
 	 * @return JSON ｛"res":结果｝ 结果：true存在重复名字，false不存在重复名字
 	 */
 	@SuppressWarnings("rawtypes")
-	@RequestMapping(value="existname")
+	@RequestMapping(value="existname",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public @ResponseBody Map isExistName(@RequestParam("name")String name) {
 		Map<String, Object> result=new HashMap<>();
 		result.put("res", parkingLotService.isExistingName(name));
