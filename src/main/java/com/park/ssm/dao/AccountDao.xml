@@ -92,13 +92,23 @@
 		where cardId=#{_paramter}
 	</select>
 
-
-	<insert id="insertAccount" parameterType="Account" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
-		insert into Account
-		(userId,parkingLotId,parkingPositionId,cardId,stateStartDate)
-		values
-		(#{userId},#{parkingLotId},#{parkingPositionId},#{cardId},curdate())
-	</insert>
+	<!-- 添加新卡，通过数据库调用存储过程实现 -->
+	<parameterMap type="Map" id="addNewCardMap">
+		<parameter property="parkingLotId" mode="IN" />
+		<parameter property="userId" mode="IN" />
+		<parameter property="cardId" mode="IN" />
+		<parameter property="accountId" mode="OUT" javaType="Long"/>
+		<parameter property="flag" mode="OUT" javaType="Integer"/>
+	</parameterMap>
+	<select id="addNewCard" statementType="CALLABLE" useCache="false">
+		call addNewCard(
+			#{cardId}
+			,#{userId}
+			,#{parkingLodId}
+			,#{accountId}
+			,#{flag}
+		);
+	</select>
 
 	<update id="setAccountState">
 		update Account

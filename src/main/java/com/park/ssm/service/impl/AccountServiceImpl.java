@@ -1,5 +1,6 @@
 package com.park.ssm.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,11 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.park.ssm.dao.AccountDao;
 import com.park.ssm.dao.BillDao;
-import com.park.ssm.dao.ParkingLotDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
-import com.park.ssm.entity.ParkingPosition;
 import com.park.ssm.entity.User;
 import com.park.ssm.service.AccountService;
 import com.park.ssm.util.PersistentUtil;
@@ -33,8 +32,8 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private BillDao billdao;
 	
-	@Autowired 
-	private ParkingLotDao parkinglotdao;
+	/*@Autowired 
+	private ParkingLotDao parkinglotdao;*/
 	
 	@Autowired
 	private ParkingPositionDao parkingpositiondao;
@@ -65,9 +64,30 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	@Transactional
-	public int addNewCard(Account account,int LotId) {
-		int successAccount=accountdao.insertAccount(account);
-		if(successAccount==0) {
+	public Long addNewCard(Long cardId,Long userId,Integer LotId) {
+		Map<String, Object> paramMap=new HashMap<>();
+		paramMap.put("cardId", cardId);
+		paramMap.put("userId", userId);
+		paramMap.put("parkingLotId", LotId);
+		accountdao.addNewCard(paramMap);
+		int flag=(int) paramMap.get("flag");
+		if(flag==0) {
+			return (Long) paramMap.get("accountId");
+		}else {
+			StringBuilder errorMessage=new StringBuilder();
+			//flag的第一位非0表示：用户有其他卡为非正常状态
+			if((flag & 1) != 0) {
+				errorMessage.append("失败原因：用户有其他卡为非正常状态\n");
+			}
+			//flag的第二位非0表示： 没有空停车位
+			if((flag & (1<<1)) != 0) {
+				errorMessage.append("失败原因：没有空停车位\n");
+			}
+			throw new RuntimeException(errorMessage.toString());
+		}
+		 
+		
+		/*if(successAccount==0) {
 		   	throw new RuntimeException("添加新的停车卡事务异常，新增停车卡失败");
 		}
 		else {
@@ -80,7 +100,7 @@ public class AccountServiceImpl implements AccountService {
 			else {
 				return 1;
 			}
-		}
+		}*/
 	}
 	@Override
 	@Transactional

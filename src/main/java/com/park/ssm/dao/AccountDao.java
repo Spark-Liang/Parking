@@ -19,15 +19,30 @@ import com.park.ssm.entity.type.AccountState;
  */
 @MapperScan
 public interface AccountDao {
-	/**
-	 * 通过account id查询account所有信息，连Bill也一起查询出来
+
+	/**通过AccountId获取Account的基础信息
+	 * 
 	 * @param id
 	 * @return
 	 */
 	public abstract Account loadAccountById(long id);
 	public abstract Account loadAccountByIdForUpdate(long id);
 	
-	public abstract int insertAccount(Account account);
+	/**执行添加新卡的过程，执行结果通过输入的map返回
+	 * 
+	 * result中
+	 * <p>accountId 表示添加之后生成的account的Id
+	 * <p>flag是执行结果的标志位 
+	 * flag＝0表示执行成功
+	 * flag 第一个bit位为1表示由于用户存在其他非正常状态的卡
+	 * flag 第二个bit位为1表示由于没有停车位
+	 * 
+	 * @param map
+	 * <li>parkingLotId 停车场id
+	 * <li>userId 用户的id
+	 * <li>cardId 停车卡Id
+	 */
+	public abstract void addNewCard(Map<String, Object> map);
 	
 	public abstract int setAccountState(@Param("id") Long id,@Param("state")AccountState state); 
 	

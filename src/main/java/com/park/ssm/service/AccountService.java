@@ -3,7 +3,6 @@ package com.park.ssm.service;
 import java.util.List;
 
 import com.park.ssm.entity.Account;
-import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 
 public interface AccountService {
@@ -12,7 +11,14 @@ public interface AccountService {
 	
 	public User findUserByuserId(long userId);//根据用户ID获取用户基础信息
 	
-	public int addNewCard(Account account,int LotId);//为客户新建停车卡
+	/**
+	 * 添加新的卡，并且返回相应的账号id
+	 * @param cardId
+	 * @param userId
+	 * @param LotId
+	 * @return Long acccountId
+	 */
+	public Long addNewCard(Long cardId,Long userId,Integer lotId);
 	
 	public int modifyAccount(Account account);//修改客户的帐户信息
 	
