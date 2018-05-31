@@ -216,7 +216,7 @@
 			var check = checkinf(this,inf);
 			if(check==1){
 				 $.ajax({
-					url:'user/addNewCard',
+					url:'user/addNewCard',//检测新卡是否已经存在
 					dataType:'json',
 					type:'post',
 					data:{
@@ -228,7 +228,7 @@
 							if(result.falg==1){
 								alert(result.message);
 								$.ajax({
-									url:'user/addCard',
+									url:'user/addCard',//增加 新卡 
 									dataType:'json',
 									type:'post',
 									data:{
