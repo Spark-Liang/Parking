@@ -70,9 +70,9 @@ body{
 </style>
 <html>
 <body>
-    <img id="background-img" src="img/loginback.jpg">
+    <img id="background-img" src="img/parking.png">
 <div class="login">
-    <div class="loginback">
+    <div class="loginback" style="opacity: 0.8">
         
     </div>
     <h2>用户登录</h3>
