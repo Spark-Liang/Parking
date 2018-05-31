@@ -37,12 +37,12 @@ create table ParkingPosition
 	,accountId bigint
 	,state tinyint default 0 
 )engine=innodb auto_increment=1 charset='utf8';
-insert into ParkingPosition(parkingLotId,accountId)
+insert into ParkingPosition(parkingLotId,accountId,state)
 values
-(1,1)
-,(1,2),(2,5),(3,8 )
-,(1,3),(2,6),(3,9 )
-,(1,4),(2,7),(3,10),(3,11),(3,12),(3,13)
+ (1,1,1)
+,(1,2,1),(2,5,1),(3,8 ,1)
+,(1,3,1),(2,6,1),(3,9 ,1)
+,(1,4,1),(2,7,1),(3,10,1),(3,11,1),(3,12,1),(3,13,1)
 ;
 
 
