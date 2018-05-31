@@ -104,9 +104,9 @@
 		call addNewCard(
 			#{cardId}
 			,#{userId}
-			,#{parkingLodId}
-			,#{accountId}
-			,#{flag}
+			,#{parkingLotId}
+			,#{accountId,mode=OUT,jdbcType=BIGINT}
+			,#{flag,mode=OUT,jdbcType=INTEGER}
 		);
 	</select>
 

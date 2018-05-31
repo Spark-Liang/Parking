@@ -7,11 +7,14 @@ import java.util.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.test.annotation.Rollback;
 
 import com.park.AutoRollBackTest;
 import java.text.SimpleDateFormat;
 import com.park.ssm.entity.Account;
+import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.type.AccountState;
+import com.park.ssm.service.ParkingLotService;
 import com.park.ssm.util.PersistentUtil;
 
 import junit.framework.Assert;
@@ -67,12 +70,28 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(newAccountInDB.getState(), AccountState.STOP);
 	}
 
-//	@Test
+	@Test
+	@Rollback(true)
 	public void testAddNewCard() {//测试增加新停车卡
-		Map<String,Object> paramMap=new HashMap<>();
+		//添加能够停车的停车场
+		ParkingLotService parkingLotService=applicationContext.getBean(ParkingLotService.class);
+		ParkingLot parkingLot=new ParkingLot();
+		parkingLot.setName("Test Add New Card"+System.currentTimeMillis());
+		parkingLot.setTotalPositionNum(10);
+		parkingLot.setCost(100.0);
+		parkingLotService.saveParkingLot(parkingLot);
 		
+		Map<String,Object> paramMap=new HashMap<>();
+		paramMap.put("parkingLotId", parkingLot.getId());
+		paramMap.put("cardId", System.currentTimeMillis() % 100000000000L);
+		paramMap.put("userId", "13745678910");
 		dao.addNewCard(paramMap);
 		int flag=(int) paramMap.get("flag");
+		assertEquals(flag, 0);
+		Account account=dao.loadAccountById((Long)paramMap.get("accountId"));
+		Assert.assertNotNull(account);
+		ParkingPositionDao parkingPositionDao=applicationContext.getBean(ParkingPositionDao.class);
+		Assert.assertNotNull(parkingPositionDao.loadParkingPositionById(account.getParkingPositionId()));
 		//int num=parkingpositiondao.getPositionNumByUser(id,1);
 		//System.out.println("数量为"+num);
 	}
@@ -107,7 +126,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		long userId=13745678910l;
 		List<Account> list=dao.findAccountrById(userId,null,null,null,null,null);
 	}
-	@Test
+	//@Test
 	public void testgetCardMessage() {
 		long cardId=1l;
 		Account account=dao.getCardMessage(cardId);

@@ -85,7 +85,7 @@ end
 $
 
 drop procedure if exists addNewCard$
-create procedure addNewCard(in cardId bigint,in userId bigint,in parkingLotId bigint,out accountId bigint,out flag int)
+create procedure addNewCard(in cardId bigint,in userId bigint,in parkingLotId int,out accountId bigint,out flag int)
 begin
 	declare parkingPositionId bigint;
 	#定义检查变量
@@ -95,7 +95,6 @@ begin
 	set checkParkingPosition=1;
 	#开始更新操作
 	start transaction;
-	insert into Account(id,userId,parkingLotId,parkingPositionId,cardId,stateStartDate)
 	select
 		@accountId:=(select id+1 from Account 
 					where id>=(select max(id) from Account)
@@ -104,7 +103,8 @@ begin
 					for update) id
 		,a.userId
 		,parkingLotId
-		,@parkingPositionId:=b.id parkingPositionId
+		#,@parkingPositionId:=b.id parkingPositionId
+		,b.id parkingPositionId
 		,cardId
 		,curdate()
 	from 
@@ -129,13 +129,54 @@ begin
 		for update
 		)b
 	;
+	insert into Account(id,userId,parkingLotId,parkingPositionId,cardId,stateStartDate)
+	select
+		@accountId:=(select id+1 from Account 
+					where id>=(select max(id) from Account)
+					order by id desc
+					limit 1
+					for update) id
+		,a.userId
+		,parkingLotId
+		#,@parkingPositionId:=b.id parkingPositionId
+		,b.id
+		,cardId
+		,curdate()
+	from 
+		#检查对应parkingLot和User下没有没有不能使用的账号
+		(select userId,@checkUser:=0
+		from (select userId as userId) tmpUserId 
+		where
+			(select count(1) from Account
+			where userId = userId
+			  and parkingLotId = parkingLotId
+			  and state=-1
+			for update
+			)=0 
+		)a
+		inner join
+		#检查停车场是否有空停车位
+		(select id ,@checkParkingPosition:=0
+		from ParkingPosition
+		where parkingLotId=parkingLotId
+		  and state=0
+		limit 1
+		for update
+		)b
+	;
+	select id,userId,parkingLotId,parkingPositionId,cardId,stateStartDate
+	from Account where id=@accountId
+	;
 	update ParkingPosition
 	set 
 		accountId=@accountId
 		,state=1
-	where id=@parkingPositionId
+	#where id=@parkingPositionId
+	where id=(select parkingPositionId from Account where id=@accountId)
 	;
 	commit;
+	#test 
+	select @accountId as accountId,@parkingPositionId as parkingPositionId, @flag as flag;
 	#判断事务完成状态
 	# flag=0 事务正常完成
 	# flag=1 用户有其他卡为非正常状态
