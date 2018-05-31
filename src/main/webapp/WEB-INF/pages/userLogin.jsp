@@ -10,11 +10,17 @@
 <head>
 <meta charset="UTF-8">
 <base href="<%=basePath%>">
-    <title>用户登录</title>
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="js/jquery-3.3.1.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
+<title>用户登录</title>
+<link rel="stylesheet"
+    href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+<script src="js/jquery-3.3.1.js"></script>
+<script
+    src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
 </head>
 
 <style type="text/css">
@@ -79,63 +85,65 @@ body{
         <br/>
     <p class = "tip"></p>
     <form id = "formLogin">
-        <div class="form-gorup">
-            <label>用户名</label>
-            <input type="text" class="form-control userName" name="" placeholder="手机号">
-        </div>
-        <br/>
-        <div class="form-gorup">
-            <label>密码</label>
-            <input type="password" class="form-control pass" name="" placeholder="password">
-        </div>
+         <div class="form-gorup">
+                    <label>用户名</label> <input type="text" class="form-control userName"
+                        name="userId" placeholder="username" onblur="checkName()">
+                </div>
+                <br />
+                <div class="form-gorup">
+                    <label>密码</label> <input type="password" class="form-control pass"
+                        name="password" placeholder="password">
+                </div>
+                <br />
         
     </form>
     <br/>
     
     <br/>
-    <a class="btn btn-md btn-primary pull-right btn-block"  onclick="login(this)" href="#">登录</button>
+    <a class="btn btn-md btn-primary pull-right btn-block"  onclick="login(this)" href="javascript:void(0);">登录</button>
 </div>
 
 <script type="text/javascript">
-    var tip = document.getElementsByClassName('tip')[0];
-    var className = "userName";
-    var inputName = document.getElementsByClassName('userName')[0];
-    inputName.addEventListener("blur",function(){checkName(className,tip);});//监听填写完账号后进行检测
-    inputName.addEventListener("change",function(){cleanTip(tip);});//监听修改账号或密码时清空出错提示
-    
-     function login(a){
-        //密码格式以及非空验证
-        var pwdClass = "pass";
-        var result = checkPwd(pwdClass,tip);
-        //检测通过后通过ajax提交表单
-        if(result){
-            cleanTip(tip);
-            $.ajax({
-                type : "POST",
-                dataType : "json",
-                url : "", //提交的地址  
-                data : $('#formLogin').serialize(),
-                error : function(request) {
-                    $('.tip').text('登录请求提交出错');
+var tip = document.getElementsByClassName('tip')[0];
+var className = "userName";
+var inputName = document.getElementsByClassName('userName')[0];
+inputName.addEventListener("blur",function(){checkName(className,tip);});//监听填写完账号后进行检测
+inputName.addEventListener("change",function(){cleanTip(tip);});//监听修改账号或密码时清空出错提示
+function login(a){
+    //密码格式以及非空验证
+    var pwdClass = "pass";
+    var result = checkPwd(pwdClass,tip);
+    //检测通过后通过ajax提交表单
+    if(result){
+        //ajax提交表单
+        cleanTip(tip);
+        $.ajax({
+            type : "POST",
+            dataType : "json",
+            url : "user/userLogin/", //提交的地址  
+            data : $('#formLogin').serialize(),
+            error : function(request) {
+                $('.tip').text('登录请求提交出错');
+                $('.userName').val('');
+                $('.pass').val('');
+                return;
+                //alert("Connection error");  
+            },
+            success : function(user) {
+                if (user === null) {
+                    $('.tip').text('请检查用户名、密码和角色');
                     $('.userName').val('');
                     $('.pass').val('');
                     return;
-                },
-                success : function(user) {
-                    if (user === null) {
-                        $('.tip').text('账号或密码错误');
-                        $('.userName').val('');
-                        $('.pass').val('');
-                        return;
-                    } else {
-                        var hre="";
-                        $(location).attr('href',hre);
-                    }
+                } else {
+                    console.log(user)
+                        var hre = "<%=basePath%>user/userLogin?id="+ user.userId;
+                    $(location).attr('href', hre);
                 }
-            });
-        }
-       
+            }
+        });
     }
+}
 
 </script>
 <script src = "js/check6.js"></script>
