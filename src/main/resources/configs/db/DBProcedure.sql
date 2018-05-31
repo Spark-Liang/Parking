@@ -11,7 +11,7 @@ begin
 		a.userid as userId
 		,a.parkingLotId as parkingLotId
 		,a.id as accountId
-		,b.currentPrice * datediff(billDate,a.stateStartDate)/getTotalDate(billDate)
+		,b.currentPrice * getCardUsedDays(a.stateStartDate,billDate)/getTotalDate(billDate)
 		as price
 		,a.stateStartDate as billStartDate
 		,date_sub(billDate,INTERVAL 1 DAY) as billEndDate
@@ -85,28 +85,45 @@ end
 $
 
 drop procedure if exists addNewCard$
-create procedure addNewCard(in cardId bigint,in userId bigint,in parkingLotId int,out accountId bigint,out flag int)
+create procedure addNewCard(in cardId bigint,in userId bigint,in lotId int,out accountId bigint,out flag int)
 begin
-	declare parkingPositionId bigint;
+	declare positionId bigint;
+    declare tmpAccountId bigint;
 	#定义检查变量
 	declare checkUser bit;
 	declare checkParkingPosition bit;
-	set checkUser=1;
-	set checkParkingPosition=1;
+	set @checkUser=1;
+	set @checkParkingPosition=1;
 	#开始更新操作
 	start transaction;
+    /*
+    select userId,@checkUser:=0 checkUser
+		from (select userId as userId) tmpUserId 
+		where
+			(select count(1) from Account
+			where userId = userId
+			  and parkingLotId = lotId
+			  and state=-1
+			for update
+			)=0 
+	;
+    select id ,@checkParkingPosition:=0 checkPosition
+		from ParkingPosition
+		where parkingLotId=lotId
+		  and state=0
+		limit 1
+	;
 	select
-		@accountId:=(select id+1 from Account 
-					where id>=(select max(id) from Account)
-					order by id desc
-					limit 1
-					for update) id
-		,a.userId
-		,parkingLotId
-		#,@parkingPositionId:=b.id parkingPositionId
-		,b.id parkingPositionId
-		,cardId
-		,curdate()
+		@tmpAccountId:=(select id+1 from Account 
+				where id>=(select max(id) from Account)
+				order by id desc
+				limit 1
+				for update) id
+		,a.userId userId
+		,lotId parkingLotId
+		,@positionId:=b.id parkingPositionId
+		,cardId cardId
+		,curdate() stateStartDate
 	from 
 		#检查对应parkingLot和User下没有没有不能使用的账号
 		(select userId,@checkUser:=0
@@ -114,7 +131,7 @@ begin
 		where
 			(select count(1) from Account
 			where userId = userId
-			  and parkingLotId = parkingLotId
+			  and parkingLotId = lotId
 			  and state=-1
 			for update
 			)=0 
@@ -123,23 +140,22 @@ begin
 		#检查停车场是否有空停车位
 		(select id ,@checkParkingPosition:=0
 		from ParkingPosition
-		where parkingLotId=parkingLotId
+		where parkingLotId=lotId
 		  and state=0
 		limit 1
 		for update
 		)b
-	;
+	;*/
 	insert into Account(id,userId,parkingLotId,parkingPositionId,cardId,stateStartDate)
 	select
-		@accountId:=(select id+1 from Account 
-					where id>=(select max(id) from Account)
-					order by id desc
-					limit 1
-					for update) id
+		@tmpAccountId:=(select id+1 from Account 
+				where id>=(select max(id) from Account)
+				order by id desc
+				limit 1
+				for update) id
 		,a.userId
-		,parkingLotId
-		#,@parkingPositionId:=b.id parkingPositionId
-		,b.id
+		,lotId
+		,@positionId:=b.id parkingPositionId
 		,cardId
 		,curdate()
 	from 
@@ -149,7 +165,7 @@ begin
 		where
 			(select count(1) from Account
 			where userId = userId
-			  and parkingLotId = parkingLotId
+			  and parkingLotId = lotId
 			  and state=-1
 			for update
 			)=0 
@@ -158,31 +174,37 @@ begin
 		#检查停车场是否有空停车位
 		(select id ,@checkParkingPosition:=0
 		from ParkingPosition
-		where parkingLotId=parkingLotId
+		where parkingLotId=lotId
 		  and state=0
 		limit 1
 		for update
 		)b
 	;
-	select id,userId,parkingLotId,parkingPositionId,cardId,stateStartDate
-	from Account where id=@accountId
-	;
+    /*
+    select @tmpAccountId accountId,@positionId positionId;
+    select id,userId,parkingLotId,parkingPositionId,cardId,stateStartDate
+    from Account 
+    where id=@tmpAccountId;
+    */
 	update ParkingPosition
 	set 
-		accountId=@accountId
+		accountId=@tmpAccountId
 		,state=1
-	#where id=@parkingPositionId
-	where id=(select parkingPositionId from Account where id=@accountId)
+	where id=@positionId
 	;
 	commit;
-	#test 
-	select @accountId as accountId,@parkingPositionId as parkingPositionId, @flag as flag;
+	
 	#判断事务完成状态
 	# flag=0 事务正常完成
 	# flag=1 用户有其他卡为非正常状态
 	# flag=2 没有空停车位
-	set flag=(@checkUser<<1)|(@checkParkingPosition)
+    /*
+    select @checkUser checkUser,@checkParkingPosition checkParkingPosition,(@checkUser<<1)|(@checkParkingPosition) flag ;
+	*/
+    set flag=(@checkUser<<1)|(@checkParkingPosition)
 	;
+    set accountId=@tmpAccountId
+    ;
 end 
 $
 DELIMITER ;

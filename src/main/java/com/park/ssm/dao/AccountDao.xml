@@ -100,13 +100,13 @@
 		<parameter property="accountId" mode="OUT" javaType="Long"/>
 		<parameter property="flag" mode="OUT" javaType="Integer"/>
 	</parameterMap>
-	<select id="addNewCard" statementType="CALLABLE" useCache="false">
+	<select id="addNewCard"  statementType="CALLABLE" useCache="false">
 		call addNewCard(
 			#{cardId}
 			,#{userId}
 			,#{parkingLotId}
-			,#{accountId,mode=OUT,jdbcType=BIGINT}
-			,#{flag,mode=OUT,jdbcType=INTEGER}
+			,#{accountId,mode=OUT,jdbcType=BIGINT,javaType=Long}
+			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
 		);
 	</select>
 

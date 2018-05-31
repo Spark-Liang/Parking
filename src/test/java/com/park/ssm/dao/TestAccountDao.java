@@ -86,8 +86,8 @@ public class TestAccountDao extends AutoRollBackTest {
 		paramMap.put("cardId", System.currentTimeMillis() % 100000000000L);
 		paramMap.put("userId", "13745678910");
 		dao.addNewCard(paramMap);
-		int flag=(int) paramMap.get("flag");
-		assertEquals(flag, 0);
+		Integer flag=(int) paramMap.get("flag");
+		assertEquals(flag, new Integer(0));
 		Account account=dao.loadAccountById((Long)paramMap.get("accountId"));
 		Assert.assertNotNull(account);
 		ParkingPositionDao parkingPositionDao=applicationContext.getBean(ParkingPositionDao.class);
