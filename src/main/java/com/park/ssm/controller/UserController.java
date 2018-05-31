@@ -46,29 +46,31 @@ public class UserController {
 	@Autowired
 	private BillService billService;
 
-	/**
-	 * 操作员 根据客户ID获取客户的停车卡信息（拥有卡号的账户） userId 客户ID message 返回的结果信息
-	 */
+		/**
+	* 操作员 根据客户ID获取客户的停车卡信息（拥有卡号的账户） userId 客户ID message 返回的结果信息
+	*/
 	@RequestMapping(value = "getAllAccount", method = { RequestMethod.POST })
 	@ResponseBody
-	public String getAllAccount(@RequestParam("userId") long userId,@RequestParam("isGetAll")boolean isGetAll) {
-		Map result = new HashMap();
-		String message = "";
-		try {
-			User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
-			if (user != null) {
-				List<Account> list = accountService.findAccountrById(userId,isGetAll);
-				result.put("list", list);
-			} else {
-				message = "不存在此用户";
-			}
-			result.put("message", message);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("message", " 服务器出现错误");
+	public String getAllAccount(@RequestParam("userId") long userId,@RequestParam("isGetAll")String isGetAll) {
+	Map result = new HashMap();
+	String message = "";
+	try {
+		User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
+		Boolean bIsGetAll=Boolean.parseBoolean(isGetAll);
+		if (user != null) {
+			List<Account> list = accountService.findAccountrById(userId,bIsGetAll);
+			result.put("list", list);
+		} else {
+			message = "不存在此用户";
 		}
-		return JSON.toJSONString(result);
+		result.put("message", message);
+	} catch (Exception e) {
+		e.printStackTrace();
+		result.put("message", " 服务器出现错误");
 	}
+	return JSON.toJSONString(result);
+	}
+
 
 	/**
 	 * 操作员 根据客户ID获取客户的特定停车场的停车卡信息（即帐号信息 ） userId 客户ID message 返回的结果信息

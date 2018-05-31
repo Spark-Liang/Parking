@@ -16,6 +16,7 @@
 <script src="js/jquery-3.3.1.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/AllUseTools.js"></script>
+<script src="js/aopDefind.js"></script>
 </head>
 
 <style type="text/css">
@@ -42,6 +43,7 @@
 .search-inf{
 	margin-top:30px;
 	margin-right:20px;
+	min-height: 180px;
 }
 .search-inf a{
 	font-size:12px;
@@ -50,6 +52,7 @@
 	margin-bottom: 0px;
 }
 .pay-money{
+	z-index:1000;
 	width: 300px;
 	height: 250px;
 	top:30%;
@@ -149,7 +152,7 @@
 				<div class="alert alert-success col-md-3 search-inf">
 					<h4>卡号：<span>44444</span></h4>
 					<p>手机号：<span>fds</span></p>
-					<p>停车场：<span>fsafda</span></p>
+					<!-- <p>停车场：<span>fsafda</span></p> -->
 					<p>卡状态：<span>fds</span></p>
 					<a onclick="updateCard(this)">更换停车卡</a><br/><a onclick="paymoney(this)">支付帐单</a>
 				</div>
@@ -309,39 +312,36 @@
 		}
 		
 		$('.search-card').click(function(){
+			$('.search-inf').remove();
 			var iphone = $(this).parent().find('input:eq(0)').val();
 			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
 			if(object.test(iphone)){
 				$(this).parent().find('input:eq(0)').parent().removeClass('has-error');
-				/* $.ajax({
+			    $.ajax({
 					url:'user/getAllAccount',
 					dataType:'json',
 					type:'POST',
 					data:{
-						'userId':iphone
+						'userId':iphone,
+						'isGetAll':'ture'
 					},success:function(json){
-						
 						console.log(json);
-						var l = json.data.length;
-						
-						
-						
-						
+						var l = json.list.length;
 						for(var i =0;i<l;i++){
 							$('.search-show').append(function (){
 								return "<div class='alert alert-success col-md-3 search-inf'>"
-								+"<h4>卡号：<span>"+卡号+"</span></h4>"
-								+"<p>手机号：<span>"+卡号+"</span></p>"
-								+"<p>停车场：<span>"+卡号+"</span></p>"
-								+"<p>卡状态：<span>"+卡号+"</span></p>"
-								+"<a onclick='updateCard(this)'>更换停车卡</a><br/><a onclick='paymoney(this)'>支付帐单</a>"
+								+"<h4>卡号：<span>"+json.list[i].cardId+"</span></h4>"
+								+"<p>手机号：<span>"+json.list[i].userId+"</span></p>"
+								/* +"<p>停车场：<span>"+json.list[i].cardId+"</span></p>" */
+								+"<p>卡状态：<span>"+json.list[i].state+"</span></p>"
+								+"<a data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a><br/><a onclick='paymoney(this)'>支付帐单</a>"
 							+"</div>";
 							})
 						}
 					},error:function(){
 						
 					}
-				})  */
+				})
 			}else{
 				alert('手机号格式出错');
 				$(this).parent().find('input:eq(0)').parent().addClass('has-error');
@@ -352,25 +352,29 @@
 		//点击更换停车卡按钮触发的事件 a是元素自身
  		function updateCard(a){
 			$('.edit-money').remove();
-			id = 33;
+			id = $(a).data('value');
 			content ="请输入新的卡号"
 			$(a).parent().find('h4').after(function (){
 				return NumEdit(id,content);
 			});
 		}
-		/* function moneyok(a){
-			var id = $(a).data('value');
-		    var aa = $(a).parent().parent().find('input').val();
+		function moneyok(a){
+			var OldCardId = $(a).data('value');
+			alert(OldCardId);
+		    var NewCardId = $(a).parent().parent().find('input').val();
+		    var object = /^\d{7}$/g;
+		    alert(NewCardId);
 		  // $(a).parent().parent().parent().find('span:eq(0)').text(aa);
 		    var object = /^\d{7}$/;
-		        if(object.test(aa)){
+		        if(object.test(NewCardId)){
+		        	$(a).parent().parent().find('input').parent().removeClass('has-error');
 		        	$.ajax({
-		                url:'inneruser/changeParkingLotPrice',
+		                url:'user/changeCard',
 		                type:'POST',
 		                dataType:'json',
 		                data:{
-		                	'id':id,
-		                	'currentPrice':aa
+		                	'id':OldCardId,
+		                	'currentPrice':NewCardId
 		                },success:function(json){
 		                	console.log(json)
 		                    if(json.msg==1){
@@ -385,9 +389,10 @@
 		                }
 		           })
 		        }else{
-		        	
+		        	alert('停车卡格式有问题！！')
+		        	$(a).parent().parent().find('input').parent().addClass('has-error');
 		        }  
-		} */
+		}
 		
 		//点击支付帐单的触发事件 
 		function paymoney(){
