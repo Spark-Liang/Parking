@@ -10,36 +10,7 @@ function NumEdit(id,content) {
     +"</div>";
 	}
 
-function moneyok(a){
-	var id = $(a).data('value');
-    var aa = $(a).parent().parent().find('input').val();
-   /*  $(a).parent().parent().parent().find('span:eq(0)').text(aa); */
-    var object = /^\d{2,5}$/;
-        if(object.test(aa)){
-        	$.ajax({
-                url:'inneruser/changeParkingLotPrice',
-                type:'POST',
-                dataType:'json',
-                data:{
-                	'id':id,
-                	'currentPrice':aa
-                },success:function(json){
-                	console.log(json)
-                    if(json.msg==1){
-                    	alert('修改成功')
-                         $(a).parent().parent().parent().find('span:eq(0)').text(aa);
-                         $(a).parent().parent().fadeOut();
-                    }else if(json.error){
-                    	alert('修改失败')
-                    }
-                },error:function(){
 
-                }
-           })
-        }else{
-    }
-     
-}
 function moneyclose(a){
     $('.edit-money').fadeOut();
 }

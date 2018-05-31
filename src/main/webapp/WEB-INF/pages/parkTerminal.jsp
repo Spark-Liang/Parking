@@ -11,31 +11,73 @@
 <base href="<%=basePath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>停车场终端</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
 <script src="js/jquery-3.3.1.js"></script>
+<script src="js/bootstrap.min.js"></script>
 </head>
+<style>
+	.module{
+		max-width:300px;
+	}
+</style>
 <body>
-	<p>停车：
-	<form id="parkForm">
-		<label>停车场id：</label><input name="parkingLotId" type="text" size="8" /><br>
-		<label>停车卡号码：</label><input name="cardId" type="text" size="8" /><br>
+<div class="module">
+	<h3>停车：</h3>
+	<form id="parkForm form-gourp">
+		<label>停车场id：</label>
+		<div class="form-gourp">			
+			<input class="form-control" name="parkingLotId" type="text" size="8" /><br>
+		</div>
+		<label>停车卡号码：</label>
+		<div class="form-gourp">		
+			<input class="form-control" name="cardId" type="text" size="8" placeholder="请输入7位卡号" /><br>
+		</div>
 		<!-- <button id="parkCar" >停车</button> -->
-		<a href="javascript:void(0);" onclick="parkCar();">停车</a>
+		<a class="btn btn-md btn-primary" href="javascript:void(0);" onclick="parkCar(this);">停车</a>
 	</form>
-	<p>提车：
-	<form id="pickForm">
-		<label>停车场id：</label><input name="parkingLotId" type="text" size="8" /><br>
-		<label>停车卡号码：</label><input name="cardId" type="text" size="8" /><br>
+</div>
+<div class="module">
+	<h3>提车：</h3>
+	<form id="pickForm form-gourp">
+		<label>停车场id：</label>
+		<div class="form-gourp">			
+			<input class="form-control" name="parkingLotId" type="text" size="8" /><br>
+		</div>
+		<label>停车卡号码：</label>
+		<div class="form-gourp">		
+			<input class="form-control" name="cardId" type="text" size="8" placeholder="请输入7位卡号" /><br>
+		</div>
 		<!-- <button id="pickCar">提车</button> -->
-		<a href="javascript:void(0);" onclick="pickCar();">提车</a>
+		<a class="btn btn-md btn-primary" href="javascript:void(0);" onclick="pickCar(this);">提车</a>
 	</form>
-
+</div>
 </body>
 
 <script>
 	$(window).ready(function() {
 		
 	});
-	function parkCar(){
+	function check(a){
+		var parkid = $(a).parent().find('input:eq(0)').val();
+		var cardid = $(a).parent().find('input:eq(1)').val();
+		var object = /^\d{1,4}$/g;
+		var num = 0;
+		if(object.test(parkid)){
+			$(a).parent().find('input:eq(0)').parent().removeClass('has-error');
+		}else{
+			alert('不正确的停车场格式');
+			$(a).parent().find('input:eq(0)').parent().addClass('has-error');num++;
+		}
+		var object = /^\d{7}$/g;
+		if(object.test(cardid)){
+			$(a).parent().find('input:eq(1)').parent().removeClass('has-error');
+		}else{
+			alert('不正确的停车卡格式');
+			$(a).parent().find('input:eq(1)').parent().addClass('has-error');num++;
+		}
+	}
+	function parkCar(a){
+		check(a);
 		$.ajax({
 			type : "POST",
 			dataType : "json",
@@ -61,7 +103,8 @@
 			}
 		});
 	}
-	function pickCar(){
+	function pickCar(a){
+		check(a);
 		$.ajax({
 			type : "POST",
 			dataType : "json",

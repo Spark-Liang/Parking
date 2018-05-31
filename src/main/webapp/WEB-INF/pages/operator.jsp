@@ -323,6 +323,10 @@
 						
 						console.log(json);
 						var l = json.data.length;
+						
+						
+						
+						
 						for(var i =0;i<l;i++){
 							$('.search-show').append(function (){
 								return "<div class='alert alert-success col-md-3 search-inf'>"
@@ -330,7 +334,7 @@
 								+"<p>手机号：<span>"+卡号+"</span></p>"
 								+"<p>停车场：<span>"+卡号+"</span></p>"
 								+"<p>卡状态：<span>"+卡号+"</span></p>"
-								+"<a>更换停车卡</a><br/><a>支付帐单</a>"
+								+"<a onclick='updateCard(this)'>更换停车卡</a><br/><a onclick='paymoney(this)'>支付帐单</a>"
 							+"</div>";
 							})
 						}
@@ -354,6 +358,36 @@
 				return NumEdit(id,content);
 			});
 		}
+		/* function moneyok(a){
+			var id = $(a).data('value');
+		    var aa = $(a).parent().parent().find('input').val();
+		  // $(a).parent().parent().parent().find('span:eq(0)').text(aa);
+		    var object = /^\d{7}$/;
+		        if(object.test(aa)){
+		        	$.ajax({
+		                url:'inneruser/changeParkingLotPrice',
+		                type:'POST',
+		                dataType:'json',
+		                data:{
+		                	'id':id,
+		                	'currentPrice':aa
+		                },success:function(json){
+		                	console.log(json)
+		                    if(json.msg==1){
+		                    	alert('修改成功')
+		                         $(a).parent().parent().parent().find('span:eq(0)').text(aa);
+		                         $(a).parent().parent().fadeOut();
+		                    }else if(json.error){
+		                    	alert('修改失败');
+		                    }
+		                },error:function(){
+
+		                }
+		           })
+		        }else{
+		        	
+		        }  
+		} */
 		
 		//点击支付帐单的触发事件 
 		function paymoney(){
