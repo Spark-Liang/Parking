@@ -40,9 +40,23 @@ public class AccountServiceImpl implements AccountService {
 	private ParkingPositionDao parkingpositiondao;
 	
 	@Override
-	public List<Account> findAccountrById(long userId) {
-		
-		return accountdao.findAccountrById(userId,null,null,null,null,null);
+	public List<Account> findAccountrById(long userId,boolean isFindAll) {
+		List<Account> list=null;
+		List<Account> listDB=accountdao.countAccountrById(userId, null, null, null);
+		if(!isFindAll) {
+			try {
+				for(Account account:listDB) {
+					Account tmpAccount=new Account();
+					PersistentUtil.merge(tmpAccount, account, Account.class);
+					list.add(tmpAccount);
+				}
+			}catch(IllegalArgumentException | IllegalAccessException e) {
+				logger.info(e);
+			}
+		}else {
+			list=listDB;
+		}
+		return list;
 	}
 	@Override
 	public User findUserByuserId(long userId) {

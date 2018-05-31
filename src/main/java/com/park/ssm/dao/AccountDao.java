@@ -19,7 +19,11 @@ import com.park.ssm.entity.type.AccountState;
  */
 @MapperScan
 public interface AccountDao {
-
+	/**
+	 * 通过account id查询account所有信息，连Bill也一起查询出来
+	 * @param id
+	 * @return
+	 */
 	public abstract Account loadAccountById(long id);
 	public abstract Account loadAccountByIdForUpdate(long id);
 	

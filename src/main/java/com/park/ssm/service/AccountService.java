@@ -8,7 +8,7 @@ import com.park.ssm.entity.User;
 
 public interface AccountService {
 	
-	public List<Account> findAccountrById(long userId);//根据用户ID获取用户所有的帐户信息
+	public List<Account> findAccountrById(long userId,boolean isFindAll);//根据用户ID获取用户所有的帐户信息
 	
 	public User findUserByuserId(long userId);//根据用户ID获取用户基础信息
 	

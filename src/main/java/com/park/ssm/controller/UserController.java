@@ -51,13 +51,13 @@ public class UserController {
 	 */
 	@RequestMapping(value = "getAllAccount", method = { RequestMethod.POST })
 	@ResponseBody
-	public String getAllAccount(@RequestParam("userId") long userId) {
+	public String getAllAccount(@RequestParam("userId") long userId,@RequestParam("isGetAll")boolean isGetAll) {
 		Map result = new HashMap();
 		String message = "";
 		try {
 			User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
 			if (user != null) {
-				List<Account> list = accountService.findAccountrById(userId);
+				List<Account> list = accountService.findAccountrById(userId,isGetAll);
 				result.put("list", list);
 			} else {
 				message = "不存在此用户";
