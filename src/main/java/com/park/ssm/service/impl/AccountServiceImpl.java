@@ -1,5 +1,6 @@
 package com.park.ssm.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,9 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public List<Account> findAccountrById(long userId,boolean isFindAll) {
 		List<Account> list=null;
-		List<Account> listDB=accountdao.countAccountrById(userId, null, null, null);
+		List<Account> listDB=accountdao.findAccountrById(userId, null, null, null, null, null);
 		if(!isFindAll) {
+			list=new ArrayList<Account>(listDB.size());
 			try {
 				for(Account account:listDB) {
 					Account tmpAccount=new Account();
