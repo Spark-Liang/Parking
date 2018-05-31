@@ -67,7 +67,7 @@
 				</div>
 				<div class="form-gorup">
 					<label>*密码</label> <input type="password" class="form-control pwd"
-						name="" placeholder="password">
+						name="" placeholder="密码不少于6位且不含空格">
 				</div>
 				<div class="form-gorup">
 					<label>*确认密码</label> <input type="password" class="form-control pwd2"
@@ -575,7 +575,7 @@
 										+ "</div>"
 										+ "<div class='form-gourp'>"
 										+ "<label>新密码</label>"
-										+ "<input type='password' class='form-control input-sm' name='' placeholder=''>"
+										+ "<input type='password' class='form-control input-sm' name='' placeholder='密码不少于6位且不含空格'>"
 										+ "</div>"
 										+ "<div class='form-gourp'>"
 										+ "<label>重新输入密码</label>"

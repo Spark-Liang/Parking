@@ -68,7 +68,7 @@
 			alert('不正确的停车场格式');
 			$(a).parent().find('input:eq(0)').parent().addClass('has-error');num++;
 		}
-		var object = /^\d{7}$/g;
+		var object = /^\d{11}$/g;
 		if(object.test(cardid)){
 			$(a).parent().find('input:eq(1)').parent().removeClass('has-error');
 		}else{
