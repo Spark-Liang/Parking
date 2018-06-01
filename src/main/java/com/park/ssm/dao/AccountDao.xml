@@ -65,7 +65,7 @@
 			limit ${(pageNum-1)*pageSize},#{pageSize}
 		</if>
 	</select>
-	<select id="countAccountrById" resultMap="accountRoughResult">
+	<select id="countAccountrById" resultType="Integer">
 		select
 			count(1)
 		from Account

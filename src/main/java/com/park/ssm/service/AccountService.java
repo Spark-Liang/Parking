@@ -32,6 +32,12 @@ public interface AccountService {
 	
 //	public int getPositionNumByUser(long accountId,int LotId);//
 	
-	public int getPositionNumByUser(long userId);//获取用户在该停车场的停车卡数量
+	/**
+	 * 查看该用户在该停车场的账户数量
+	 * @param lotId
+	 * @param userId
+	 * @return
+	 */
+	public int getPositionNumByUser(Integer lotId,long userId);
 	
 }

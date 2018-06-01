@@ -72,7 +72,7 @@ public interface AccountDao {
 	 * @param pageSize
 	 * @return
 	 */
-	public abstract List<Account> countAccountrById(@Param("userId")Long userId
+	public abstract int countAccountrById(@Param("userId")Long userId
 												,@Param("parkingLotId")Integer parkingLotId
 												,@Param("parkingPositionId")Long parkingPositionId
 												,@Param("cardId")Long cardId

@@ -154,7 +154,7 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	@Transactional
-	public int getPositionNumByUser(long userId) {
-		return accountdao.getAccountNum(userId);
+	public int getPositionNumByUser(Integer lotId,long userId) {
+		return accountdao.countAccountrById(userId, lotId, null, null);
 	}
 }
