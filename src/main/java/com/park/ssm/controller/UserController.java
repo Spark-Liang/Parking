@@ -112,10 +112,11 @@ public class UserController {
 		try {
 			String times = new SimpleDateFormat("MMdd").format(new Date());
 			// String times = "0401";
-			String exetime = "";
-			String a[] = { "0101", "0401", "0701", "1001" };
-			for (int i = 0; i < 3; i++) {
-				exetime = a[i];
+			//String exetime = "";
+			String a[] = { "0101", "0401", "0701", "1001"};
+			//for (int i = 0; i < 3; i++) {
+			for(String exetime:a) {
+				//exetime = a[i];
 				if (times.equals(exetime)) {// 判断是否为出帐单的日子，出账单日无法办卡
 					message = "系统正在生成账单，无法办理开卡业务！";
 					falg = 2;

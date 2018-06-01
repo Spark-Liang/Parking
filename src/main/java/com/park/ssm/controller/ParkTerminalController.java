@@ -25,10 +25,10 @@ public class ParkTerminalController {
 	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="park",produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody Map park(@RequestParam("parkingLotId")Integer parkingLotId,@RequestParam("cardId")Long cardId) {
+	public @ResponseBody Map park(@RequestParam("lotId")Integer lotId,@RequestParam("cardId")Long cardId) {
 		Map<String, Object> result=new HashMap<>();
 		
-		String reason=parkTerminalService.park(parkingLotId, cardId);
+		String reason=parkTerminalService.park(lotId, cardId);
 		if(reason!=null) {
 			result.put("res", false);
 		}else {
@@ -39,10 +39,10 @@ public class ParkTerminalController {
 	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value="pick",produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody Map pick(@RequestParam("parkingLotId")Integer parkingLotId,@RequestParam("cardId")Long cardId) {
+	public @ResponseBody Map pick(@RequestParam("lotId")Integer lotId,@RequestParam("cardId")Long cardId) {
 		Map<String, Object> result=new HashMap<>();
 		
-		String reason=parkTerminalService.pick(parkingLotId, cardId);
+		String reason=parkTerminalService.pick(lotId, cardId);
 		if(reason!=null) {
 			result.put("res", false);
 		}else {

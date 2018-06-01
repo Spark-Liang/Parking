@@ -30,6 +30,7 @@
     	<mvc:interceptor>
     		<mvc:mapping path="/**"/>
     		<mvc:exclude-mapping path="/index.jsp"/>
+    		<!-- <mvc:exclude-mapping path="/error/**"/> -->
     		<bean class="com.park.ssm.interceptor.LoginInterceptor"/>
     	</mvc:interceptor>
     </mvc:interceptors>

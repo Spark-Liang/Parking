@@ -98,11 +98,11 @@
 				<div class="col-md-3">
 				    <div class="form-group">
 						<label for="exampleInputName2">手机号码</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号,从0000001开始">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位数字作为卡号">
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号,从0000001开始">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputEmail2">停车场</label>

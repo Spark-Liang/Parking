@@ -1,5 +1,6 @@
 package com.park.ssm.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +32,12 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 	public String park(Integer parkingLotId, Long cardId) {
 		// TODO Auto-generated method stub
 		// 检查该卡是否能够正常停车
-		Account account = accountDao.findAccountrById(null, null, null, cardId, null, null).get(0);
+		// 判断是否能够找到停车账号
+		List<Account> accounts=accountDao.findAccountrById(null, null, null, cardId, null, null);
+		if (accounts == null || accounts.isEmpty()) {
+			throw new RuntimeException("请输入正确的停车卡，该停车卡没有对应的账号");
+		}
+		Account account = accounts.get(0);
 		String reason = canPark(parkingLotId, account);
 		if (reason != null) {
 			return reason;
@@ -69,10 +75,7 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 	 *             <li>RuntimeException("请输入正确的停车卡，该停车卡没有对应的账号")
 	 */
 	private String canPark(Integer parkingLotId, Account account) {
-		// 判断是否能够找到停车账号
-		if (account == null) {
-			throw new RuntimeException("请输入正确的停车卡，该停车卡没有对应的账号");
-		}
+		
 
 		// 判断是否与停车场对应
 		if (!parkingLotId.equals(account.getParkingLotId())) {
@@ -142,7 +145,12 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 	public String pick(Integer parkingLotId, Long cardId) {
 		// TODO Auto-generated method stub
 		// 检查该卡是否能够正常提车
-		Account account = accountDao.findAccountrById(null, null, null, cardId, null, null).get(0);
+		// 判断是否能够找到停车账号
+		List<Account> accounts=accountDao.findAccountrById(null, null, null, cardId, null, null);
+		if (accounts == null || accounts.isEmpty()) {
+			throw new RuntimeException("请输入正确的停车卡，该停车卡没有对应的账号");
+		}
+		Account account = accounts.get(0);
 		String reason = canPick(parkingLotId, account);
 		if (reason != null) {
 			return reason;
@@ -168,10 +176,6 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 	}
 
 	private String canPick(Integer parkingLotId, Account account) {
-		// 判断是否能够找到停车账号
-		if (account == null) {
-			throw new RuntimeException("请输入正确的停车卡，该停车卡没有对应的账号");
-		}
 		// 判断是否与停车场对应
 		if (!parkingLotId.equals(account.getParkingLotId())) {
 			throw new RuntimeException("停车卡与停车场不匹配");

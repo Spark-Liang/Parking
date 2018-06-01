@@ -91,7 +91,7 @@ public class ParkingLotController {
 	 * */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="list",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
-	@Permission(value= {Type.ADMIN,Type.MANAGER,Type.OPERATOR})
+	@Permission(value= {Type.ADMIN,Type.MANAGER,Type.OPERATOR},haveControl=false)
 	public @ResponseBody Map listParkingLot(HttpServletRequest request) {
 		Map<String, String[]> params=request.getParameterMap();
 		Map<String, Object> conditions=new HashMap<>();

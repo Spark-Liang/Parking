@@ -32,7 +32,7 @@
 			<br />
 			<form>
 				<div class="form-gorup">
-					<label>*新停车场名称</label>
+					<label>*新停车场名称</label><!-- &nbsp;<label></label> -->
 					<input type="text" class="form-control" name="" placeholder="(4个字以上)不允许空格">
 				</div>
 				<div class="form-gorup">
@@ -48,8 +48,10 @@
 						name="" placeholder="(输入3位数或以上)">
 				</div>
 				<br/>
-				<button class="btn btn-md btn-primary" type="button">提交</button>
-				<a class="add-block-one-close">关闭</a>
+				<button id="add_parking" class="btn btn-md btn-primary" type="button">提交</button>
+				<!-- <a class="add-block-one-close">关闭</a> -->
+				&nbsp;
+				<button id="close_add_parking" class="btn btn-md btn-primary" type="button">关闭</button>
 			</form>
 		</div>
 		<!-- 添加一个经理的div -->
@@ -59,10 +61,10 @@
 			<form>
 				<div class="form-gorup">
 					<label>*新员工名字</label> <input type="text" class="form-control newName"
-						name="" placeholder="2个字或以上">
+						name="" placeholder="2到10个字符">
 				</div>
 				<div class="form-gorup">
-					<label>*手机号码</label> <input type="number" class="form-control userName"
+					<label>*手机号码</label> <input type="text" class="form-control userName"
 						name="" placeholder="手机号码格式">
 				</div>
 				<div class="form-gorup">
@@ -79,8 +81,10 @@
 					<input type="radio" name="position" value="2">操作员
 					<p class="text-warning" style="display: none;" id="work-tip">没有选择！！<p>
 				</div>
-				<button class="btn btn-md btn-primary pull-left" type="button">提交</button>
-				<a class="add-block-one-close">关闭</a>
+				<button id="add_employee" class="btn btn-md btn-primary pull-left" type="button">提交</button>
+				<!-- <a class="add-block-one-close">关闭</a> -->
+				&nbsp;
+				<button id="close_add_employee" class="btn btn-md btn-primary" type="button">关闭</button>
 			</form>
 		</div>
 	</div>
@@ -198,7 +202,7 @@
 			} else {
 				$('.add-parking input:eq(1)').parent().removeClass('has-error');
 			}
-			if (a[2] > 10 && a[2] < 10000) {
+			if (true || (a[2] > 10 && a[2] < 10000)) {
 				$('.add-parking input:eq(2)').parent().removeClass('has-error');
 			} else {
 				$('.add-parking input:eq(2)').parent().addClass('has-error');num++;
@@ -300,7 +304,8 @@
 							})
 		}
 		// 点击按钮新建停车场
-		$('.add-parking button').click(function() {
+		/* $('.add-parking button').click(function() { */
+		 $('#add_parking').click(function() { 
 			var parkinginf = new Array();
 			parkinginf[0] = $('.add-parking input:eq(0)').val();//名称
 			parkinginf[1] = $('.add-parking input:eq(1)').val();//地址
@@ -329,9 +334,10 @@
 
 				}
 			})
-			}else if(check1 == 'error'){
-				alert('格式错误！！添加失败');
 			}
+			/* else if(check1 == 'error'){
+				alert('格式错误！！添加失败');
+			} */
 			
 			// var check = park.check();
 			// if (check == 'ok') {
@@ -445,7 +451,8 @@
 			}
 		}
 		// 点击按钮添加人员 
-		$('.add-manger button').click(function() {
+		/* $('.add-manger button').click(function() { */
+		$('#add_employee').click(function() {
 			var mangerinf = new Array();
 			mangerinf[0] = $('.add-manger input:eq(0)').val();//姓名
 			mangerinf[1] = $('.add-manger input:eq(1)').val();//用户名
@@ -478,9 +485,10 @@
 						alert("添加失败") 
 					}
 				})
-			}else{
-				alert("格式错误，添加失败");
 			}
+			/* else{
+				alert("格式错误，添加失败");
+			} */
 			
 			// var man = new manger();
 			// man.mangeradd();
@@ -626,7 +634,7 @@
 					$('.add-block-one:eq(0),.add-block-one:eq(2)').css(
 							"display", "none");
 				})
-		$('.add-block2,.add-block-one-close').click(function() {
+		$('.add-block2,.add-block-one-close,#close_add_parking,#close_add_employee').click(function() {
 			$('.add-block,.add-block2,.selectall-1').fadeOut();
 		}) 
 		
