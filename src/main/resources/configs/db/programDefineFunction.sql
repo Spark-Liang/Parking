@@ -1,4 +1,6 @@
+use train_db;
 DELIMITER $
+drop function if exists getTotalDate$
 create function getTotalDate(billDate date)
 returns int
 begin
@@ -20,6 +22,7 @@ from
 );
 end
 $
+drop function if exists getCardUsedDays$
 create function getCardUsedDays(stateStartDate date,billGenerateDate date)
 returns int
 begin
@@ -28,7 +31,7 @@ begin
 	return 
 	(select case 
 				#开始日期大于出账单前2个月的第一天，证明中间存在空的天数
-				when stateStartDate>(date_sub(@tmpDate:=date_sub(billGenerateDate,Interval 2 month),Interval day(@tmpDate) day)
+				when stateStartDate > date_sub(@tmpDate:=date_sub(billGenerateDate,Interval 2 month),Interval day(@tmpDate) day)
 				#计算出账单后一个月的天数，加上重新开始到出账单前的天数
 				then datediff(date_sub(@tmpDate:=date_sub(billGenerateDate,Interval 2 month),Interval day(@tmpDate)+1 day)
 						,date_sub(@tmpDate:=date_sub(billGenerateDate,Interval 3 month),Interval day(@tmpDate) day))
@@ -36,9 +39,10 @@ begin
 				#其他情况为给季度总天数	
 				else getTotalDate(billGenerateDate)
 			end
-	)
+	);
 end 
 $
+drop function if exists buildDate$
 create function buildDate(year int,month int,day int)
 returns date
 begin

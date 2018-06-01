@@ -139,7 +139,7 @@ public class UserController {
 							} else {
 								falg = 1;
 								// long accountId=account.getId();
-								int PositionNum = accountService.getPositionNumByUser(userId);
+								int PositionNum = accountService.getPositionNumByUser(LotId,userId);
 								message = "当前用户已在该停车场订了" + PositionNum + "个停车位，确认要继续开卡吗?";
 							}
 						}

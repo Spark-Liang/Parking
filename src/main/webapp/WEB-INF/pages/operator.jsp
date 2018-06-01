@@ -102,7 +102,7 @@
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="卡号">
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位数字作为卡号">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputEmail2">停车场</label>
@@ -226,19 +226,22 @@
 						console.log(result);
 						if(result!=null){
 							if(result.falg==1){
-								alert(result.message);
-								$.ajax({
-									url:'user/addCard',//增加 新卡 
-									dataType:'json',
-									type:'post',
-									data:{
-										"userId":inf[0],"cardId":inf[1],"LotId":inf[2]
-									},success:function(data){
-										alert(data.message+","+"新的卡号为:"+data.cardId);
-									},error:function(){
-										
-									}
-								});
+								/* alert(result.message); */
+								if(confirm(result.message)){
+									$.ajax({
+										url:'user/addCard',//增加 新卡 
+										dataType:'json',
+										type:'post',
+										data:{
+											"userId":inf[0],"cardId":inf[1],"LotId":inf[2]
+										},success:function(data){
+											alert(data.message+","+"新的卡号为:"+data.cardId);
+										},error:function(){
+											
+										}
+									});
+								}
+								
 							}
 							else{
 								alert(result.message);

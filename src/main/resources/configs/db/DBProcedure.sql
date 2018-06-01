@@ -1,10 +1,10 @@
-
+use train_db;
 #生成bill的储存过程
 DELIMITER $
 drop procedure if exists generateBill$
 create procedure generateBill(in billDate date)
 begin
-	start trainsaction;
+	start transaction;
 	#对非stop的账户生成当前bill的开始时间和结束时间
 	insert into Bill(userId,parkingLotId,accountId,price,billStartDate,billEndDate)
 	select 
