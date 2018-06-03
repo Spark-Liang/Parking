@@ -19,6 +19,8 @@ public class LoggerAop {
 	private static ThreadLocal<Throwable> currentLastThrowable=new ThreadLocal<>();
 	private Logger logger=LogManager.getLogger(this.getClass());
 	
+	private static boolean debugFlag;
+	
 	@Pointcut(value="execution(* com.park..*.*(..))")
 	public void exceptionPointCut() {}
 	
@@ -32,9 +34,20 @@ public class LoggerAop {
 		}
 		currentLastThrowable.set(e);
 		logger.info(e);
-		StringWriter writer=new StringWriter();
-		writer.write("Exception stack trace is :\n");
-		e.printStackTrace(new PrintWriter(writer));
-		logger.info(writer.toString());
+		if(debugFlag) {
+			System.err.println("Exception stack trace is :\n");
+			e.printStackTrace();
+			
+		}
+	}
+	
+	//用于查看当前环境是否是debug环境，即查看JVM参数中是否有输入debug.flag=true
+	static {
+		String debugFlagString=System.getProperty("debug.flag");
+		if(debugFlagString != null && Boolean.valueOf(debugFlagString)) {
+			debugFlag=true;
+		}else {
+			debugFlag=false;
+		}
 	}
 }

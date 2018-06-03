@@ -71,7 +71,14 @@ var successAdvice=new AdviceFunc({
 });
 //处理返回失败的函数
 var errorAdvice=new AdviceFunc({
-	before:function(response){
+	before:function(XMLHttpRequest, textStatus, errorThrown){
+		if(XMLHttpRequest.status == '403'){
+			var responseJSON=XMLHttpRequest.responseJSON
+			if(responseJSON.error != null ){
+				alert(responseJSON.error);
+			}
+			window.location.pathname=responseJSON.url;
+		}
 		return true;
 	}
 });

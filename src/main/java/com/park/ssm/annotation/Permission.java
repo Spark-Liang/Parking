@@ -4,6 +4,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -15,6 +16,7 @@ import java.lang.annotation.Target;
  * <li>注解在方法上是限制该方法的访问角色
  * <li>注解在类上是整个类默认允许的访问角色
  * <li>方法级别注解高于类级别注解
+ * <li>注解在Bean属性上用于控制通过返回JSON或者XML是自动过滤不满足权限的信息
  * <ol>
  * @param haveControl 指是否需要进行权限控制
  * @param value Type[] 指能够允许的权限角色
@@ -23,7 +25,7 @@ import java.lang.annotation.Target;
  * {@value}用于控制该方法或者整个类的允许访问的角色，比如允许ADMIN就添加 “Permission.ADMIN”
  */
 @Retention(RUNTIME)
-@Target({ TYPE, METHOD })
+@Target({ TYPE, METHOD ,ElementType.FIELD})
 public @interface Permission {
 
 	Type[] value();

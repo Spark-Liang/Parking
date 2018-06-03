@@ -1,6 +1,9 @@
 package com.park.ssm.entity;
 
 import java.io.Serializable;
+
+import com.park.ssm.annotation.Permission;
+import com.park.ssm.annotation.Permission.Type;
 /**
  * 内部用户实体类，适用于admin,manager,operator
  * @author ASNPHX4
@@ -13,9 +16,11 @@ public class InnerUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String nickname;          //昵称即用户名，登陆时使用昵称，不允许重复
+	@Permission(value= {Type.ADMIN})
 	private String password;		  //密码，不允许低于8位
 	private int typeflag;			  //类型标记，1为admin，2为manager，3为operator
 	private String name;			  //用户真实姓名，允许同姓名
+	@Permission(value= {Type.ADMIN})
 	private String salt;		      //盐
 	
 	

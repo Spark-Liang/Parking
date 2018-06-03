@@ -3,9 +3,12 @@ package com.park.ssm.entity;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.park.ssm.annotation.Permission;
+import com.park.ssm.annotation.Permission.Type;
 import com.park.ssm.entity.type.ParkingPositionState;
 
 @JsonIgnoreProperties(value= {"handler","serialVersionUID"},ignoreUnknown = true)
+@Permission(value= {Type.ADMIN,Type.MANAGER,Type.OPERATOR})
 public class ParkingPosition implements Serializable {
 	/**
 	 */

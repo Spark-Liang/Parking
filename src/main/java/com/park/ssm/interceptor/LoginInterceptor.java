@@ -16,14 +16,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import com.alibaba.fastjson.JSON;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.entity.InnerUser;
+import com.park.ssm.exception.LoginException;
 
 
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 	private static String loginUrl="/inneruser/page";
+	private static String loginPageUrl="/park/WEB-INF/pages/login.jsp";
 	private static String errorUrl="";
 	
 	private Logger logger=LogManager.getLogger(this.getClass());
@@ -53,9 +54,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		InnerUser innerUser=(InnerUser) session.getAttribute("innerUser");
 		if(innerUser==null) {  
 			//未登录，重定向到登录页面  
-			request.getRequestDispatcher(loginUrl).forward(request, response); 
-			logger.debug("request dispatch to:"+request.getServletPath());
-			return false;  
+			//request.getRequestDispatcher(loginUrl).forward(request, response);
+			//response.sendRedirect(request.getContextPath()+loginUrl);
+			logger.debug("request dispatch to:"+loginPageUrl);
+			throw new LoginException("未登录请重新登录",loginUrl);
+			//return false;  
 		}else {
 			//已登录，检查权限是否满足要求
 			if(checkPermission(permission, innerUser)) {

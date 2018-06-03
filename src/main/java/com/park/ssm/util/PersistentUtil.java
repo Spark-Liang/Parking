@@ -35,17 +35,22 @@ public class PersistentUtil {
 			field.setAccessible(accessiable);
 		}
 	}
-
-	private static Set<Field> getAllField(Class<?> clazz) {
+	
+	/**
+	 * 获取除去固定标识符的类的所有属性
+	 * @param clazz
+	 * @param modifierFilter 带需要被过滤的标识位的整数
+	 * @return
+	 */
+	public static Set<Field> getAllField(Class<?> clazz,int modifierFilter) {
 		Set<Field> fieldSet = new HashSet<>();
 		Class<?> currentClass = clazz;
 		if (clazz != null) {
 			do {
 				Field[] fields = currentClass.getDeclaredFields();
-				// 获取能够进行排除的Field的modifier
-				int modifier = Modifier.STATIC | Modifier.FINAL;
+				
 				for (Field field : fields) {
-					if ((field.getModifiers() & modifier) == 0) {
+					if ((field.getModifiers() & modifierFilter) == 0) {
 						fieldSet.add(field);
 					}
 				}
@@ -63,7 +68,7 @@ public class PersistentUtil {
 	 * @return
 	 */
 	private static Set<Field> getCommendField(Class<?> targetClass, Class<?> sourceClass, Class<?> baseClass) {
-		Set<Field> targetSet = getAllField(targetClass), sourceSet = getAllField(sourceClass);
+		Set<Field> targetSet = getAllField(targetClass,Modifier.STATIC | Modifier.FINAL), sourceSet = getAllField(sourceClass,Modifier.STATIC | Modifier.FINAL);
 		targetSet.removeIf(new Predicate<Field>() {
 			@Override
 			public boolean test(Field t) {
@@ -72,7 +77,7 @@ public class PersistentUtil {
 			}
 		});
 		if(baseClass != null) {
-			Set<Field> baseSet=getAllField(baseClass);
+			Set<Field> baseSet=getAllField(baseClass,Modifier.STATIC | Modifier.FINAL);
 			targetSet.removeIf(new Predicate<Field>() {
 				@Override
 				public boolean test(Field t) {
