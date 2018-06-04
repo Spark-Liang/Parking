@@ -329,7 +329,8 @@ public class UserController {
 			Encryption en=new Encryption();
 			String salt=en.createSalt();
 			String passwordAndSalt = en.SHA512(password.trim() + salt);
-			boolean status=userService.insertUser(userId, passwordAndSalt,salt);
+			boolean status=false;
+			status=userService.insertUser(userId, passwordAndSalt,salt);
 			status=true;
 			map.put("status", status);
 		}
