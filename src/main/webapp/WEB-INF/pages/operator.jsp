@@ -122,8 +122,9 @@
 				<div class="col-md-3 add-user col-md-offset-1">
 					<label for="exampleInputName2">新增用户</label>
 					<p>手机号：<span></span></p>
-					<input class="form-control input-sm" id="" placeholder="请输入6位数以上的密码" type="password">
-					<br/>
+					<div class="form-group">
+						<input class="form-control input-sm" id="" placeholder="请输入6位数以上的密码" type="password">
+					</div>
 					<button class="btn btn-primary btn-sm addUserBtn">确定</button>
 				</div>
 			</div>
@@ -298,19 +299,27 @@
 			var iphone = $(this).parent().find('span').text();
 			var password = $(this).parent().find('input').val();
 			alert(iphone+" "+password);
- 			$.ajax({
-				url:'user/addNewUser',
-				dataType:'json',
-				type:'POST',
-				data:{
-					'userId':iphone,
-					'password':password
-				},success:function(json){
-					console.log(json);
-				},error:function(){
-					
-				}
-			})
+			var object = /^\w{6,12}$/g;
+			if(object.test(password)){
+				$(this).parent().find('input').parent().removeClass('has-error');
+				$.ajax({
+					url:'user/addNewUser',
+					dataType:'json',
+					type:'POST',
+					data:{
+						'userId':iphone,
+						'password':password
+					},success:function(json){
+						console.log(json);
+						$('.addUserBtn').parent().hide();
+					},error:function(){
+						
+					}
+				})
+			}else{
+				alert('密码格式有问题！');
+				$(this).parent().find('input').parent().addClass('has-error');
+			}
  		})
 		//点击停卡按钮的操作
 		$('.deletecard').click(function(){
