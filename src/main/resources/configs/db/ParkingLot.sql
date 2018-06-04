@@ -42,6 +42,7 @@ create table Account
 	,index parkingLotId_idx(parkingLotId)
 )engine=innodb auto_increment=1 charset='utf8';
 
+alter table Account add price decimal(10,4);
 
 create table Bill
 (

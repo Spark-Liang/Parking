@@ -138,7 +138,7 @@ body {
                 },
                 success : function(user) {
                     if (user === null) {
-                        $('.tip').text('请检查用户名、密码和角色');
+                        $('.tip').text('请检查用户名和密码');
                         $('.userName').val('');
                         $('.pass').val('');
                         return;
