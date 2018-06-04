@@ -147,4 +147,22 @@
 	where userId=#{_paramter}
 </select>
 
+<parameterMap type="Map" id="parkpickParamMap">
+	<parameter property="accountId" mode="IN" jdbcType="BIGINT"/>
+	<parameter property="flag" mode="OUT" jdbcType="INTEGER"/>
+</parameterMap>
+<select id="parkCar" statementType="CALLABLE"  parameterMap="parkpickParamMap">
+	call parkCar(
+		#{accountId}
+		,#{flag}	
+	)
+</select>
+
+<select id="pickCar" statementType="CALLABLE" parameterMap="parkpickParamMap">
+	call pickCar(
+		#{accountId}
+		,#{flag}	
+	)
+</select>
+
 </mapper>
