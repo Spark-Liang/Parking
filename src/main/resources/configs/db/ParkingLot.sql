@@ -36,6 +36,7 @@ create table Account
 	,state tinyint default 0
 	,stateStartDate datetime not null
 	,isParking bit not null default 0
+	,currentParkingRecId bigint 
 	,currentBillId bigint
 	
 	,index userId_idx(userId)
@@ -58,3 +59,14 @@ create table Bill
 	,index userId_idx(userId)
 	,index accountId_idx(accountId)
 )engine=innodb auto_increment=1 charset='utf8';
+
+create table ParkingRecord
+(
+	id bigint primary key auto_increment
+	,lotId int not null
+	,positionId bigint not null
+	,accountId bigint not null
+	,startTime datetime not null
+	,endTime datetime
+)engine=innodb auto_increment=1 charset='utf8';
+
