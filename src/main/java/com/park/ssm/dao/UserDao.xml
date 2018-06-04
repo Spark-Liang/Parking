@@ -26,4 +26,8 @@
 			userId=#{userId}
 		</where>
 	</select>
+	
+	<insert id="insertUser">
+	insert into User(userId,password,salt)values(#{userId},#{password},#{salt})
+	</insert>
 </mapper>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.park.ssm.annotation.Permission;
+import com.park.ssm.annotation.Permission.Type;
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
@@ -239,7 +240,7 @@ public class UserController {
 	 *            登陆成功后写入session
 	 * @return Json格式的user对象
 	 */
-	@RequestMapping(value = "userLogin", method =RequestMethod.POST)
+	@RequestMapping(value = "userLogin", method = { RequestMethod.POST })
 	@ResponseBody
 	public String login(String userId, String password, HttpSession session) {
 		User user = new User();
@@ -275,16 +276,7 @@ public class UserController {
 	public String toUserLogin() {
 		return "userLogin";
 	}
-	
-	/**
-	 * 登陆成功后跳转
-	 * @return
-	 */
-	@RequestMapping(value="userbillpage")
-	@Permission(value= {},haveControl=false)
-	public String userBillPage() {
-		return "bill";
-	}
+
 	/**
 	 * User退出登陆功能 消除session
 	 * 
@@ -320,5 +312,25 @@ public class UserController {
 		}
 		String strBillInfo = new JSONObject(map).toString();
 		return strBillInfo;
+	}
+	
+	/**
+	 * User 新增用户
+	 * @param telephone
+	 * @return
+	 */
+	@RequestMapping(value="addNewUser",method=RequestMethod.POST)
+	@Permission(value= {Type.ADMIN,Type.OPERATOR})
+	public Map insertUser(@RequestParam("userId")Long userId,@RequestParam("password") String password){
+		Map<String,Object> map=new HashMap<>();
+		if (userId!=null && null!=password && ""!=password) {
+			Encryption en=new Encryption();
+			String salt=en.createSalt();
+			String passwordAndSalt = en.SHA512(password.trim() + salt);
+			boolean status=userService.insertUser(userId, passwordAndSalt,salt);
+			status=true;
+			map.put("status", status);
+		}
+		return map;
 	}
 }

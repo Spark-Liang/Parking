@@ -13,4 +13,6 @@ public interface UserDao {
 	public User getUser(@Param("userId")Long userId,@Param("password")String password);//登陆验证
 	
 	public String getSaltByUserId(Long userId);//取出盐
+	
+	public int insertUser(@Param("userId")Long userId,@Param("password")String password,@Param("salt")String salt);//新增用户
 }

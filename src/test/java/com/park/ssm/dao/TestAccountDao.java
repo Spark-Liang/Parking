@@ -15,6 +15,7 @@ import com.park.ssm.entity.Account;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.ParkingLotService;
+import com.park.ssm.util.Encryption;
 import com.park.ssm.util.PersistentUtil;
 
 import junit.framework.Assert;
@@ -27,6 +28,8 @@ public class TestAccountDao extends AutoRollBackTest {
 	@Autowired
 	private ParkingPositionDao parkingpositiondao;
 	
+	@Autowired
+	private UserDao userdao;
 	
 //	@Test
 	/*public void tesAddAndtLoadById() {
@@ -70,8 +73,8 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(newAccountInDB.getState(), AccountState.STOP);
 	}
 
-	@Test
-	@Rollback(true)
+//	@Test
+//	@Rollback(true)
 	public void testAddNewCard() {//测试增加新停车卡
 		//添加能够停车的停车场
 		ParkingLotService parkingLotService=applicationContext.getBean(ParkingLotService.class);
@@ -130,6 +133,17 @@ public class TestAccountDao extends AutoRollBackTest {
 	public void testgetCardMessage() {
 		long cardId=1l;
 		Account account=dao.getCardMessage(cardId);
+	}
+	
+	@Test
+	public void testAddUser() {
+		long userId=18826237366l;
+		String password="123456";
+		Encryption en=new Encryption();
+		String salt=en.createSalt();
+		String passwordAndSalt = en.SHA512(password.trim() + salt);
+		int a=userdao.insertUser(userId, passwordAndSalt, salt);
+		System.out.println(a);
 	}
 
 }

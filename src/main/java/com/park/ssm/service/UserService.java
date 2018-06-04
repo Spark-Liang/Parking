@@ -9,4 +9,6 @@ public interface UserService {
 	
 	public String findSaltByUserId(Long userId);//查找salt
 	
+	public Boolean insertUser(long userId,String password,String salt);//新增用户
+	
 }
