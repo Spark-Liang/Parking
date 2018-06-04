@@ -62,6 +62,7 @@ create table Account
 	,state tinyint default 0
 	,stateStartDate datetime not null
 	,isParking bit not null default 0
+	,currentParkingRecId bigint 
 	,currentBillId bigint
 	
 	,index userId_idx(userId)

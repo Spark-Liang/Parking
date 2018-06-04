@@ -5,6 +5,7 @@ drop procedure if exists generateBill$
 create procedure generateBill(in billDate date)
 begin
 	start transaction;
+	set transaction isolation level SERIALIZABLE;
 	#对非stop的账户生成当前bill的开始时间和结束时间
 	insert into Bill(userId,parkingLotId,accountId,price,billStartDate,billEndDate)
 	select 
@@ -58,7 +59,8 @@ $
 drop procedure if exists updateAllAccountState$
 create procedure updateAllAccountState(in execDate date)
 begin
-	
+	start transaction;
+	set transaction isolation level SERIALIZABLE;
 	#更新所有Account的状态，未支付账单的状态设为s，其他不变
 	update 
 		Account a 
@@ -81,6 +83,8 @@ begin
 		a.accountId=null
 	where b.state=-1
 	;
+	
+	commit;
 end
 $
 
@@ -205,6 +209,72 @@ begin
 	;
     set accountId=@tmpAccountId
     ;
+end 
+$
+
+drop procedure if exists parkCar$
+create procedure parkCar(in accountId bigint,out flag int)
+begin
+	declare parkingRecordId bigint;
+	declare continue handler for sqlexception set flag=1;
+	set flag=0;
+	start transaction;
+	insert into ParkingRecord (id,lotId,positionId,accountId,startTime)
+	select
+		@parkingRecordId:=
+			case 
+				when 
+					(select @parkingRecordId:=id+1 from ParkingRecord
+					where id>=(select max(id) from ParkingRecord)
+					order by id desc
+					limit 1 for update
+					) is not null then @parkingRecordId
+				else 1
+			end id
+		,parkingLotId lotId
+		,parkingPositionId positionId
+		,accountId 
+		,now() startTime
+	from 
+		(select * from Account
+		where id=accountId
+		for update) tmp
+	;
+	update Account
+		set currentParkingRecId = @parkingRecordId
+			,isParking = 1
+	where id=accountId
+	;
+	if (flag > 0) then
+		rollback;
+	else
+		commit;
+	end if
+	;
+end 
+$
+
+drop procedure if exists pickCar$
+create procedure pickCar(in accountId bigint,out flag int)
+begin
+	declare continue handler for sqlexception set flag=1;
+	set flag=0;
+	start transaction;
+	update ParkingRecord
+		set endTime = now()
+	where id=(select currentParkingRecId from Account where id=accountId for update)
+	;
+	update Account
+		set currentParkingRecId = null
+			,isParking=0
+	where id=accountId
+	;
+	if (flag > 0) then
+		rollback;
+	else
+		commit;
+	end if
+	;
 end 
 $
 DELIMITER ;

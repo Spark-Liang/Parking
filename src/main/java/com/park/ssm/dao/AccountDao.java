@@ -100,4 +100,18 @@ public interface AccountDao {
 	 */
 	public abstract int getAccountNum(long userId);
 	
+	/**提供accountid，执行停车操作 
+	 * @param map
+	 * <li>in accountId 需要停车的accountId
+	 * <li>out flag 停车结果
+	 */
+	public void parkCar(Map<String, Object> map);
+	
+	/**提供accountid，执行提车操作 
+	 * @param map
+	 * <li>in accountId 需要停车的accountId
+	 * <li>out flag 停车结果
+	 */
+	public void pickCar(Map<String, Object> map);
+	
 }

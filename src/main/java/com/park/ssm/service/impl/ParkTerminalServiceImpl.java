@@ -1,5 +1,6 @@
 package com.park.ssm.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,6 @@ import com.park.ssm.dao.AccountDao;
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.ParkTerminalService;
-import com.park.ssm.util.PersistentUtil;
 
 @Service
 public class ParkTerminalServiceImpl implements ParkTerminalService {
@@ -43,22 +43,17 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 			return reason;
 		}
 		// 该停车卡能够正常使用，修改停车卡状态
-		try {
-			Account accountInDB = accountDao.loadAccountByIdForUpdate(account.getId());
-			account = new Account();
-			PersistentUtil.<Account>merge(account, accountInDB, Account.class);
-			account.setParking(true);
-
-			Map<String, Object> different = null;
-			different = PersistentUtil.different(accountInDB, account, Account.class);
-			if (different != null) {
-				accountDao.modifyAccount(account.getId(), different);
-			}
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			reason = "系统内部错误，原因：" + e.getMessage();
-			logger.info(e);
+		Account accountInDB = accountDao.loadAccountByIdForUpdate(account.getId());
+		Map<String, Object> resultMap=new HashMap<String, Object>();
+		resultMap.put("accountId", accountInDB.getId());
+		accountDao.parkCar(resultMap);
+		Integer flag=(Integer) resultMap.get("flag");
+		if(flag==0) {
+			reason=null;
+		}else {
+			reason="系统内部错误，请重试";
 		}
+		
 		return reason;
 	}
 
@@ -156,22 +151,17 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 			return reason;
 		}
 		// 该停车卡能够正常提车，修改停车卡状态
-		try {
-			Account accountInDB = accountDao.loadAccountByIdForUpdate(account.getId());
-			account = new Account();
-			PersistentUtil.<Account>merge(account, accountInDB, Account.class);
-			account.setParking(false);
-
-			Map<String, Object> different = null;
-			different = PersistentUtil.different(accountInDB, account, Account.class);
-			if (different != null) {
-				accountDao.modifyAccount(account.getId(), different);
-			}
-		} catch (IllegalArgumentException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			reason = "系统内部错误，原因：" + e.getMessage();
-			logger.info(e);
+		Account accountInDB = accountDao.loadAccountByIdForUpdate(account.getId());
+		Map<String, Object> resultMap=new HashMap<String, Object>();
+		resultMap.put("accountId", accountInDB.getId());
+		accountDao.pickCar(resultMap);
+		Integer flag=(Integer) resultMap.get("flag");
+		if(flag==0) {
+			reason=null;
+		}else {
+			reason="系统内部错误，请重试";
 		}
+		
 		return reason;
 	}
 
