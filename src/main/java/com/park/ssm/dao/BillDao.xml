@@ -89,6 +89,8 @@
 				and userId=#{userId}
 			</if>
 		</where>
+		and isPaid=0
+		for update
 	</select>
 	<select id="listBillByUserId" resultMap="billResultMap">
 		select b.userId,a.cardId,p.name,b.billStartDate,b.billEndDate,b.price,b.isPaid

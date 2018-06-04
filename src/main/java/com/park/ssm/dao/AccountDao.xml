@@ -138,6 +138,7 @@
 		*
 	from Account
 	where cardId=#{_paramter}
+	for update
 </select>
 
 <select id="getAccountNum" resultType="Integer">

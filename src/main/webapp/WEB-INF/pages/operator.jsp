@@ -44,7 +44,7 @@
 	margin-top:30px;
 	margin-right:20px;
 	min-height: 150px;
-	border: 1px solid black;
+	border: 2px solid black;
 	border-radius:5px;
 }
 .search-inf a{
@@ -68,6 +68,9 @@
 	text-align:center;
 	font-weight:600;
 }
+.add-user{
+	display:none;
+}
 </style>
 <script type="text/javascript">
 	
@@ -80,7 +83,7 @@
 		<h3>支付金额：<span></span></h3>
 		<br/>
 		<a class="btn btn-block btn-primary">支付</a>
-		<a>取消</a>
+		<a class="btn btn-block btn-primary">取消</a>
 	</div>
 	<!-- 导航条 -->
 	<div class="dh">
@@ -115,6 +118,14 @@
 						</select>
 					</div>
 					<button type="submit" class="btn btn-primary btn-sm newcard">开卡</button>		
+				</div>
+				<div class="col-md-3 add-user col-md-offset-1">
+					<label for="exampleInputName2">新增用户</label>
+					<p>手机号：<span></span></p>
+					<div class="form-group">
+						<input class="form-control input-sm" id="" placeholder="请输入6位数以上的密码" type="password">
+					</div>
+					<button class="btn btn-primary btn-sm addUserBtn">确定</button>
 				</div>
 			</div>
 			
@@ -153,18 +164,33 @@
 						<button type="button" class="btn btn-primary btn-sm search-card">搜索</button>		
 					</form>
 				</div>
-				<div class="col-md-3 search-inf">
-					<h4>卡号：<span>44444</span></h4>
-					<p>手机号：<span>fds</span></p>
-					<!-- <p>停车场：<span>fsafda</span></p> -->
-					<p>卡状态：<span>fds</span></p>
-					<a class="btn btn-primary btn-xs" onclick="updateCard(this)">更换停车卡</a>&nbsp;<a class="btn btn-primary btn-xs" onclick="paymoney(this)">支付帐单</a>
+				<br/><br/>
+				<div class="col-md-10">
+					<table class="table">
+						<thead>
+							<tr>
+								<th class="col-md-4">卡号</th>
+								<th class="col-md-3">手机号</th>
+								<th class="col-md-2">状态</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody class="tbody-add">
+						</tbody>
+					</table>
 				</div>
+				
 			</div>
 		</div>
 	</div>
 
 	<script type="text/javascript">
+	/* $(function (){
+		//ajax开始的时候出发的函数
+		$('.newcard').ajaxStart(function(){
+			$(this).hide();
+		});
+	}) */
 		//两个模块之间的跳转
 		function skip(num) {
 			if (num == 0) {
@@ -249,6 +275,11 @@
 							}
 							else{
 								alert(result.message);
+								var con = confirm('是否新增用户？');
+								if(con){
+									$('.add-user').show();
+									$('.add-user span').text(inf[0]);
+								}
 							}		
 						}
 						else{
@@ -263,6 +294,33 @@
 				//alert('fdss')
 			//}
 		})
+		//数据库中没有用户操作员帮助用户注册
+		$('.addUserBtn').click(function(){
+			var iphone = $(this).parent().find('span').text();
+			var password = $(this).parent().find('input').val();
+			alert(iphone+" "+password);
+			var object = /^\w{6,12}$/g;
+			if(object.test(password)){
+				$(this).parent().find('input').parent().removeClass('has-error');
+				$.ajax({
+					url:'user/addNewUser',
+					dataType:'json',
+					type:'POST',
+					data:{
+						'userId':iphone,
+						'password':password
+					},success:function(json){
+						console.log(json);
+						$('.addUserBtn').parent().hide();
+					},error:function(){
+						
+					}
+				})
+			}else{
+				alert('密码格式有问题！');
+				$(this).parent().find('input').parent().addClass('has-error');
+			}
+ 		})
 		//点击停卡按钮的操作
 		$('.deletecard').click(function(){
 			var inf = new Array();
@@ -319,7 +377,7 @@
 		}
 		
 		$('.search-card').click(function(){
-			$('.search-inf').remove();
+			$('.tbody-add tr').remove();
 			var iphone = $(this).parent().find('input:eq(0)').val();
 			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
 			if(object.test(iphone)){
@@ -335,16 +393,24 @@
 						console.log(json);
 						var l = json.list.length;
 						for(var i =0;i<l;i++){
-							$('.search-show').append(function (){
-								return "<div class='col-md-3 search-inf'>"
-								+"<h4>卡号：<span>"+json.list[i].cardId+"</span></h4>"
-								+"<p>手机号：<span>"+json.list[i].userId+"</span></p>"
-								/* +"<p>停车场：<span>"+json.list[i].cardId+"</span></p>" */
-								+"<p>卡状态：<span>"+json.list[i].state+"</span></p>"
+							$('.tbody-add').append(function (){
+								return "<tr>"
+								+"<td>"+json.list[i].cardId+"</td>"
+								+"<td>"+json.list[i].userId+"</td>"
+								+"<td>"+json.list[i].state+"</td>"
+								+"<td>"
 								+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
-								+"&nbsp;<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
-							+"</div>";
-							})
+								+"<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
+								+"</td>"
+							+"</tr>";
+							});
+							/* <div class='col-md-3 search-inf'>"
+							+"<h4>卡号：<span>"+json.list[i].cardId+"</span></h4>"
+							+"<p>手机号：<span>"+json.list[i].userId+"</span></p>"
+							+"<p>卡状态：<span>"+json.list[i].state+"</span></p>"
+							+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
+							+"&nbsp;<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
+						+"</div> */
 						}
 					},error:function(){
 						
@@ -362,7 +428,7 @@
 			$('.edit-money').remove();
 			id = $(a).data('value');
 			content ="请输入新的卡号"
-			$(a).parent().find('h4').after(function (){
+			$(a).parent().parent().find('td:eq(0)').after(function (){
 				return NumEdit(id,content);
 			});
 		}
@@ -381,8 +447,8 @@
 		                type:'POST',
 		                dataType:'json',
 		                data:{
-		                	'id':OldCardId,
-		                	'currentPrice':NewCardId
+		                	'OldCardId':OldCardId,
+		                	'NewCardId':NewCardId
 		                },success:function(json){
 		                	console.log(json)
 		                    if(json.msg==1){
@@ -393,7 +459,7 @@
 		                    	alert('修改失败');
 		                    }
 		                },error:function(){
-
+		                	alert('更换停车卡出错！')
 		                }
 		           })
 		        }else{
@@ -410,6 +476,8 @@
 		$('.pay-money a:eq(1)').click(function (){
 			$('.pay-money').fadeOut();
 		})
+		
+		
 	</script>
 </body>
 

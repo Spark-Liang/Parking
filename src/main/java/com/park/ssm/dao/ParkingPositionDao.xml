@@ -112,11 +112,13 @@ where parkingLotId=#{_parameter}
 <select id="getPositionNum"  resultType="Integer">
     select count(id) from ParkingPosition where parkingLotId=#{parkingLotId} 
       and accountId is null
+      for update
 </select>
 
 <select id="getPositionNumByUser" resultType="Integer">
     select count(id) from ParkingPosition 
     where parkingLotId=#{parkingLotId} and accountId=#{accountId}
+     for update
 </select>
 
 </mapper>
