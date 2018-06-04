@@ -316,11 +316,13 @@ public class UserController {
 	
 	/**
 	 * User 新增用户
-	 * @param telephone
+	 * @param userId
+	 * @param password
 	 * @return
 	 */
+	@ResponseBody
 	@RequestMapping(value="addNewUser",method=RequestMethod.POST)
-	@Permission(value= {Type.ADMIN,Type.OPERATOR})
+	@Permission(value = { Permission.Type.ADMIN, Permission.Type.OPERATOR })
 	public Map insertUser(@RequestParam("userId")Long userId,@RequestParam("password") String password){
 		Map<String,Object> map=new HashMap<>();
 		if (userId!=null && null!=password && ""!=password) {
