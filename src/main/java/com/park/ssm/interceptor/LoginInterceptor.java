@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,25 +21,37 @@ import com.alibaba.fastjson.JSON;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.entity.InnerUser;
 import com.park.ssm.exception.LoginException;
+import com.park.ssm.util.CommonsDebugFlag;
 
 
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 	private static String loginUrl="/inneruser/page";
-	private static String loginPageUrl="/park/WEB-INF/pages/login.jsp";
 	private static String errorUrl="";
 	
 	private Logger logger=LogManager.getLogger(this.getClass());
 	
+	private static boolean debugFlag=CommonsDebugFlag.isDebug();
+	
 	@Override
 	public boolean preHandle(HttpServletRequest request,HttpServletResponse response,Object handler) 
 		throws IOException, ServletException{
-		logger.debug("intercept request:"+request.getServletPath());
+		if(debugFlag) {
+			logger.info("intercept request url:"+request.getServletPath());
+		}else {
+			logger.debug("intercept request url:"+request.getServletPath());
+		}
 		//忽略指向登录页面的请求
 		if(request.getServletPath().equals(loginUrl)) {
+			if(debugFlag) {
+				logger.info("忽略指向登录页面的请求\n");
+			}
 			return true;
 		}
 		//非HandlerMethod的请求不需要进行权限控制
 		if(!(handler instanceof HandlerMethod)) {
+			if(debugFlag) {
+				logger.info("非HandlerMethod的请求不需要进行权限控制\n");
+			}
 			return true;
 		}
 		//检查是否需要进行权限控制
@@ -47,6 +60,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		Permission permission=method.getAnnotation(Permission.class)!=null?method.getAnnotation(Permission.class):method.getDeclaringClass().getAnnotation(Permission.class);
 		if(permission==null || permission.haveControl()==false) {
 			//不需要进行权限控制
+			if(debugFlag) {
+				logger.info("request servlet url:"+request.getServletPath());
+				logger.info("不需要进行权限控制\n");
+			}
 			return true;
 		}
 		//检查是否登录登录
@@ -56,12 +73,19 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			//未登录，重定向到登录页面  
 			//request.getRequestDispatcher(loginUrl).forward(request, response);
 			//response.sendRedirect(request.getContextPath()+loginUrl);
-			logger.debug("request dispatch to:"+loginPageUrl);
-			throw new LoginException("未登录请重新登录",loginUrl);
+			LoginException exception=new LoginException("未登录请重新登录",loginUrl);
+			if(debugFlag) {
+				logger.info("未登录，重定向到登录页面 \n");
+				logger.info(exception);
+			}
+			throw exception;
 			//return false;  
 		}else {
 			//已登录，检查权限是否满足要求
 			if(checkPermission(permission, innerUser)) {
+				if(debugFlag) {
+					logger.info("已登录，检查权限是否满足要求 \n");
+				}
 				return true;
 			}else {
 				//权限无法满足要求
@@ -77,7 +101,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 				//如果访问返回jsp的方法，则跳转到错误页面 
 				request.setAttribute("message", "权限不足无法操作");
 				request.setAttribute("originURL", request.getRequestURL());
-				request.getRequestDispatcher(errorUrl).forward(request, response); 
+				RequestDispatcher dispatcher=request.getRequestDispatcher(errorUrl); 
+				dispatcher.forward(request, response);
+				if(debugFlag) {
+					logger.info("如果访问返回jsp的方法，则跳转到错误页面 \n");
+					logger.info(dispatcher);
+				}
 				return false;
 			}
 		}
@@ -101,4 +130,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		}
 		return false;
 	}
+	
+	
 }

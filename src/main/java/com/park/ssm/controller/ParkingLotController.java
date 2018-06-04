@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.park.ssm.annotation.Permission;
-import com.park.ssm.annotation.Permission.Type;
 import com.park.ssm.dao.ParkingLotDao.CONDITION;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.service.ParkingLotService;
@@ -91,7 +90,7 @@ public class ParkingLotController {
 	 * */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="list",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
-	@Permission(value= {Type.ADMIN,Type.MANAGER,Type.OPERATOR})
+	@Permission(value= {},haveControl=false)
 	public @ResponseBody Map listParkingLot(HttpServletRequest request) {
 		Map<String, String[]> params=request.getParameterMap();
 		Map<String, Object> conditions=new HashMap<>();

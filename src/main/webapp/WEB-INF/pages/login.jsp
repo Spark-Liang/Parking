@@ -93,7 +93,7 @@ body {
             <form id="formLogin">
                 <div class="form-gorup">
                     <label>用户名</label> <input type="text" class="form-control userName"
-                        name="nickname" placeholder="username" onblur="checkName()">
+                        name="nickname" placeholder="username" >
                 </div>
                 <br />
                 <div class="form-gorup">
