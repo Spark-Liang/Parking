@@ -131,13 +131,13 @@ function login(a){
             },
             success : function(user) {
                 if (user === null) {
-                    $('.tip').text('请检查用户名、密码和角色');
+                    $('.tip').text('请检查用户名和密码');
                     $('.userName').val('');
                     $('.pass').val('');
                     return;
                 } else {
                     console.log(user)
-                        var hre = "<%=basePath%>user/userLogin?id="+ user.userId;
+                        var hre = "<%=basePath%>user/userbillpage?id="+ user.userId;
                     $(location).attr('href', hre);
                 }
             }

@@ -239,7 +239,7 @@ public class UserController {
 	 *            登陆成功后写入session
 	 * @return Json格式的user对象
 	 */
-	@RequestMapping(value = "userLogin", method = { RequestMethod.POST })
+	@RequestMapping(value = "userLogin", method =RequestMethod.POST)
 	@ResponseBody
 	public String login(String userId, String password, HttpSession session) {
 		User user = new User();
@@ -275,7 +275,16 @@ public class UserController {
 	public String toUserLogin() {
 		return "userLogin";
 	}
-
+	
+	/**
+	 * 登陆成功后跳转
+	 * @return
+	 */
+	@RequestMapping(value="userbillpage")
+	@Permission(value= {},haveControl=false)
+	public String userBillPage() {
+		return "bill";
+	}
 	/**
 	 * User退出登陆功能 消除session
 	 * 

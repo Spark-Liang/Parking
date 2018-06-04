@@ -12,7 +12,7 @@
 	</select>
 
 	<select id="getUser" resultType="User">
-		select userId,password from User
+		select id,userId,password from User
 		<where>
 			userId=#{userId}
 			and
