@@ -43,10 +43,13 @@
 .search-inf{
 	margin-top:30px;
 	margin-right:20px;
-	min-height: 180px;
+	min-height: 150px;
+	border: 1px solid black;
+	border-radius:5px;
 }
 .search-inf a{
 	font-size:12px;
+	margin-top:10px;
 }
 .search-inf p{
 	margin-bottom: 0px;
@@ -59,6 +62,7 @@
 	left:35%;
 	position:fixed;
 	display:none;
+	border:2px solid black;
 }
 .pay-money h4{
 	text-align:center;
@@ -98,11 +102,11 @@
 				<div class="col-md-3">
 				    <div class="form-group">
 						<label for="exampleInputName2">手机号码</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号,从0000001开始">
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式 ">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号,从0000001开始">
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputEmail2">停车场</label>
@@ -121,11 +125,11 @@
 				<div class="col-md-3">
 				    <div class="form-group">
 						<label for="exampleInputName2">手机号码</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="手机号码">
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="卡号">
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputEmail2">停车场</label>
@@ -149,12 +153,12 @@
 						<button type="button" class="btn btn-primary btn-sm search-card">搜索</button>		
 					</form>
 				</div>
-				<div class="alert alert-success col-md-3 search-inf">
+				<div class="col-md-3 search-inf">
 					<h4>卡号：<span>44444</span></h4>
 					<p>手机号：<span>fds</span></p>
 					<!-- <p>停车场：<span>fsafda</span></p> -->
 					<p>卡状态：<span>fds</span></p>
-					<a onclick="updateCard(this)">更换停车卡</a><br/><a onclick="paymoney(this)">支付帐单</a>
+					<a class="btn btn-primary btn-xs" onclick="updateCard(this)">更换停车卡</a>&nbsp;<a class="btn btn-primary btn-xs" onclick="paymoney(this)">支付帐单</a>
 				</div>
 			</div>
 		</div>
@@ -332,12 +336,13 @@
 						var l = json.list.length;
 						for(var i =0;i<l;i++){
 							$('.search-show').append(function (){
-								return "<div class='alert alert-success col-md-3 search-inf'>"
+								return "<div class='col-md-3 search-inf'>"
 								+"<h4>卡号：<span>"+json.list[i].cardId+"</span></h4>"
 								+"<p>手机号：<span>"+json.list[i].userId+"</span></p>"
 								/* +"<p>停车场：<span>"+json.list[i].cardId+"</span></p>" */
 								+"<p>卡状态：<span>"+json.list[i].state+"</span></p>"
-								+"<a data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a><br/><a onclick='paymoney(this)'>支付帐单</a>"
+								+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
+								+"&nbsp;<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
 							+"</div>";
 							})
 						}
