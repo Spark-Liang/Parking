@@ -62,7 +62,7 @@
 	left:35%;
 	position:fixed;
 	display:none;
-	border:2px solid black;
+	border:1px solid black;
 }
 .pay-money h4{
 	text-align:center;
@@ -166,10 +166,11 @@
 				</div>
 				<br/><br/>
 				<div class="col-md-10">
-					<table class="table">
+					<table class="table table-striped table-hover">
 						<thead>
 							<tr>
-								<th class="col-md-4">卡号</th>
+								<th class="col-md-1">卡号</th>
+								<th class="col-md-3"></th>
 								<th class="col-md-3">手机号</th>
 								<th class="col-md-2">状态</th>
 								<th>操作</th>
@@ -399,6 +400,7 @@
 							$('.tbody-add').append(function (){
 								return "<tr>"
 								+"<td>"+json.list[i].cardId+"</td>"
+								+"<td></td>"
 								+"<td>"+json.list[i].userId+"</td>"
 								+"<td>"+json.list[i].state+"</td>"
 								+"<td>"
@@ -431,7 +433,7 @@
 			$('.edit-money').remove();
 			id = $(a).data('value');
 			content ="请输入新的卡号"
-			$(a).parent().parent().find('td:eq(0)').after(function (){
+			$(a).parent().parent().find('td:eq(1)').append(function (){
 				return NumEdit(id,content);
 			});
 		}
