@@ -112,23 +112,23 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>123</td>
-                        <td>2018.1.5-2018.3.5</td>
+                        <td>1</td>
+                        <td>2018.1.1-2018.3.31</td>
                         <td>2018.4.5</td>
                         <td>500</td>
                         <td>已付款</td>
                     </tr>
                     <tr>
-                        <td>123</td>
-                        <td>2018.1.5-2018.3.5</td>
-                        <td>2018.4.5</td>
+                        <td>2</td>
+                        <td>2018.4.1-2018.6.30</td>
+                        <td>2018.7.5</td>
                         <td>500</td>
                         <td>已付款</td>
                     </tr>
                     <tr>
-                        <td>123</td>
-                        <td>2018.1.5-2018.3.5</td>
-                        <td>2018.4.5</td>
+                        <td>3</td>
+                        <td>2018.7.1-2018.9.30</td>
+                        <td>2018.10.5</td>
                         <td>500</td>
                         <td>已付款</td>
                     </tr>
@@ -148,12 +148,12 @@
                 <tbody>
                     <tr>
                         <td>123</td>
-                        <td>2018.1.5-2018.3.5</td>
+                        <td>2018.1.5-2018.3.31</td>
                         <td>500</td>
                     </tr>
                     <tr>
                         <td>1551</td>
-                        <td>2018.1.5-2018.3.5</td>
+                        <td>2018.4.1-2018.6.30</td>
                         <td>500</td>
                         
                     </tr>
@@ -174,7 +174,7 @@
     <!--停车卡页面-->
     <div class="dh">
         <label>Parking management system</label>
-        <a class="btn btn-primary btn-md" href="login.html">退出</a>
+        <a class="btn btn-primary btn-md" href="<%=basePath%>user/userLogout">退出</a>
     </div>
     <div class="container container-style" >
         <h1>Hello,<span>XXX</span></h1>
@@ -183,9 +183,52 @@
             <h4>拥有的停车卡</h4>
             <div class="admin-block">
                 <br/>
-                <p>卡号:<span>1023400</span></p>
-                <p>开卡日期：<span>2018.1.1</span></p>
-                <p>
+                <p>卡号:<span>1023401</span></p>
+                <p>开卡日期：<span>2018.1.11</span></p>
+                <p style = "color:red">有未付款账单</p>
+                <!--<p>卡状态：正常使用</p>-->
+                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
+            </div>
+        
+            <div class="admin-block">
+                <br/>
+                <p>卡号:<span>1023402</span></p>
+                <p>开卡日期：<span>2018.2.21</span></p>
+                <!--<p>卡状态：正常使用</p>-->
+                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
+            </div>
+        
+            <div class="admin-block">
+                <br/>
+                <p>卡号:<span>1023403</span></p>
+                <p>开卡日期：<span>2018.3.10</span></p>
+                <!--<p>卡状态：正常使用</p>-->
+                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
+            </div>
+        
+            <div class="admin-block">
+                <br/>
+                <p>卡号:<span>1023404</span></p>
+                <p>开卡日期：<span>2018.3.11</span></p>
+                <p style = "color:red">有未付款账单</p>
+                <!--<p>卡状态：正常使用</p>-->
+                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
+            </div>
+       
+            <div class="admin-block">
+                <br/>
+                <p>卡号:<span>1023405</span></p>
+                <p>开卡日期：<span>2018.5.1</span></p>
+                <p style = "color:red">有未付款账单</p>
+                <!--<p>卡状态：正常使用</p>-->
+                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
+            </div>
+        
+            <div class="admin-block">
+                <br/>
+                <p>卡号:<span>1023406</span></p>
+                <p>开卡日期：<span>2018.5.20</span></p>
+                <p style = "color:red">有未付款账单</p>
                 <!--<p>卡状态：正常使用</p>-->
                 <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
             </div>
@@ -270,13 +313,13 @@
                     + "</div>" + "</div>";
         });
     }
-    for(var i = 0; i <= 6; i++){
+    /*for(var i = 0; i <= 6; i++){
         $('.moudle1').append(function() {
             return "<div class='admin-block' >"
                     + "<div>"
                     + "<br/>"
                     + "<p>卡号：<span>"
-                    + "cardnum"
+                    + "1234567"
                     + "</span></p>"
                     + "<p>开卡日期：<span>"
                     + "date"
@@ -284,7 +327,7 @@
                     +'<button class="btn btn-md btn-block btn-primary">查看帐单</button>'
                     + "</div>" + "</div>";
         });
-    }
+    }*/
 
     //点击检查帐单弹出帐单页面
     function showBill(){
