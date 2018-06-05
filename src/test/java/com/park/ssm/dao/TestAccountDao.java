@@ -129,13 +129,15 @@ public class TestAccountDao extends AutoRollBackTest {
 		long userId=13745678910l;
 		List<Account> list=dao.findAccountrById(userId,null,null,null,null,null);
 	}
-	//@Test
+	@Test
 	public void testgetCardMessage() {
 		long cardId=1l;
 		Account account=dao.getCardMessage(cardId);
+		AccountState state=account.getState();
+		System.out.println(state.getInd());
 	}
 	
-	@Test
+//	@Test
 	public void testAddUser() {
 		long userId=18826237366l;
 		String password="123456";

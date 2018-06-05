@@ -197,11 +197,12 @@ public class UserController {
 	 * 操作员 根据客户ID，更换新的停车卡(创建新的卡号，代替旧的卡) 
 	 * OldCardId  旧卡卡号，
 	 * NewCardId  新卡卡号，
+	 * userId     用户账号
 	 * message    返回的结果信息
 	 */
 	@RequestMapping(value = "changeCard", method = { RequestMethod.POST })
 	@ResponseBody
-	public String changeCard(@RequestParam("OldCardId") long OldCardId, @RequestParam("NewCardId") long NewCardId) {
+	public String changeCard(@RequestParam("OldCardId") long OldCardId, @RequestParam("NewCardId") long NewCardId,@RequestParam("userId")long userId) {
 		Map result = new HashMap();
 		String message = "";
 		int status = 0;
@@ -212,12 +213,24 @@ public class UserController {
 				if (NewCardAccount != null) {
 					message = "更换失败，该停车卡已与帐户绑定，请重新输入！";
 				} else {
-					account.setCardId(NewCardId);
-					status = accountService.modifyAccount(account);// 更换新的停车卡
-					if (status > 0) {
-						message = "更换成功！";
-					} else {
-						message = " 系统出错，请联系技术部门！";
+					int bill = accountService.isNotPayBill(userId);// 判断是否存在未支付的账单
+					if(bill>0){
+						message = "无法更换，该账户存在未缴费的账单，请先支付帐单！";
+					}
+					else {
+						AccountState state=account.getState();
+						if(state.getInd()==-1){
+							message = "无法更换，该账户已被冻结（被停卡）！";
+						}
+						else {
+							account.setCardId(NewCardId);
+							status = accountService.modifyAccount(account);// 更换新的停车卡
+							if (status > 0) {
+								message = "更换成功！";
+							} else {
+								message = " 系统出错，请联系技术部门！";
+							}
+						}
 					}
 				}
 			}else {
