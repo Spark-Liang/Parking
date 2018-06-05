@@ -71,6 +71,9 @@
 .add-user{
 	display:none;
 }
+.tbody-add tr{
+	height:47px;
+}
 </style>
 <script type="text/javascript">
 	
@@ -95,9 +98,9 @@
 		<h1 id='admin-name'>Hello,<span>XXX</span></h1>
 		<p class="text-info">您的身份是操作员,可以操作以下数据</p>
 		<ol class="breadcrumb">
-			<li><a onclick="skip(0)">用户开卡</a></li>
-			<li><a onclick="skip(1)">用户停卡</a></li>
-			<li><a onclick="skip(2)">换卡以及支付帐单</a></li>
+			<li><a onclick="skip(0,this)">用户开卡</a></li>
+			<li><a onclick="skip(1,this)">用户停卡</a></li>
+			<li><a onclick="skip(2,this)">换卡以及支付帐单</a></li>
 		</ol>
 		<div class="operator-module1" >
 			<div class="operator-module1-1">
@@ -193,21 +196,28 @@
 		});
 	}) */
 		//两个模块之间的跳转
-		function skip(num) {
+		function skip(num,a) {
+			$('.breadcrumb a').css({'font-weight':'500'})
 			if (num == 0) {
+				fontWeight();
 				$('.operator-module1').show();
 				$('.operator-module2').hide();
 				$('.operator-module3').hide();
 
 			} else if (num == 1) {
+				fontWeight();
 				$('.operator-module2').show();
 				$('.operator-module1').hide();
 				$('.operator-module3').hide();
 				
 			} else if(num == 2){
+				fontWeight();
 				$('.operator-module3').show();
 				$('.operator-module1').hide();
 				$('.operator-module2').hide();
+			}
+			function fontWeight(){
+				$(a).css({'font-weight':'600'})
 			}
 		}
 		//页面刷新加载信息
@@ -304,7 +314,6 @@
 		$('.addUserBtn').click(function(){
 			var iphone = $(this).parent().find('span').text();
 			var password = $(this).parent().find('input').val();
-			alert(iphone+" "+password);
 			var object = /^\w{6,12}$/g;
 			if(object.test(password)){
 				$(this).parent().find('input').parent().removeClass('has-error');
@@ -317,7 +326,11 @@
 						'password':password
 					},success:function(json){
 						console.log(json);
-						$('.addUserBtn').parent().hide();
+						if(json.status){
+							$('.addUserBtn').parent().hide();
+							alert('成功新增用户')
+						}
+						
 					},error:function(){
 						
 					}
@@ -397,20 +410,26 @@
 						'isGetAll':'ture'
 					},success:function(json){
 						console.log(json);
-						var l = json.list.length;
-						for(var i =0;i<l;i++){
-							$('.tbody-add').append(function (){
-								return "<tr>"
-								+"<td>"+json.list[i].cardId+"</td>"
-								+"<td></td>"
-								+"<td>"+json.list[i].userId+"</td>"
-								+"<td>"+json.list[i].state+"</td>"
-								+"<td>"
-								+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
-								+"<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
-								+"</td>"
-							+"</tr>";
-							});
+						if(json.message==''){
+							var l = json.list.length;
+							for(var i =0;i<l;i++){
+								$('.tbody-add').append(function (){
+									return "<tr>"
+									+"<td>"+json.list[i].cardId+"</td>"
+									+"<td></td>"
+									+"<td>"+json.list[i].userId+"</td>"
+									+"<td>"+json.list[i].state+"</td>"
+									+"<td>"
+									+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
+									+"<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
+									+"</td>"
+								+"</tr>";
+								});
+							}
+						}else{
+							alert(json.message);
+						}
+						
 							/* <div class='col-md-3 search-inf'>"
 							+"<h4>卡号：<span>"+json.list[i].cardId+"</span></h4>"
 							+"<p>手机号：<span>"+json.list[i].userId+"</span></p>"
@@ -418,9 +437,9 @@
 							+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
 							+"&nbsp;<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
 						+"</div> */
-						}
-					},error:function(){
 						
+					},error:function(){
+						alert('系统出错')
 					}
 				})
 			}else{
@@ -441,10 +460,8 @@
 		}
 		function moneyok(a){
 			var OldCardId = $(a).data('value');
-			alert(OldCardId);
 		    var NewCardId = $(a).parent().parent().find('input').val();
 		    var object = /^\d{7}$/g;
-		    alert(NewCardId);
 		  // $(a).parent().parent().parent().find('span:eq(0)').text(aa);
 		    var object = /^\d{7}$/;
 		        if(object.test(NewCardId)){
@@ -458,9 +475,9 @@
 		                	'NewCardId':NewCardId
 		                },success:function(json){
 		                	console.log(json)
-		                    if(json.msg==1){
-		                    	alert('修改成功')
-		                         $(a).parent().parent().parent().find('span:eq(0)').text(aa);
+		                    if(json.flag==1){
+		                    	alert('修改成功');
+		                         $(a).parent().parent().parent().parent().find('td:eq(0)').text(NewCardId);
 		                         $(a).parent().parent().fadeOut();
 		                    }else if(json.error){
 		                    	alert('修改失败');
