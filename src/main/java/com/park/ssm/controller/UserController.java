@@ -147,7 +147,7 @@ public class UserController {
 					}
 				} else {
 					falg=3;
-					message = "请输入已存在的用户帐号！";
+//					message = "请输入已存在的用户帐号！";
 				}
 			}
 			result.put("falg", falg);
@@ -194,7 +194,10 @@ public class UserController {
 	}
 
 	/**
-	 * 操作员 根据客户ID，更换新的停车卡(创建新的卡号，代替旧的卡) OldCardId 旧卡卡号  NewCardId 新卡卡号 message 返回的结果信息
+	 * 操作员 根据客户ID，更换新的停车卡(创建新的卡号，代替旧的卡) 
+	 * OldCardId  旧卡卡号，
+	 * NewCardId  新卡卡号，
+	 * message    返回的结果信息
 	 */
 	@RequestMapping(value = "changeCard", method = { RequestMethod.POST })
 	@ResponseBody
@@ -202,33 +205,26 @@ public class UserController {
 		Map result = new HashMap();
 		String message = "";
 		int status = 0;
-		int flag=0;
 		try {
 			Account account = accountService.getCardMessage(OldCardId);
-			if (account != null) {
+			if (account != null){
 				Account NewCardAccount = accountService.getCardMessage(NewCardId);
 				if (NewCardAccount != null) {
-					flag=2;
 					message = "更换失败，该停车卡已与帐户绑定，请重新输入！";
 				} else {
 					account.setCardId(NewCardId);
 					status = accountService.modifyAccount(account);// 更换新的停车卡
 					if (status > 0) {
-						flag=1;
 						message = "更换成功！";
 					} else {
-						flag=2;
 						message = " 系统出错，请联系技术部门！";
 					}
 				}
-			} else {
-				flag=2;
+			}else {
 				message = "该停车卡不存在，请重新输入！";
 			}
-			result.put("flag", flag);
 			result.put("message", message);
 		} catch (Exception e) {
-			flag=2;
 			e.printStackTrace();
 			result.put("message", " 系统出错，请联系技术部门！");
 		}
@@ -339,7 +335,6 @@ public class UserController {
 			String passwordAndSalt = en.SHA512(password.trim() + salt);
 			boolean status = false;
 			status = userService.insertUser(userId, passwordAndSalt, salt);
-			status = true;
 			map.put("status", status);
 		}
 		return map;
