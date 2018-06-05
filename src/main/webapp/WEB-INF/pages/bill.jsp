@@ -89,7 +89,7 @@
         <div class = "bill">
             <!--账单关闭按钮-->
             <div id="usageClose" onclick = closeBill()>
-                <img src="img/manger-close2.svg" style = "cursor: pointer">
+                <img src="img/manger-close2.svg"  style = "cursor: pointer">
                               <strong>关闭</strong>
             </div>
             <div class = showBill_1>
