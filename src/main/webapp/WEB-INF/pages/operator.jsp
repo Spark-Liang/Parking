@@ -275,11 +275,14 @@
 							}
 							else{
 								alert(result.message);
-								var con = confirm('是否新增用户？');
-								if(con){
-									$('.add-user').show();
-									$('.add-user span').text(inf[0]);
+								if(result.falg==3){
+									var con = confirm('是否新增用户？');
+									if(con){
+										$('.add-user').show();
+										$('.add-user span').text(inf[0]);
+									}
 								}
+								
 							}		
 						}
 						else{

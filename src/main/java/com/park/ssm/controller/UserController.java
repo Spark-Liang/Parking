@@ -97,7 +97,7 @@ public class UserController {
 
 	/**
 	 * 操作员 开停车卡的校验流程 LotId 停车场ID userId 客户ID cardId 停车卡卡号 message 返回的结果信息 falg
-	 * 返回的操作是否成功的标志{0：系统出错，1：允许开卡，2：账户或卡号存在问题，无法开卡}
+	 * 返回的操作是否成功的标志{0：系统出错，1：允许开卡，2：账户或卡号存在问题，无法开卡,3:帐号不存在}
 	 */
 	@RequestMapping(value = "addNewCard", method = { RequestMethod.POST })
 	@ResponseBody
@@ -146,6 +146,7 @@ public class UserController {
 						}
 					}
 				} else {
+					falg=3;
 					message = "请输入已存在的用户帐号！";
 				}
 			}
