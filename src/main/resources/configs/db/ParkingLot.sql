@@ -61,6 +61,8 @@ create table Bill
 	,index accountId_idx(accountId)
 )engine=innodb auto_increment=1 charset='utf8';
 
+alter table Bill add lastPayDate datetime;
+
 create table ParkingRecord
 (
 	id bigint primary key auto_increment

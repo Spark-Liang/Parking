@@ -26,7 +26,16 @@ public class Bill implements Serializable {
 	private Date billStartDate;
 	private Date billEndDate;
 	private boolean isPaid;
+	private Date lastPayDate;
 	
+	public Date getLastPayDate() {
+		return lastPayDate;
+	}
+
+	public void setLastPayDate(Date lastPayDate) {
+		this.lastPayDate = lastPayDate;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -65,11 +74,11 @@ public class Bill implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Bill [id=" + id + ", user=" + user + ", parkingLot=" + parkingLot + ", account=" + account
-				+ ", price=" + price + ", billStartDate=" + billStartDate + ", billEndDate=" + billEndDate + ", isPaid="
-				+ isPaid + "]";
+		return "Bill [id=" + id + ", user=" + user + ", parkingLot=" + parkingLot + ", account=" + account + ", price="
+				+ price + ", billStartDate=" + billStartDate + ", billEndDate=" + billEndDate + ", isPaid=" + isPaid
+				+ ", lastPayDate=" + lastPayDate + "]";
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -79,11 +88,13 @@ public class Bill implements Serializable {
 		result = prime * result + ((billStartDate == null) ? 0 : billStartDate.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + (isPaid ? 1231 : 1237);
+		result = prime * result + ((lastPayDate == null) ? 0 : lastPayDate.hashCode());
 		result = prime * result + ((parkingLot == null) ? 0 : parkingLot.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -115,6 +126,11 @@ public class Bill implements Serializable {
 			return false;
 		if (isPaid != other.isPaid)
 			return false;
+		if (lastPayDate == null) {
+			if (other.lastPayDate != null)
+				return false;
+		} else if (!lastPayDate.equals(other.lastPayDate))
+			return false;
 		if (parkingLot == null) {
 			if (other.parkingLot != null)
 				return false;
@@ -132,6 +148,7 @@ public class Bill implements Serializable {
 			return false;
 		return true;
 	}
+	
 	
 	
 }

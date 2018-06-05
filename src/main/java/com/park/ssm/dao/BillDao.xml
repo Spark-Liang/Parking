@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--客户映射 指定到dao接口 -->
 <mapper namespace="com.park.ssm.dao.BillDao">
+<!--  
 	<resultMap type="bill" id="billResultMap">
 		<id property="id" column="userId"></id>
 		<result property="billStartDate" column="billStartDate"></result>
@@ -18,7 +19,7 @@
 			<id property="id" column="accountId"/>
 		</association>
 	</resultMap>
-
+-->
 	<sql id="sqlField">
 		id,userId,parkingLotId,accountId,price,billStartDate,billEndDate,isPaid
 	</sql>
@@ -91,12 +92,13 @@
 		</where>
 		and isPaid=0
 	</select>
-	<select id="listBillByUserId" resultMap="billResultMap">
-		select b.userId,a.cardId,p.name,b.billStartDate,b.billEndDate,b.price,b.isPaid
-		from Account a,ParkingLot p,Bill b
-		<where> a.userId=b.userId
-			and b.parkingLotId=p.id
-			and b.userId=#{userId}
+	<select id="listBillByUserId" resultType="com.park.ssm.entity.Bill">
+		select 
+
+b.id,b.userId,b.billStartDate,b.billEndDate,b.lastPayDate,b.price,b.isPaid
+		from Account a,Bill b
+		<where> b.userId=a.userId
+			and a.cardId=#{cardId}
 		</where>
 	</select>
 
