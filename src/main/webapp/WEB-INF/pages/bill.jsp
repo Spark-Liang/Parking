@@ -90,7 +90,7 @@
             <!--账单关闭按钮-->
             <div id="usageClose" onclick = closeBill()>
                 <img src="img/manger-close2.svg" style = "cursor: pointer">
-                <strong>关闭</strong>
+                              <strong>关闭</strong>
             </div>
             <div class = showBill_1>
                 <br/>
@@ -270,8 +270,8 @@
                     + "</div>" + "</div>";
         });
     }
-for(var i = 0; i <= 6; i++){
-    $('.moudle1').append(function() {
+    for(var i = 0; i <= 6; i++){
+        $('.moudle1').append(function() {
             return "<div class='admin-block' >"
                     + "<div>"
                     + "<br/>"
@@ -283,17 +283,19 @@ for(var i = 0; i <= 6; i++){
                     + "</span></p>"
                     +'<button class="btn btn-md btn-block btn-primary">查看帐单</button>'
                     + "</div>" + "</div>";
-    });
+        });
+    }
 
-}
     //点击检查帐单弹出帐单页面
     function showBill(){
+        console.log(this);//保存卡号，用来请求账单信息
         span1.classList.add("mystyle");
         span2.classList.remove("mystyle");
         var showBill = document.getElementsByClassName("showBill")[0];
         showBill.style.display = 'block';
         outbill.style.display = "block";
         nooutbill.style.display = "none";
+
     }
     //点击关闭，关闭帐单页面
     function closeBill(){
@@ -306,18 +308,22 @@ for(var i = 0; i <= 6; i++){
     console.log(billMenu);
     var span1 = billMenu.getElementsByTagName("span")[0];
     var span2 = billMenu.getElementsByTagName("span")[2];
-    console.log(span1);
-    console.log(span2);
-    span1.addEventListener('click',menuChange1);
-    span2.addEventListener('click',menuChange2);
+    //console.log(span1);
+    //console.log(span2);
+    span1.addEventListener('click',menuChange1);//监听点击查看已出账单
+    span2.addEventListener('click',menuChange2);//监听点击查看未出账单
     var outbill = document.getElementsByClassName("outbill")[0];
     var nooutbill = document.getElementsByClassName("nooutbill")[0];
+    
+    //点击查看已出账单触发的函数
     function menuChange1(){
         span1.classList.add("mystyle");
         span2.classList.remove("mystyle");
         outbill.style.display = "block";
         nooutbill.style.display = "none";
     }
+
+    //点击查看未出账单触发的函数
     function menuChange2(){
         span2.classList.add("mystyle");
         span1.classList.remove("mystyle");
@@ -327,25 +333,45 @@ for(var i = 0; i <= 6; i++){
 
     //页面加载后获取停车卡信息
     /*$(document).ready(function(){
-        $(ajax)({
+        $.ajax({
             url:'',
             type:'GET',
             dateType:'json',
             data{
 
-            },success:function(responce){
+            },
+            success: function(responce){
                 var data =responce.msg;
                 var length = data.length;
                 for (var i = 0; i<length; i++){
                 var card1 = new card(data[i]);
                     card1.cardadd();
                 }
-            },error:function{
+            },
+            error: function(){
 
             }
         });
     });*/
     
+    //点击查看已出账单发送ajax请求获取账单信息
+    /*var card = document.getElementsByClassName
+    function(){
+        $.ajax({
+            url:'',
+            type: 'GET',
+            dataType:'json',
+            data{
+                cardId: cardId;
+            },
+            success: function(){
+
+            },
+            error: function(){
+
+            }
+        });
+    }*/
 </script>
 </body>
 
