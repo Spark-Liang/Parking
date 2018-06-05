@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.park.AutoRollBackTest;
+import com.park.ssm.entity.Account;
 import com.park.ssm.entity.User;
 import com.park.ssm.util.Encryption;
 
@@ -14,7 +15,10 @@ public class TestUserService extends AutoRollBackTest{
 	@Autowired
 	private UserService userService;
 	
-	@Test
+	@Autowired
+	private AccountService accountService;
+	
+//	@Test
 	public void testFindUser() {
 		Encryption en=new Encryption();
 		String salt=userService.findSaltByUserId(Long.valueOf(12345678919L));
@@ -23,16 +27,26 @@ public class TestUserService extends AutoRollBackTest{
 		Assert.assertEquals(Long.valueOf(12345678919L), user.getUserId());
 	}
 	
-	@Test
+//	@Test
 	public void testFindUserById() {
 		User user=userService.findUserById(Long.valueOf(12345678919L));
 		Assert.assertEquals(Long.valueOf(12345678919L), user.getUserId());
 	}
 	
-	@Test
+//	@Test
 	public void testFindSaltByUserId() {
 		String salt=userService.findSaltByUserId(Long.valueOf(12345678919L));
 		System.out.println("-----------");
 		Assert.assertEquals(null, salt);
+	}
+	
+	@Test
+	public void testChangeCard() {
+		Account account =new Account();
+		account.setCardId(1882222l);
+		account.setId(19l);
+//		account=accountService.getCardMessage(123);
+//		System.out.println(account.getCardId());
+		int status = accountService.modifyAccount(account);// 更换新的停车卡
 	}
 }
