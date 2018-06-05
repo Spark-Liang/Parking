@@ -47,31 +47,30 @@ public class UserController {
 	@Autowired
 	private BillService billService;
 
-		/**
-	* 操作员 根据客户ID获取客户的停车卡信息（拥有卡号的账户） userId 客户ID message 返回的结果信息
-	*/
+	/**
+	 * 操作员 根据客户ID获取客户的停车卡信息（拥有卡号的账户） userId 客户ID message 返回的结果信息
+	 */
 	@RequestMapping(value = "getAllAccount", method = { RequestMethod.POST })
 	@ResponseBody
-	public String getAllAccount(@RequestParam("userId") long userId,@RequestParam("isGetAll")String isGetAll) {
-	Map result = new HashMap();
-	String message = "";
-	try {
-		User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
-		Boolean bIsGetAll=Boolean.parseBoolean(isGetAll);
-		if (user != null) {
-			List<Account> list = accountService.findAccountrById(userId,bIsGetAll);
-			result.put("list", list);
-		} else {
-			message = "不存在此用户";
+	public String getAllAccount(@RequestParam("userId") long userId, @RequestParam("isGetAll") String isGetAll) {
+		Map result = new HashMap();
+		String message = "";
+		try {
+			User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
+			Boolean bIsGetAll = Boolean.parseBoolean(isGetAll);
+			if (user != null) {
+				List<Account> list = accountService.findAccountrById(userId, bIsGetAll);
+				result.put("list", list);
+			} else {
+				message = "不存在此用户";
+			}
+			result.put("message", message);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("message", " 服务器出现错误");
 		}
-		result.put("message", message);
-	} catch (Exception e) {
-		e.printStackTrace();
-		result.put("message", " 服务器出现错误");
+		return JSON.toJSONString(result);
 	}
-	return JSON.toJSONString(result);
-	}
-
 
 	/**
 	 * 操作员 根据客户ID获取客户的特定停车场的停车卡信息（即帐号信息 ） userId 客户ID message 返回的结果信息
@@ -113,11 +112,11 @@ public class UserController {
 		try {
 			String times = new SimpleDateFormat("MMdd").format(new Date());
 			// String times = "0401";
-			//String exetime = "";
-			String a[] = { "0101", "0401", "0701", "1001"};
-			//for (int i = 0; i < 3; i++) {
-			for(String exetime:a) {
-				//exetime = a[i];
+			// String exetime = "";
+			String a[] = { "0101", "0401", "0701", "1001" };
+			// for (int i = 0; i < 3; i++) {
+			for (String exetime : a) {
+				// exetime = a[i];
 				if (times.equals(exetime)) {// 判断是否为出帐单的日子，出账单日无法办卡
 					message = "系统正在生成账单，无法办理开卡业务！";
 					falg = 2;
@@ -141,7 +140,7 @@ public class UserController {
 							} else {
 								falg = 1;
 								// long accountId=account.getId();
-								int PositionNum = accountService.getPositionNumByUser(LotId,userId);
+								int PositionNum = accountService.getPositionNumByUser(LotId, userId);
 								message = "当前用户已在该停车场订了" + PositionNum + "个停车位，确认要继续开卡吗?";
 							}
 						}
@@ -168,7 +167,7 @@ public class UserController {
 	@Permission(value = { Permission.Type.ADMIN, Permission.Type.OPERATOR })
 	public Map addCard(@RequestParam("LotId") Integer lotId, @RequestParam("userId") Long userId,
 			@RequestParam("cardId") Long cardId) {
-		Map<String,Object> result = new HashMap();
+		Map<String, Object> result = new HashMap();
 		Account account = new Account();
 		String message = "";
 		account.setUserId(userId);
@@ -176,7 +175,7 @@ public class UserController {
 		account.setCardId(cardId);
 		if (lotId != 0 && userId != 0 && cardId != 0) {
 			account.setState(AccountState.getValueByInd(0));
-			Long accountId=null;
+			Long accountId = null;
 			try {
 				accountId = accountService.addNewCard(cardId, userId, lotId);
 				message = "开卡成功";
@@ -184,9 +183,9 @@ public class UserController {
 				result.put("accountId", accountId);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				message=e.getMessage();
+				message = e.getMessage();
 			}
-			
+
 		} else {
 			message = "输入数据有误，请重新输入！";
 		}
@@ -290,9 +289,10 @@ public class UserController {
 		session.invalidate();
 		return "userLogin";
 	}
-	
+
 	/**
 	 * User check the bill info（已出账的账单）
+	 * 
 	 * @param userId
 	 * @return
 	 */
@@ -313,27 +313,41 @@ public class UserController {
 		String strBillInfo = new JSONObject(map).toString();
 		return strBillInfo;
 	}
-	
+
 	/**
 	 * User 新增用户
+	 * 
 	 * @param userId
 	 * @param password
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="addNewUser",method=RequestMethod.POST)
+	@RequestMapping(value = "addNewUser", method = RequestMethod.POST)
 	@Permission(value = { Permission.Type.ADMIN, Permission.Type.OPERATOR })
-	public Map insertUser(@RequestParam("userId")Long userId,@RequestParam("password") String password){
-		Map<String,Object> map=new HashMap<>();
-		if (userId!=null && null!=password && ""!=password) {
-			Encryption en=new Encryption();
-			String salt=en.createSalt();
+	public Map insertUser(@RequestParam("userId") Long userId, @RequestParam("password") String password) {
+		Map<String, Object> map = new HashMap<>();
+		if (userId != null && null != password && "" != password) {
+			Encryption en = new Encryption();
+			String salt = en.createSalt();
 			String passwordAndSalt = en.SHA512(password.trim() + salt);
-			boolean status=false;
-			status=userService.insertUser(userId, passwordAndSalt,salt);
-			status=true;
+			boolean status = false;
+			status = userService.insertUser(userId, passwordAndSalt, salt);
+			status = true;
 			map.put("status", status);
 		}
 		return map;
+	}
+
+	/**
+	 * 登陆成功后跳转
+	 * 
+	 * @return
+	 * 
+	 * 
+	 */
+	@RequestMapping(value = "userbillpage")
+	@Permission(value = {}, haveControl = false)
+	public String userBillPage() {
+		return "bill";
 	}
 }
