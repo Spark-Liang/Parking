@@ -181,7 +181,7 @@
 					<form class="form-inline">
 						<div class="form-group">
 							<label for="exampleInputName2">手机号</label>
-							<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="手机号">
+							<input type="text" class="form-control input-sm input-userId" id="exampleInputName2" placeholder="手机号">
 						</div>
 						<button type="button" class="btn btn-primary btn-sm search-card">搜索</button>		
 					</form>
@@ -476,7 +476,9 @@
 		//点击更换停车卡按钮触发的事件 a是元素自身
  		function updateCard(a){
 			$('.edit-money').remove();
-			id = $(a).data('value');
+			
+			var id = $(a).parent().parent().find('td:eq(0)').text();
+			console.log(id);
 			content ="请输入新的卡号"
 			$(a).parent().parent().find('td:eq(1)').append(function (){
 				return NumEdit(id,content);
@@ -485,6 +487,7 @@
 		function moneyok(a){
 			var OldCardId = $(a).data('value');
 		    var NewCardId = $(a).parent().parent().find('input').val();
+		    var userId = $('.input-userId').val();
 		    var object = /^\d{7}$/g;
 		  // $(a).parent().parent().parent().find('span:eq(0)').text(aa);
 		    var object = /^\d{7}$/;
@@ -496,14 +499,15 @@
 		                dataType:'json',
 		                data:{
 		                	'OldCardId':OldCardId,
-		                	'NewCardId':NewCardId
+		                	'NewCardId':NewCardId,
+		                	'userId':userId
 		                },success:function(json){
 		                	console.log(json)
 		                    if(json.flag==1){
 		                    	alert('修改成功');
 		                         $(a).parent().parent().parent().parent().find('td:eq(0)').text(NewCardId);
 		                         $(a).parent().parent().fadeOut();
-		                    }else if(json.flag==2){
+		                    }else if(json.flag==0){
 		                    	alert(json.message);
 		                    }
 		                    else if(json.error){
@@ -521,7 +525,6 @@
 		
 		//点击支付帐单的触发事件 
 		function paymoney(a){
-			
 			$('.pay-money').fadeIn();
 		}
 		//关闭支付帐单的弹框
