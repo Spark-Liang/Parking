@@ -6,9 +6,22 @@ import com.park.ssm.entity.Bill;
 
 /**
  * bill服务层
+ * 
  * @author ASNPHX4
  *
  */
 public interface BillService {
-public List<Bill> listBillByCardId(Long userId);
+	/**
+	 * 
+	 * @param cardId
+	 * @return
+	 */
+	public List<Bill> listBillByCardId(Long cardId);
+	
+	/**
+	 * 增加Bill
+	 * @param bill
+	 * @return
+	 */
+	public int insertBill(Bill bill);
 }

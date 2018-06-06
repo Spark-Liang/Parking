@@ -25,5 +25,17 @@ public class BillServiceImpl implements BillService {
 		System.out.println("-----------------------"+billDao.listBillByCardId(userId));
 		return billDao.listBillByCardId(userId);
 	}
+	
+	@Override
+	public int insertBill(Bill bill) {
+		// TODO Auto-generated method stub
+		int result=0;
+		try {
+			result=billDao.addBill(bill);
+		}catch(Exception e) {
+			result=0;
+		}
+		return result;
+	}
 
 }

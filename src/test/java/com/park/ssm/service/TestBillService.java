@@ -28,5 +28,5 @@ public class TestBillService extends AutoRollBackTest {
 		list = billService.listBillByCardId(Long.valueOf(5689784l));
 		Assert.assertEquals(3, list.get(0).getLastPayDate());
 	}
-
+	
 }
