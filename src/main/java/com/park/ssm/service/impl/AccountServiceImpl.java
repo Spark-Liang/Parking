@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
 		List<Account> list=null;
 		List<Account> listDB=accountdao.findAccountrById(userId, null, null, null, null, null);
 		System.out.println("---------------------------listDB="+listDB);
-		if(!isFindAll) {
+		if(isFindAll==true) {
 			list=new ArrayList<Account>(listDB.size());
 			try {
 				for(Account account:listDB) {

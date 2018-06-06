@@ -365,7 +365,11 @@ public class UserController {
 	public String userBillPage() {
 		return "bill";
 	}
-	
+	/**
+	 * 插入Bill
+	 * @param bill
+	 * @return
+	 */
 	@RequestMapping(value="insertBill",method=RequestMethod.POST)
 	@ResponseBody
 	public String insertBill(Bill bill) {
@@ -384,6 +388,11 @@ public class UserController {
 		}
 		String strInsertBill=new JSONObject(map).toString();
 		return strInsertBill;
-		
+	}
+	
+	
+	@RequestMapping("inputbillpage")
+	public String page() {
+		return "InputBill";
 	}
 }
