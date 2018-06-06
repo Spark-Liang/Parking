@@ -199,6 +199,7 @@ public class UserController {
 	 * NewCardId  新卡卡号，
 	 * userId     用户账号
 	 * message    返回的结果信息
+	 * flag       返回的判断标识{0：失败，1，成功}
 	 */
 	@RequestMapping(value = "changeCard", method = { RequestMethod.POST })
 	@ResponseBody
@@ -206,6 +207,7 @@ public class UserController {
 		Map result = new HashMap();
 		String message = "";
 		int status = 0;
+		int flag=0;
 		try {
 			Account account = accountService.getCardMessage(OldCardId);
 			if (account != null){
@@ -226,6 +228,7 @@ public class UserController {
 							account.setCardId(NewCardId);
 							status = accountService.modifyAccount(account);// 更换新的停车卡
 							if (status > 0) {
+								flag=1;
 								message = "更换成功！";
 							} else {
 								message = " 系统出错，请联系技术部门！";
@@ -237,9 +240,11 @@ public class UserController {
 				message = "该停车卡不存在，请重新输入！";
 			}
 			result.put("message", message);
+			result.put("flag",flag);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("message", " 系统出错，请联系技术部门！");
+			result.put("flag",flag);
 		}
 		return JSON.toJSONString(result);
 	}
