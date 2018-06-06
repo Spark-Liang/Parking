@@ -92,7 +92,7 @@
 		</where>
 		and isPaid=0
 	</select>
-	<select id="listBillByUserId" resultType="com.park.ssm.entity.Bill">
+	<select id="listBillByCardId" resultType="com.park.ssm.entity.Bill">
 		select 
 
 b.id,b.userId,b.billStartDate,b.billEndDate,b.lastPayDate,b.price,b.isPaid

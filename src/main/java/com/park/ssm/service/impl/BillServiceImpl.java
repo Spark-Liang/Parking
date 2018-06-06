@@ -20,10 +20,10 @@ public class BillServiceImpl implements BillService {
 	@Autowired
 	private BillDao billDao;
 	@Override
-	public List<Bill> findBillByUserId(Long userId) {
+	public List<Bill> listBillByCardId(Long userId) {
 		// TODO Auto-generated method stub
-		System.out.println("-----------------------"+billDao.listBillByUserId(userId));
-		return billDao.listBillByUserId(userId);
+		System.out.println("-----------------------"+billDao.listBillByCardId(userId));
+		return billDao.listBillByCardId(userId);
 	}
 
 }

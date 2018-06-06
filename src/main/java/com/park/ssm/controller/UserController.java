@@ -317,7 +317,7 @@ public class UserController {
 	public String checkBillInfo(@PathVariable("userId") Long userId) {
 		Map<String, Object> map = new HashMap<>();
 		List<Bill> list = new ArrayList<>();
-		list = billService.findBillByUserId(userId);
+		list = billService.listBillByCardId(userId);
 		String message = "您还没有账单";
 		if (!list.isEmpty()) {
 			map.put("msg", list);

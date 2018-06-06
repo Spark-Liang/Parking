@@ -10,5 +10,5 @@ import com.park.ssm.entity.Bill;
  *
  */
 public interface BillService {
-public List<Bill> findBillByUserId(Long userId);
+public List<Bill> listBillByCardId(Long userId);
 }

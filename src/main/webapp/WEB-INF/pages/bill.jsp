@@ -113,24 +113,24 @@
                     <tbody>
                     <tr>
                         <td>1</td>
-                        <td>2018.1.1-2018.3.31</td>
-                        <td>2018.4.5</td>
+                        <td>2017.1.1-2017.3.31</td>
+                        <td>2017.4.29</td>
                         <td>500</td>
                         <td>已付款</td>
                     </tr>
                     <tr>
                         <td>2</td>
-                        <td>2018.4.1-2018.6.30</td>
-                        <td>2018.7.5</td>
+                        <td>2017.4.1-2017.6.30</td>
+                        <td>2017.7.1</td>
                         <td>500</td>
                         <td>已付款</td>
                     </tr>
                     <tr>
                         <td>3</td>
-                        <td>2018.7.1-2018.9.30</td>
-                        <td>2018.10.5</td>
+                        <td>2017.7.1-2017.9.30</td>
+                        <td></td>
                         <td>500</td>
-                        <td>已付款</td>
+                        <td>未付款</td>
                     </tr>
                     </tbody>
                 </table> 
@@ -140,28 +140,15 @@
                 <table class="tableStyle">
                 <thead>
                     <tr>
-                        <th>帐单编号</th>
+                        
                         <th>日期</th>
                         <th>预计下季度付款金额(RMB)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>123</td>
-                        <td>2018.1.5-2018.3.31</td>
-                        <td>500</td>
-                    </tr>
-                    <tr>
-                        <td>1551</td>
-                        <td>2018.4.1-2018.6.30</td>
-                        <td>500</td>
-                        
-                    </tr>
-                    <tr>
-                        <td>1df3</td>
-                        <td>2018.1.5-2018.3.5</td>
-                        <td>500</td>
-                        
+                    <tr>                  
+                        <td>2018.5.20-2018.6.30</td>
+                        <td>250</td>
                     </tr>
                 </tbody>
             </table> 
@@ -184,7 +171,7 @@
             <div class="admin-block">
                 <br/>
                 <p>卡号:<span>1023401</span></p>
-                <p>开卡日期：<span>2018.1.11</span></p>
+                <p>开卡日期：<span>2017.1.11</span></p>
                 <p style = "color:red">有未付款账单</p>
                 <!--<p>卡状态：正常使用</p>-->
                 <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
@@ -193,7 +180,7 @@
             <div class="admin-block">
                 <br/>
                 <p>卡号:<span>1023402</span></p>
-                <p>开卡日期：<span>2018.2.21</span></p>
+                <p>开卡日期：<span>2017.2.21</span></p>
                 <!--<p>卡状态：正常使用</p>-->
                 <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
             </div>
@@ -201,7 +188,7 @@
             <div class="admin-block">
                 <br/>
                 <p>卡号:<span>1023403</span></p>
-                <p>开卡日期：<span>2018.3.10</span></p>
+                <p>开卡日期：<span>2017.3.10</span></p>
                 <!--<p>卡状态：正常使用</p>-->
                 <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
             </div>
@@ -219,7 +206,6 @@
                 <br/>
                 <p>卡号:<span>1023405</span></p>
                 <p>开卡日期：<span>2018.5.1</span></p>
-                <p style = "color:red">有未付款账单</p>
                 <!--<p>卡状态：正常使用</p>-->
                 <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
             </div>
@@ -228,7 +214,6 @@
                 <br/>
                 <p>卡号:<span>1023406</span></p>
                 <p>开卡日期：<span>2018.5.20</span></p>
-                <p style = "color:red">有未付款账单</p>
                 <!--<p>卡状态：正常使用</p>-->
                 <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
             </div>
