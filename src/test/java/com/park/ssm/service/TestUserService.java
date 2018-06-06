@@ -42,11 +42,10 @@ public class TestUserService extends AutoRollBackTest{
 	
 	@Test
 	public void testChangeCard() {
-		Account account =new Account();
+		Long OldCardId=254136l;
+		Account account = accountService.getCardMessage(OldCardId);
 		account.setCardId(1882222l);
-		account.setId(19l);
-//		account=accountService.getCardMessage(123);
-//		System.out.println(account.getCardId());
+		System.out.println(account.getState().getInd());
 		int status = accountService.modifyAccount(account);// 更换新的停车卡
 	}
 }

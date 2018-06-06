@@ -129,4 +129,3 @@ create table Bill
 )engine=innodb auto_increment=1 charset='utf8';
 
 
-

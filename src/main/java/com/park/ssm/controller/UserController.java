@@ -220,7 +220,7 @@ public class UserController {
 					else {
 						AccountState state=account.getState();
 						if(state.getInd()==-1){
-							message = "无法更换，该账户已被冻结（被停卡）！";
+							message = "无法更换，该账户已被停卡！";
 						}
 						else {
 							account.setCardId(NewCardId);
