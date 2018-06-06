@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
+import com.park.ssm.entity.Account;
 import com.park.ssm.entity.Bill;
 
 /**
@@ -76,4 +77,6 @@ public interface BillDao {
 	 * @return
 	 */
 	public int addBill(Bill bill);
+	
+	public int changeCurrentBillId(Account account);
 }

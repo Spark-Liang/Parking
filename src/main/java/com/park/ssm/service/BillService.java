@@ -2,6 +2,7 @@ package com.park.ssm.service;
 
 import java.util.List;
 
+import com.park.ssm.entity.Account;
 import com.park.ssm.entity.Bill;
 
 /**
@@ -24,4 +25,6 @@ public interface BillService {
 	 * @return
 	 */
 	public int insertBill(Bill bill);
+	
+	public int updateCurrentBill(Account account);
 }
