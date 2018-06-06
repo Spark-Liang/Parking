@@ -2,24 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--客户映射 指定到dao接口 -->
 <mapper namespace="com.park.ssm.dao.BillDao">
-<!--  
-	<resultMap type="bill" id="billResultMap">
-		<id property="id" column="userId"></id>
-		<result property="billStartDate" column="billStartDate"></result>
-		<result property="billEndDate" column="billStartDate"></result>
-		<result property="price" column="price"></result>
-		<result property="isPaid" column="isPaid"></result>
-		<association property="user" javaType="User">
-			<id property="id" column="userId"/>
-		</association>
-		<association property="parkingLot" javaType="ParkingLot">
-			<id property="id" column="parkingLotId"/>
-		</association>
-		<association property="account" javaType="Account">
-			<id property="id" column="accountId"/>
-		</association>
-	</resultMap>
--->
+	<!-- <resultMap type="bill" id="billResultMap"> <id property="id" column="userId"></id> 
+		<result property="billStartDate" column="billStartDate"></result> <result 
+		property="billEndDate" column="billStartDate"></result> <result property="price" 
+		column="price"></result> <result property="isPaid" column="isPaid"></result> 
+		<association property="user" javaType="User"> <id property="id" column="userId"/> 
+		</association> <association property="parkingLot" javaType="ParkingLot"> 
+		<id property="id" column="parkingLotId"/> </association> <association property="account" 
+		javaType="Account"> <id property="id" column="accountId"/> </association> 
+		</resultMap> -->
 	<sql id="sqlField">
 		id,userId,parkingLotId,accountId,price,billStartDate,billEndDate,isPaid
 	</sql>
@@ -92,14 +83,23 @@
 		</where>
 		and isPaid=0
 	</select>
-	<select id="listBillByUserId" resultType="com.park.ssm.entity.Bill">
-		select 
+	<select id="listBillByCardId" resultType="com.park.ssm.entity.Bill">
+		select
 
-b.id,b.userId,b.billStartDate,b.billEndDate,b.lastPayDate,b.price,b.isPaid
+		b.id,b.userId,b.billStartDate,b.billEndDate,b.lastPayDate,b.price,b.isPaid
 		from Account a,Bill b
 		<where> b.userId=a.userId
 			and a.cardId=#{cardId}
 		</where>
 	</select>
-
+	
+	<insert id="addBill" parameterType="com.park.ssm.entity.Bill">
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+			<!-- SELECT LAST_INSERT_ID()：获取刚insert到数据表中的记录的键值，只适用于自增键字段 -->
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into
+		Bill(userId,parkingLotId,accountId,price,billStartDate,billEndDate,isPaid)
+		values(#{userId},#{parkingLotId},#{accountId},#{price},#{billStartDate},#{billEndDate},#{isPaid})
+	</insert>
 </mapper>

@@ -317,7 +317,7 @@ public class UserController {
 	public String checkBillInfo(@PathVariable("userId") Long userId) {
 		Map<String, Object> map = new HashMap<>();
 		List<Bill> list = new ArrayList<>();
-		list = billService.findBillByUserId(userId);
+		list = billService.listBillByCardId(userId);
 		String message = "您还没有账单";
 		if (!list.isEmpty()) {
 			map.put("msg", list);
@@ -364,5 +364,26 @@ public class UserController {
 	@Permission(value = {}, haveControl = false)
 	public String userBillPage() {
 		return "bill";
+	}
+	
+	@RequestMapping(value="insertBill",method=RequestMethod.POST)
+	@ResponseBody
+	public String insertBill(Bill bill) {
+		Map<String,Object> map=new HashMap<>();
+		int result=0;
+		try {
+			result=billService.insertBill(bill);
+			if(result>0) {
+				map.put("msg", 1);
+				map.put("bill", bill);
+			}else {
+				map.put("msg", 0);
+			}
+		}catch(Exception e) {
+			map.put("msg", "error");
+		}
+		String strInsertBill=new JSONObject(map).toString();
+		return strInsertBill;
+		
 	}
 }
