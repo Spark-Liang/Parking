@@ -17,11 +17,14 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/AllUseTools.js"></script>
 <script src="js/aopDefind.js"></script>
-    <script src="js/laydate.js"></script> 
+<script src="js/laydate.js"></script> 
 
 </head>
 
 <style type="text/css">
+body{padding: 20px;}
+  .demo-input{padding-left: 10px; height: 38px; min-width: 262px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+
 
 </style>
 <script type="text/javascript">
@@ -39,10 +42,10 @@
 	<br/>
 	<br/>
 	开始日期
-	<input type="text"  class="demo-input date1" placeholder="格子主题" id="test31">
+	<input type="text"  class="demo-input" placeholder="格子主题" id="test31">
 	<br/><br/>
 	结束日期
-	<input type="text"  class="demo-input date2" placeholder="格子主题" id="test31">
+	<input type="text"  class="demo-input date2" placeholder="格子主题" id="test30">
 		<br/><br/>
 	<button class="btn btn-primary btn-sm">提交</button>
 	
@@ -77,11 +80,14 @@
 		});
 		
 		//年月选择器
-	    //格子主题
+		lay('#version').html('-v'+ laydate.v);
+
+	//格子主题
     laydate.render({
       elem: '#test31'
       ,theme: 'grid'
     });
+
 
 	</script>
 </body>
