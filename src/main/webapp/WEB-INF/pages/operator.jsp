@@ -38,7 +38,6 @@
 	margin-bottom: 20px;
 }
 .operator-module1-1 select{
-	min-width: 220px;
 }
 .search-inf{
 	margin-top:30px;
@@ -139,11 +138,11 @@
 				<div class="col-md-3">
 				    <div class="form-group">
 						<label for="exampleInputName2">手机号码</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
+						<input type="text" onblur="checkBill(this)" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
+						<input type="text" onblur="checkCar(this)" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputEmail2">停车场</label>
@@ -152,6 +151,26 @@
 						</select>
 					</div>
 					<button type="submit" class="btn btn-primary btn-sm deletecard">停卡</button>
+				</div>
+				<div class="col-md-7 col-md-offset-1">
+					<h4><strong>支付账单信息</strong></h4>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th class="col-md-3">手机号</th>
+								<th class="col-me-6">账单时间</th>
+								<th>账单金额</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>fds</td>
+								<td>fds</td>
+								<td>fds</td>
+							</tr>
+						</tbody>
+					</table>
+					<button class="btn btn-primary btn-sm pull-right">支付账单</button>
 				</div>
 			</div>
 		</div>
@@ -195,6 +214,11 @@
 			$(this).hide();
 		});
 	}) */
+	
+	//停卡的时候输入手机号的输入框失去焦点的时候检查是否有账单没有支付
+	function checkBill(a){
+		
+	}
 		//两个模块之间的跳转
 		function skip(num,a) {
 			$('.breadcrumb a').css({'font-weight':'500'})
@@ -407,7 +431,7 @@
 					type:'POST',
 					data:{
 						'userId':iphone,
-						'isGetAll':'ture'
+						'isGetAll':'false'
 					},success:function(json){
 						console.log(json);
 						if(json.message==''){
@@ -479,7 +503,10 @@
 		                    	alert('修改成功');
 		                         $(a).parent().parent().parent().parent().find('td:eq(0)').text(NewCardId);
 		                         $(a).parent().parent().fadeOut();
-		                    }else if(json.error){
+		                    }else if(json.flag==2){
+		                    	alert(json.message);
+		                    }
+		                    else if(json.error){
 		                    	alert('修改失败');
 		                    }
 		                },error:function(){
@@ -493,7 +520,8 @@
 		}
 		
 		//点击支付帐单的触发事件 
-		function paymoney(){
+		function paymoney(a){
+			
 			$('.pay-money').fadeIn();
 		}
 		//关闭支付帐单的弹框
