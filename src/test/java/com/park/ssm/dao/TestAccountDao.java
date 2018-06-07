@@ -150,7 +150,7 @@ public class TestAccountDao extends AutoRollBackTest {
 	
 	@Test
 	public void testStopCard() {
-		long cardId=1234511l;
+		long cardId=123l;
 		AccountState state=AccountState.getValueByInd(-2);
 		int status=dao.updateCardStatus(cardId,state);
 		System.out.println("状态为： "+status);

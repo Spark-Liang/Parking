@@ -277,4 +277,17 @@ begin
 	;
 end 
 $
+
+--drop procedure if exists autoStopCard$
+--create procedure autoStopCard()
+--begin 
+--	start transaction;
+--	 update Account 
+--	    set state=-2
+--	 where id=(
+--	 select accountId from Bill where isPaid=-1 for update 
+--	 );
+--	 commit;
+--end 
+--$
 DELIMITER ;
