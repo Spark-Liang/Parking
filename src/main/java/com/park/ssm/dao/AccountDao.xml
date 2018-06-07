@@ -93,13 +93,6 @@
 	</select>
 
 	<!-- 添加新卡，通过数据库调用存储过程实现 -->
-	<parameterMap type="Map" id="addNewCardMap">
-		<parameter property="parkingLotId" mode="IN" />
-		<parameter property="userId" mode="IN" />
-		<parameter property="cardId" mode="IN" />
-		<parameter property="accountId" mode="OUT" javaType="Long"/>
-		<parameter property="flag" mode="OUT" javaType="Integer"/>
-	</parameterMap>
 	<select id="addNewCard"  statementType="CALLABLE" useCache="false">
 		call addNewCard(
 			#{cardId}
@@ -141,28 +134,25 @@
 	for update
 </select>
 
-<select id="getAccountNum" resultType="Integer">
+<select id="getAccountNum" resultType="Integer" >
 	select 
 		count(id)
 	from Account
 	where userId=#{_paramter}
 </select>
 
-<parameterMap type="Map" id="parkpickParamMap">
-	<parameter property="accountId" mode="IN" jdbcType="BIGINT"/>
-	<parameter property="flag" mode="OUT" jdbcType="INTEGER"/>
-</parameterMap>
-<select id="parkCar" statementType="CALLABLE"  parameterMap="parkpickParamMap">
+
+<select id="parkCar" statementType="CALLABLE" useCache="false" >
 	call parkCar(
 		#{accountId}
-		,#{flag}	
+		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}	
 	)
 </select>
 
-<select id="pickCar" statementType="CALLABLE" parameterMap="parkpickParamMap">
+<select id="pickCar" statementType="CALLABLE" useCache="false">
 	call pickCar(
 		#{accountId}
-		,#{flag}	
+		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}	
 	)
 </select>
 

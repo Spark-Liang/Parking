@@ -21,17 +21,21 @@ import com.park.ssm.exception.LoginException;
 public class GlobalExceptionHandler {
 	private Logger logger=LogManager.getLogger(this.getClass());
 	
-	@SuppressWarnings({ "rawtypes", "unchecked", "serial" })
+	@SuppressWarnings({ "rawtypes"})
 	@RequestMapping(value="",produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 	public @ResponseBody Map handleExceptionToJSON(HttpServletRequest request) {
 		Exception e=(Exception) request.getAttribute("error");
 		logger.info("method:handleExceptionToJSON");
-		logger.info(e);
-		return new HashMap() {
-			{
-				put("error", e.getMessage());
-			}
-		};
+		String message=null;
+		if(e != null) {
+			logger.info(e);
+			message=e.getMessage();
+		}else {
+			message="系统内部运行错误，请重试";
+		}
+		Map<String, Object> result=new HashMap<>();
+		result.put("error", message);
+		return result;
 	}
 	
 	
@@ -41,7 +45,14 @@ public class GlobalExceptionHandler {
 		Exception e=(Exception) request.getAttribute("error");
 		logger.info("method:handleException");
 		logger.info(e);
-		modelMap.addAttribute("error", "message:"+e.getMessage());
+		String message=null;
+		if(e != null) {
+			logger.info(e);
+			message=e.getMessage();
+		}else {
+			message="系统内部运行错误，请重试";
+		}
+		modelMap.addAttribute("error", "message:"+message);
 		return "errorInfoPage";
 	}
 	
