@@ -264,6 +264,7 @@
          type:'GET',
          dataType:'json',
          data:{
+        	 
          },success:function(json){
         	 console.log(json.res)
              var l = json.res.length;
