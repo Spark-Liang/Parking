@@ -218,9 +218,10 @@
     function editmoney(a){
         $('.edit-money').remove();
         var id = $(a).data('value');
-        var content = '请输入修改价格';
+        var content = '2到5位正整数';
         $(a).parent().parent().append(function(){
-            return NumEdit(id);
+        	//id是停车场的id content是输入框中的提示信息
+            return NumEdit(id,content);
         })
     }
     function moneyok(a){
@@ -250,7 +251,7 @@
                     }
                })
             }else{
-            	
+            	alert("价格只能为2到5位的正整数");
             }  
     }
     // 页面加载用户信息
