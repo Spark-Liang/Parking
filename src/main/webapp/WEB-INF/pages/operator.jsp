@@ -137,18 +137,14 @@
 				<h3>用户停卡</h3>
 				<div class="col-md-3">
 				    <div class="form-group">
-						<label for="exampleInputName2">手机号码</label><span>fsd</span>
+						<label for="exampleInputName2">手机号码</label>
 						<input type="text"  class="form-control inut-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
+						<span class="text-warning">此账户存在没支付账单！</span>
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
 						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
-					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail2">停车场</label>
-						<select class="form-control parkaddress input-sm">
-							<option value=""></option>
-						</select>
+						<span class="text-warning">此账户存在没支付账单！</span>
 					</div>
 					<button type="submit" class="btn btn-primary btn-sm deletecard">停卡</button>
 				</div>
@@ -366,9 +362,10 @@
 			var inf = new Array();
 			inf[0] = $(this).parent().find('input:eq(0)').val();
 			inf[1] = $(this).parent().find('input:eq(1)').val();
-			inf[2] = $(this).parent().find('select').val();
+			inf[2] = 1;
 			var check = checkinf(this,inf);
-			checkBill(inf[0]);
+			var a = checkBill(inf[0]); //a用与接收返回值 并用于判断能否进行停卡 checkBill 查未支付账单
+			var b = checkBill(inf[1]); //b用与接收返回值 并用于判断能否进行停卡 checkCard 查停车卡是否正在使用
 			if(check == 1){
 				/* $.ajax({
 					url:'',
@@ -402,13 +399,39 @@
 							alert(json.message);
 						}else{
 							if(json.list[0].currentBill != null){
-								alert('fds')
+								alert('存在没有支付的账单！');
+								return 0;
 							}
+							return 1;
 						}
 					},error:function(){
 						
 					}
 				})
+		}
+		function checkCard(a){
+			/* $.ajax({
+				url:'user/getAllAccount',
+				dataType:'json',
+				type:'POST',
+				data:{
+					'userId':a,
+					'isGetAll':'false'
+				},success:function(json){
+					console.log(json);
+					if(json.message!=" "){
+						alert(json.message);
+					}else{
+						if(json.list[0].currentBill != null){
+							alert('存在没有支付的账单！');
+							return 0;
+						}
+						return 1;
+					}
+				},error:function(){
+					
+				}
+			}) */
 		}
 		//检查输入格式是否正确  b是按钮元素 a是传过来的数组
 		function checkinf(b,a) {
