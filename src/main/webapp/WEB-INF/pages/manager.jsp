@@ -250,7 +250,12 @@
                     	'id':id,
                     	'currentPrice':aa
                     },success:function(json){
+                    	var flag = "出账日不能修改价格";
                     	console.log(json)
+                    	if(json.msg===flag){
+                    		alert(flag);
+                    		return;
+                    	}
                         if(json.msg==1){
                         	alert('修改成功')
                              $(a).parent().parent().parent().find('span:eq(0)').text(aa);
