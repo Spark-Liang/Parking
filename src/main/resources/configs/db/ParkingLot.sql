@@ -21,8 +21,6 @@ create table ParkingPosition
 	,state tinyint default 0 
 )engine=innodb auto_increment=1 charset='utf8';
 
---关联账户表
-alter table ParkingPosition add foreign key(accountId) references 账户表(id) 
 
 create table Account
 (
@@ -32,18 +30,30 @@ create table Account
 	,parkingPositionId bigint 
 	,cardId bigint unique key 
 	
-	
+	,price decimal(10,4)
 	,state tinyint default 0
-	,stateStartDate datetime not null
+	#,stateStartDate datetime not null
 	,isParking bit not null default 0
-	,currentParkingRecId bigint 
+	
 	,currentBillId bigint
+	,currentParkingRecId bigint  #此字段只用于实现统计停车次数功能
+	,currentStateLogId  #此字段只用于记录Account的State状态变化
 	
 	,index userId_idx(userId)
 	,index parkingLotId_idx(parkingLotId)
 )engine=innodb auto_increment=1 charset='utf8';
 
-alter table Account add price decimal(10,4);
+create table AccountStateLog
+(
+	id bigint primary key 
+	,accountId bigint not null
+	,state tinyint not null
+	,startTime datetime not null
+	,endTime datetime
+	,billId bigint
+	
+	,index billId_idx(billId)
+)engine=innodb auto_increment=1 charset='utf8';
 
 create table Bill
 (
@@ -53,15 +63,15 @@ create table Bill
 	,accountId bigint 
 	
 	,price decimal(10,4)
-	,billStartDate datetime
-	,billEndDate datetime
+	#,billStartDate datetime
+	#,billEndDate datetime
+	,lastPayDate date not null  #用户最后的支付的截止日期
 	,isPaid bit not null default 0
 
 	,index userId_idx(userId)
 	,index accountId_idx(accountId)
 )engine=innodb auto_increment=1 charset='utf8';
 
-alter table Bill add lastPayDate datetime;
 
 create table ParkingRecord
 (
@@ -72,4 +82,7 @@ create table ParkingRecord
 	,startTime datetime not null
 	,endTime datetime
 )engine=innodb auto_increment=1 charset='utf8';
+
+
+
 

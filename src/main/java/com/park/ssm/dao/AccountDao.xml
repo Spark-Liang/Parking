@@ -23,7 +23,15 @@
 
 	<!-- dao相关sql -->
 	<sql id="sqlField">
-		id,userId,parkingLotId,parkingPositionId,cardId,state,stateStartDate,isParking,currentBillId
+		id
+		,userId
+		,parkingLotId
+		,parkingPositionId
+		,cardId
+		
+		,state
+		,isParking
+		,currentBillId
 	</sql>
 
 

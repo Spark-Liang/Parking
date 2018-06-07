@@ -23,9 +23,9 @@ create table ParkingLot
 
 insert into ParkingLot(totalPositionNum,currentPrice,cost,name,location)
 values
- (4,1.33,100,'A','CC')
-,(3,233,100,'B','CC')
-,(3,3.33,100,'C','CC')
+ (4,10,100,'A','CC')
+,(3,20,100,'B','CC')
+,(3,30,100,'C','CC')
 ;
 
 
@@ -49,7 +49,6 @@ values
 
 drop table if exists Account;
 
-
 create table Account
 (
 	id bigint primary key auto_increment
@@ -58,34 +57,66 @@ create table Account
 	,parkingPositionId bigint 
 	,cardId bigint unique key 
 	
-	
+	,price decimal(10,4)
 	,state tinyint default 0
-	,stateStartDate datetime not null
+	#,stateStartDate datetime not null
 	,isParking bit not null default 0
-	,currentParkingRecId bigint 
+	
 	,currentBillId bigint
+	,currentParkingRecId bigint  #此字段只用于实现统计停车次数功能
+	,currentStateLogId bigint #此字段只用于记录Account的State状态变化
 	
 	,index userId_idx(userId)
 	,index parkingLotId_idx(parkingLotId)
 )engine=innodb auto_increment=1 charset='utf8';
 
-
-insert into Account(userId,parkingLotId,parkingPositionId,cardId,stateStartDate)
+insert into Account(userId,parkingLotId,parkingPositionId,cardId,price,currentStateLogId)
 values
- ('13745678910',1,1 ,'13745678910',buildDate(2018,2,22))
-,('13745678911',1,2 ,'13745678911',buildDate(2018,2,22))
-,('13745678912',1,3 ,'13745678912',buildDate(2018,2,22))
-,('13745678913',1,4 ,'13745678913',buildDate(2018,2,22))
-,('13745678914',2,5 ,'13745678914',buildDate(2018,2,22))
-,('13745678915',2,6 ,'13745678915',buildDate(2018,2,22))
-,('13745678916',2,7 ,'13745678916',buildDate(2018,2,22))
-,('13745678917',3,8 ,'13745678917',buildDate(2018,2,22))
-,('13745678918',3,9 ,'13745678918',buildDate(2018,2,22))
-,('13745678919',3,10,'13745678919',buildDate(2018,2,22))
-,('13745678920',3,11,'13745678920',buildDate(2018,2,22))
-,('13719326102',3,12,'13719326102',buildDate(2018,2,22))
-,('13775119722',3,13,'13775119722',buildDate(2018,2,22))
+ ('13745678910',1,1 ,'13745678910',10,1 )
+,('13745678911',1,2 ,'13745678911',10,2 )
+,('13745678912',1,3 ,'13745678912',10,3 )
+,('13745678913',1,4 ,'13745678913',10,4 )
+,('13745678914',2,5 ,'13745678914',20,5 )
+,('13745678915',2,6 ,'13745678915',20,6 )
+,('13745678916',2,7 ,'13745678916',20,7 )
+,('13745678917',3,8 ,'13745678917',30,8 )
+,('13745678918',3,9 ,'13745678918',30,9 )
+,('13745678919',3,10,'13745678919',30,10)
+,('13745678920',3,11,'13745678920',30,11)
+,('13719326102',3,12,'13719326102',30,12)
+,('13775119722',3,13,'13775119722',30,13)
 ;
+
+drop table if exists AccountStateLog;
+create table AccountStateLog
+(
+	id bigint primary key
+	,accountId bigint not null
+	,state tinyint not null
+	,startTime datetime not null
+	,endTime datetime
+	,billId bigint
+	
+	,index billId_idx(billId)
+)engine=innodb auto_increment=1 charset='utf8';
+
+insert into AccountStateLog (id,accountId,state,startTime) 
+values
+ (1 ,1 ,0,'2018-06-01')
+,(2 ,2 ,0,'2018-06-01')
+,(3 ,3 ,0,'2018-06-01')
+,(4 ,4 ,0,'2018-06-01')
+,(5 ,5 ,0,'2018-06-01')
+,(6 ,6 ,0,'2018-06-01')
+,(7 ,7 ,0,'2018-06-01')
+,(8 ,8 ,0,'2018-06-01')
+,(9 ,9 ,0,'2018-06-01')
+,(10,10,0,'2018-06-01')
+,(11,11,0,'2018-06-01')
+,(12,12,0,'2018-06-01')
+,(13,13,0,'2018-06-01')
+;
+
 
 
 drop table if exists User;
@@ -120,12 +151,25 @@ create table Bill
 	,accountId bigint 
 	
 	,price decimal(10,4)
-	,billStartDate datetime
-	,billEndDate datetime
-	,isPaid bit not null default 0 
+	#,billStartDate datetime
+	#,billEndDate datetime
+	,lastPayDate date not null  #用户最后的支付的截止日期
+	,isPaid bit not null default 0
 
 	,index userId_idx(userId)
 	,index accountId_idx(accountId)
+)engine=innodb auto_increment=1 charset='utf8';
+
+
+drop table if exists ParkingRecord;
+create table ParkingRecord
+(
+	id bigint primary key auto_increment
+	,lotId int not null
+	,positionId bigint not null
+	,accountId bigint not null
+	,startTime datetime not null
+	,endTime datetime
 )engine=innodb auto_increment=1 charset='utf8';
 
 

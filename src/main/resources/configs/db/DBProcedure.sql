@@ -6,7 +6,7 @@ create procedure generateBill(in billDate date)
 begin
 	start transaction;
 	set transaction isolation level SERIALIZABLE;
-	#对非stop的账户生成当前bill的开始时间和结束时间
+	# 对非stop的账户生成当前bill的开始时间和结束时间
 	insert into Bill(userId,parkingLotId,accountId,price,billStartDate,billEndDate)
 	select 
 		a.userid as userId
@@ -27,7 +27,7 @@ begin
 		on a.parkingLotId=b.id
 	;
 	
-	#更新Account表中,Bill表中最新的bill即是account新的currentBill
+	# 更新Account表中,Bill表中最新的bill即是account新的currentBill
 	update 
 		Account a 
 		inner join
@@ -57,21 +57,56 @@ end
 $
 
 drop procedure if exists updateAllAccountState$
-create procedure updateAllAccountState(in execDate date)
+create procedure updateAllAccountState(in execDate date,out flag int)
 begin
+	declare continue handler for sqlexception set flag=1;
 	start transaction;
 	set transaction isolation level SERIALIZABLE;
-	#更新所有Account的状态，未支付账单的状态设为s，其他不变
+	# 通过临时表记录所有需要更新的内容
+	/*create temporary table tmpUpdateInfo
+	(
+		billId bigint
+		,
+		,
+	)type= heap*/
+	
+	#找到所有lastPayDate在execDate之前的未支付的账单
+	#找到关联的Account并更新状态，并且从停车位中移除该账号，并且更新停车记录
 	update 
-		Account a 
+		(select id
+		from Bill
+		where isPaid = 0 and lastPayDate < execDate
+		)a 
 		inner join
-		Bill b
-		on a.currentBillId=b.id
+		Account b
+		on a.id=b.currentBillId
+		inner join
+		ParkingPosition c
+		on b.parkingPositionId=c.id
+		left join
+		ParkingRecord d
+		on b.currentParkingRecId=d.id
 	set 
-		a.parkingPositionId=null
-		,a.state=-1
-	 	,a.stateStartDate=execDate
-	where b.isPaid=0
+		b.parkingPositionId=null
+		,b.state=-1
+		,b.isParking=0
+		,c.accountId=null
+		,d.endTime=now()
+	;
+	#在AccountStateLog记录Account的变化
+	insert into AccountStateLog (accountId,state,startTime) 
+	select
+		a.id
+		,-1
+		,now()
+	from 
+		(select id
+		from Bill
+		where isPaid = 0 and lastPayDate < execDate
+		)a 
+		inner join
+		Account b
+		on a.id=b.currentBillId
 	;
 	#从停车位表中移除对应的Account
 	update 
@@ -93,6 +128,7 @@ create procedure addNewCard(in cardId bigint,in userId bigint,in lotId int,out a
 begin
 	declare positionId bigint;
     declare tmpAccountId bigint;
+    declare tmpAccountStateLogId bigint;
 	#定义检查变量
 	declare checkUser bit;
 	declare checkParkingPosition bit;
@@ -150,7 +186,8 @@ begin
 		for update
 		)b
 	;*/
-	insert into Account(id,userId,parkingLotId,parkingPositionId,cardId,stateStartDate)
+	#添加相应的账号
+	insert into Account(id,userId,parkingLotId,parkingPositionId,cardId,price)
 	select
 		@tmpAccountId:=(select id+1 from Account 
 				where id>=(select max(id) from Account)
@@ -161,7 +198,7 @@ begin
 		,lotId
 		,@positionId:=b.id parkingPositionId
 		,cardId
-		,curdate()
+		,currentPrice
 	from 
 		#检查对应parkingLot和User下没有没有不能使用的账号
 		(select userId,@checkUser:=0
@@ -175,7 +212,7 @@ begin
 			)=0 
 		)a
 		inner join
-		#检查停车场是否有空停车位
+		#检查停车场是否有空停车位,并锁定该行
 		(select id ,@checkParkingPosition:=0
 		from ParkingPosition
 		where parkingLotId=lotId
@@ -183,6 +220,10 @@ begin
 		limit 1
 		for update
 		)b
+		inner join
+		(select currentPrice
+		from ParkingLot where id=lotId
+		)c
 	;
     /*
     select @tmpAccountId accountId,@positionId positionId;
@@ -190,6 +231,28 @@ begin
     from Account 
     where id=@tmpAccountId;
     */
+	#在AccountStateLog添加新账号的StateLog
+	insert into AccountStateLog (id,accountId,state,startTime)
+	select
+		@tmpAccountStateLogId:=
+			case 
+				when 
+					(select @tmpAccountStateLogId:=id+1 from AccountStateLog
+					where id>=(select max(id) from AccountStateLog)
+					order by id desc
+					limit 1 for update
+					) is not null then @tmpAccountStateLogId
+				else 1
+			end id
+		,@tmpAccountId
+		,0
+		,now()
+	;
+	#更新Account表中的currentStateLogId字段
+	update Account
+	set currentStateLogId=@tmpAccountStateLogId
+	where id=@tmpAccountId
+	;
 	update ParkingPosition
 	set 
 		accountId=@tmpAccountId
