@@ -139,16 +139,14 @@
 				    <div class="form-group">
 						<label for="exampleInputName2">手机号码</label>
 						<input type="text"  class="form-control inut-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
-						<span class="text-warning">此账户存在没支付账单！</span>
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
 						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
-						<span class="text-warning">此账户存在没支付账单！</span>
 					</div>
 					<button type="submit" class="btn btn-primary btn-sm deletecard">停卡</button>
 				</div>
-				<div class="col-md-7 col-md-offset-1">
+				<div class="col-md-7 col-md-offset-1 payBill" style="display: none">
 					<h4><strong>支付账单信息</strong></h4>
 					<table class="table table-hover">
 						<thead>
@@ -158,12 +156,8 @@
 								<th>账单金额</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>fds</td>
-								<td>fds</td>
-								<td>fds</td>
-							</tr>
+						<tbody class="BillTable">
+							<!--  -->
 						</tbody>
 					</table>
 					<button class="btn btn-primary btn-sm pull-right">支付账单</button>
@@ -364,74 +358,101 @@
 			inf[1] = $(this).parent().find('input:eq(1)').val();
 			inf[2] = 1;
 			var check = checkinf(this,inf);
-			var a = checkBill(inf[0]); //a用与接收返回值 并用于判断能否进行停卡 checkBill 查未支付账单
-			var b = checkBill(inf[1]); //b用与接收返回值 并用于判断能否进行停卡 checkCard 查停车卡是否正在使用
-			if(check == 1){
-				/* $.ajax({
-					url:'',
+			if( check == 1){
+				 var a = checkBill(inf); //a用与接收返回值 并用于判断能否进行停卡 checkBill 查未支付账单
+				if(a==1){
+					
+				}else{
+					
+				}
+			/* 	$.ajax({
+					url:'user/stopCard',
 					dataType:'json',
-					type:'GET',
+					type:'POST',
 					data:{
-						
-					},success:function(){
-						
+						'cardId':inf[1]
+					},success:function(json){
+						console.log(json)
 					},error:function(){
 						
 					}
-				}) */
-			}
+				})
+ */			}
 			else{
 				
 			}
 		})
-		//停卡的时候输入手机号的输入框失去焦点的时候检查是否有账单没有支付
+		//停卡的时候点击停卡按钮先通过checkBill函数进行判断
+		//需要进行判断的有这个账户是否和停车卡匹配
+		//然后判断是否存在未支付的账单
 		function checkBill(a){
+			$('.payBill').hide();
+			$('.BillTable tr').remove();
 				$.ajax({
 					url:'user/getAllAccount',
 					dataType:'json',
 					type:'POST',
 					data:{
-						'userId':a,
+						'userId':a[0],
+						'cardId':a[1],
 						'isGetAll':'false'
 					},success:function(json){
 						console.log(json);
-						if(json.message!=" "){
+						if(json.list==null){
 							alert(json.message);
 						}else{
-							if(json.list[0].currentBill != null){
-								alert('存在没有支付的账单！');
+							if(json.list.length==0){
+								alert('卡号不存在');
 								return 0;
+							}else{
+								return checkBillData(json);
 							}
-							return 1;
+							
 						}
 					},error:function(){
-						
+						alert('提交出错')
 					}
 				})
 		}
-		function checkCard(a){
-			/* $.ajax({
-				url:'user/getAllAccount',
-				dataType:'json',
-				type:'POST',
-				data:{
-					'userId':a,
-					'isGetAll':'false'
-				},success:function(json){
-					console.log(json);
-					if(json.message!=" "){
-						alert(json.message);
-					}else{
-						if(json.list[0].currentBill != null){
-							alert('存在没有支付的账单！');
-							return 0;
-						}
-						return 1;
-					}
-				},error:function(){
-					
-				}
-			}) */
+		/*用于判断checkBill中的数据 
+		  json是传过来的json数据
+		  return 0是不允许提交 1是可以提交
+		     在没有支付账单的情况下 
+		    显示用户的账单信息
+		*/
+		function checkBillData(json){
+			
+			if(json.list[0].currentBill!=null&&json.list[0].parking==true){
+				alert('存在没有支付的账单以及停车卡正在使用');
+				payBills();
+				return 0;
+			}else if(json.list[0].currentBill!=null){
+				alert('存在没有支付的账单');
+				payBills();
+				return 0;
+			}else if(json.list[0].currentBill==null){
+				alert('需要先支付这个季度使用的费用');
+			}else if(json.list[0].parking==true){
+				alert('停车卡正在使用');
+				return 0;
+			}else{
+				return 1;
+			}
+			//用于显示用户的账单信息
+			function payBills(){
+				$('.payBill').show();
+				var sDate = new Date(json.list[0].currentBill.billStartDate);
+				var startDate = sDate.toLocaleString('chinese',{hour12:false});
+				var eDate = new Date(json.list[0].currentBill.billEndDate);
+				var endDate = eDate.toLocaleString('chinese',{hour12:false});
+				$('.BillTable').append(function(){
+					return "<tr>"
+					+"<td>"+json.list[0].userId+"</td>"
+					+"<td>"+startDate+"~"+endDate+"</td>"
+					+"<td>"+json.list[0].currentBill.price+"</td>"
+					+"</tr>"
+				})
+			}
 		}
 		//检查输入格式是否正确  b是按钮元素 a是传过来的数组
 		function checkinf(b,a) {

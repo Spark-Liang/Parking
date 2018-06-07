@@ -216,18 +216,31 @@
     
     //修改价格
     function editmoney(a){
+    	//判断是不是出单日
+    	var mydate = new Date();
+    	var mymonth = mydate.getMonth()+1;
+    	var myday = mydate.getDate();
+    	//console.log(typeof mymonth);
+    	if(mymonth === 1 || mymonth === 4 || mymonth === 7 || mymonth === 10){
+    		if(myday === 1){
+    			alert("今天为出账日，不能修改价格");
+    			return;
+    		}
+    	}
+    	
         $('.edit-money').remove();
         var id = $(a).data('value');
-        var content = '请输入修改价格';
+        var content = '2到5位正整数';
         $(a).parent().parent().append(function(){
-            return NumEdit(id);
+        	//id是停车场的id content是输入框中的提示信息
+            return NumEdit(id,content);
         })
     }
     function moneyok(a){
     	var id = $(a).data('value');
         var aa = $(a).parent().parent().find('input').val();
        /*  $(a).parent().parent().parent().find('span:eq(0)').text(aa); */
-        var object = /^\d{2,5}$/;
+        var object = /^[1-9]{1}\d{1,4}$/;
             if(object.test(aa)){
             	$.ajax({
                     url:'inneruser/changeParkingLotPrice',
@@ -237,20 +250,25 @@
                     	'id':id,
                     	'currentPrice':aa
                     },success:function(json){
+                    	var flag = "出账日不能修改价格";
                     	console.log(json)
+                    	if(json.msg===flag){
+                    		alert(flag);
+                    		return;
+                    	}
                         if(json.msg==1){
                         	alert('修改成功')
                              $(a).parent().parent().parent().find('span:eq(0)').text(aa);
                              $(a).parent().parent().fadeOut();
                         }else if(json.error){
-                        	alert('修改失败');
+                        	alert('程序内部错误，修改失败，请重试！');
                         }
                     },error:function(){
 
                     }
                })
             }else{
-            	
+            	alert("价格只能为2到5位的正整数，并且第一位不能为0");
             }  
     }
     // 页面加载用户信息

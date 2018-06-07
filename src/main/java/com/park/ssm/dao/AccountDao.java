@@ -114,4 +114,10 @@ public interface AccountDao {
 	 */
 	public void pickCar(Map<String, Object> map);
 	
+	/** 
+	 * @param cardId
+	 * 更新停车卡状态
+	 */
+	public abstract int updateCardStatus(@Param("cardId")long cardId,@Param("state")AccountState state);
+	
 }

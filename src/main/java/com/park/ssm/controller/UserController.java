@@ -117,11 +117,8 @@ public class UserController {
 		try {
 			String times = new SimpleDateFormat("MMdd").format(new Date());
 			// String times = "0401";
-			// String exetime = "";
 			String a[] = { "0101", "0401", "0701", "1001" };
-			// for (int i = 0; i < 3; i++) {
 			for (String exetime : a) {
-				// exetime = a[i];
 				if (times.equals(exetime)) {// 判断是否为出帐单的日子，出账单日无法办卡
 					message = "系统正在生成账单，无法办理开卡业务！";
 					falg = 2;
@@ -224,8 +221,8 @@ public class UserController {
 					} 
 					else {
 						AccountState state=account.getState();
-						if(state.getInd()==-1){
-							message = "无法更换，该账户已被停卡！";
+						if(state.getInd()==-1||state.getInd()==-2){
+							message = "无法更换，该停车卡已被停卡或已被终止！";
 						}
 						else {
 							account.setCardId(NewCardId);
@@ -252,6 +249,25 @@ public class UserController {
 		return JSON.toJSONString(result);
 	}
 
+	/**
+	 * 操作人员帮助用户停卡
+	 * cardId 停车卡卡号
+	 * 返回的结果信息 flag(0:失败，1:成功)
+	 * @return 
+	 */
+	@RequestMapping(value="stopCard",method= {RequestMethod.POST})
+	@ResponseBody
+	public Map stopCard(@RequestParam("cardId")long cardId) {
+		Map<String,Object> map=new HashMap<>();
+		int flag=0;
+		flag=accountService.stopCard(cardId);
+		map.put("flag", flag);
+		return map;
+	}
+	
+	
+	
+	
 	/**
 	 * User登陆控制器
 	 * 
