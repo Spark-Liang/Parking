@@ -216,6 +216,18 @@
     
     //修改价格
     function editmoney(a){
+    	//判断是不是出单日
+    	var mydate = new Date();
+    	var mymonth = mydate.getMonth();
+    	var myday = mydate.getDate();
+    	//console.log(typeof mymonth);
+    	if(mymonth === 0 || mymonth === 3 || mymonth === 6 || mymonth === 9){
+    		if(myday === 1){
+    			alert("今天为出单日，不能修改价格");
+    			return;
+    		}
+    	}
+    	
         $('.edit-money').remove();
         var id = $(a).data('value');
         var content = '2到5位正整数';
