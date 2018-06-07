@@ -31,7 +31,6 @@ public class Bill implements Serializable {
 	private Long userId;
 	private Long parkingLotId;
 	private Long accountId;
-	
 	public Date getLastPayDate() {
 		return lastPayDate;
 	}

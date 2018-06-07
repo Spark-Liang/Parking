@@ -53,7 +53,7 @@ public class InnerUserController {
 		Date date=new Date();
 		int month=date.getMonth()+1;
 		int day=date.getDate();
-		if(day==1&&(month==1&&month==4&&month==7&&month==10)) {
+		if(day==1&&(month==1||month==4||month==7||month==10)) {
 			return false;
 		}else {
 			return true;
@@ -297,13 +297,16 @@ public class InnerUserController {
 		InnerUser manager=(InnerUser)session.getAttribute("innerUser");
 		int typeflag=manager.getTypeflag();
 		Map<String,Object> map=new HashMap<>();
-		if(typeflag==1&&setPriceOrNot()) {
+		if(typeflag==1&&setPriceOrNot()==true) {
 			try {
 				parkingLotService.updateParkingLot(parkingLot);
 				map.put("msg", 1);
 			}catch(Exception e) {
-				map.put("msg", "error");
+				map.put("msg", "程序内部错误");
 			}
+		}
+		if(setPriceOrNot()==false) {
+			map.put("msg", "出账日不能修改价格");
 		}
 		String strChangeParkingLotPrice=new JSONObject(map).toString();
 		return strChangeParkingLotPrice;
