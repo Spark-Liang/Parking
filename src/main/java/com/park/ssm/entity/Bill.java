@@ -28,6 +28,10 @@ public class Bill implements Serializable {
 	private boolean isPaid;
 	private Date lastPayDate;
 	
+	private Long userId;
+	private Long parkingLotId;
+	private Long accountId;
+	
 	public Date getLastPayDate() {
 		return lastPayDate;
 	}
@@ -71,12 +75,70 @@ public class Bill implements Serializable {
 	public void setPaid(boolean isPaid) {
 		this.isPaid = isPaid;
 	}
-
+//----------------------------------------------------
+	
 	@Override
 	public String toString() {
 		return "Bill [id=" + id + ", user=" + user + ", parkingLot=" + parkingLot + ", account=" + account + ", price="
 				+ price + ", billStartDate=" + billStartDate + ", billEndDate=" + billEndDate + ", isPaid=" + isPaid
 				+ ", lastPayDate=" + lastPayDate + "]";
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setParkingLot(ParkingLot parkingLot) {
+		this.parkingLot = parkingLot;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public void setBillStartDate(Date billStartDate) {
+		this.billStartDate = billStartDate;
+	}
+
+	public void setBillEndDate(Date billEndDate) {
+		this.billEndDate = billEndDate;
+	}
+	
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+	
+	
+	public Long getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
+	}
+
+	public Long getParkingLotId() {
+		return parkingLotId;
+	}
+
+	public void setParkingLotId(Long parkingLotId) {
+		this.parkingLotId = parkingLotId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override

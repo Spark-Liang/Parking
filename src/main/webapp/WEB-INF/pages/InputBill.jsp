@@ -45,39 +45,41 @@ body{padding: 20px;}
 	<input type="text"  class="demo-input" placeholder="格子主题" id="test31">
 	<br/><br/>
 	结束日期
-	<input type="text"  class="demo-input date2" placeholder="格子主题" id="test30">
+	<input type="text"  class="demo-input" placeholder="格子主题" id="test30">
 		<br/><br/>
 	<button class="btn btn-primary btn-sm">提交</button>
 	
 </div>
 		
 	<script type="text/javascript">
-		var iphone = $('input:eq(0)').val();
-		var parkid = $('input:eq(1)').val();
-		var accountid = $('input:eq(2)').val();
-		var price = $('input:eq(3)').val();
-		var pay = $('input[name="pay"]:checked').val();
-		var startdate = $('.date1').val();
-		var enddata = $('.date2').val();
-		console.log(myDate);
-		$.ajax({
-			url:'user/insertBill',
-			type:'POST',
-			dataType:'json',
-			data:{
-				'userId':iphone,
-				'parkingLotId':parkid,
-				'accountId':accountid,
-				'price':price,
-				'isPaid':pay,
-				'billStartDate':date1,
-				'billEndDate':date2
-			},success:function(json){
-				console.log(json);
-			},error:function(json){
-				console.log(json);
-			}
-		});
+		$('button').click(function(){
+			var iphone = $('input:eq(0)').val();
+			var parkid = $('input:eq(1)').val();
+			var accountid = $('input:eq(2)').val();
+			var price = $('input:eq(3)').val();
+			var pay = $('input[name="pay"]:checked').val();
+			var startdate = $('.date1').val();
+			var enddata = $('.date2').val();
+			alert(iphone)
+			$.ajax({
+				url:'user/insertBill',
+				type:'POST',
+				dataType:'json',
+				data:{
+					'userId':iphone,
+					'parkingLotId':parkid,
+					'accountId':accountid,
+					'price':price,
+					'isPaid':pay,
+					'billStartDate':startdate,
+					'billEndDate':enddata,
+				},success:function(json){
+					console.log(json);
+				},error:function(json){
+					console.log(json);
+				}
+			});
+		})
 		
 		//年月选择器
 		lay('#version').html('-v'+ laydate.v);
