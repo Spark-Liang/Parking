@@ -171,9 +171,6 @@ public class UserController {
 		Map<String, Object> result = new HashMap();
 		Account account = new Account();
 		String message = "";
-		account.setUserId(userId);
-		account.setParkingLotId(lotId);
-		account.setCardId(cardId);
 		if (lotId != 0 && userId != 0 && cardId != 0) {
 			account.setState(AccountState.getValueByInd(0));
 			Long accountId = null;
