@@ -127,7 +127,7 @@
     
     <update id="updateCardStatus">
     update Account 
-    set state=${state.getInd()},cardId=#{cardId}
+    set state=${state.getInd()},cardId=Null
     where cardId=#{cardId}
     </update>
 
