@@ -218,12 +218,12 @@
     function editmoney(a){
     	//判断是不是出单日
     	var mydate = new Date();
-    	var mymonth = mydate.getMonth();
+    	var mymonth = mydate.getMonth()+1;
     	var myday = mydate.getDate();
     	//console.log(typeof mymonth);
-    	if(mymonth === 0 || mymonth === 3 || mymonth === 6 || mymonth === 9){
+    	if(mymonth === 1 || mymonth === 4 || mymonth === 7 || mymonth === 10){
     		if(myday === 1){
-    			alert("今天为出单日，不能修改价格");
+    			alert("今天为出账日，不能修改价格");
     			return;
     		}
     	}
