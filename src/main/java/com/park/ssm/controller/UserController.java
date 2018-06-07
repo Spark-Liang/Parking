@@ -250,6 +250,25 @@ public class UserController {
 	}
 
 	/**
+	 * 停卡
+	 * cardId 停车卡卡号
+	 * 返回的结果信息 flag(0:失败，1:成功)
+	 * @return 
+	 */
+	@RequestMapping(value="stopCard",method= {RequestMethod.POST})
+	@ResponseBody
+	public Map stopCard(@RequestParam("cardId")long cardId) {
+		Map<String,Object> map=new HashMap<>();
+		int flag=0;
+		flag=accountService.stopCard(cardId);
+		map.put("flag", flag);
+		return map;
+	}
+	
+	
+	
+	
+	/**
 	 * User登陆控制器
 	 * 
 	 * @param userId

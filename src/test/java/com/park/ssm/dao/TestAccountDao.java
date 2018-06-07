@@ -129,7 +129,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		long userId=13745678910l;
 		List<Account> list=dao.findAccountrById(userId,null,null,null,null,null);
 	}
-	@Test
+//	@Test
 	public void testgetCardMessage() {
 		long cardId=1l;
 		Account account=dao.getCardMessage(cardId);
@@ -146,6 +146,14 @@ public class TestAccountDao extends AutoRollBackTest {
 		String passwordAndSalt = en.SHA512(password.trim() + salt);
 		int a=userdao.insertUser(userId, passwordAndSalt, salt);
 		System.out.println(a);
+	}
+	
+	@Test
+	public void testStopCard() {
+		long cardId=1234511l;
+		AccountState state=AccountState.getValueByInd(-2);
+		int status=dao.updateCardStatus(cardId,state);
+		System.out.println("状态为： "+status);
 	}
 
 }

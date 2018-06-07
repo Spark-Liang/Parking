@@ -17,6 +17,7 @@ import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.User;
+import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.AccountService;
 import com.park.ssm.util.PersistentUtil;
 
@@ -160,5 +161,20 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	public int getPositionNumByUser(Integer lotId,long userId) {
 		return accountdao.countAccountrById(userId, lotId, null, null);
+	}
+	
+	@Override
+	@Transactional
+	public int stopCard(long cardId) {
+		StringBuilder errorMessage=new StringBuilder();
+		AccountState state=AccountState.getValueByInd(-2);
+		int status=accountdao.updateCardStatus(cardId,state);
+		if(status>0) {
+			return 1;
+		}
+		else {
+			errorMessage.append("无法停卡！系统出错，请联系技术部门！\n");	
+			throw new RuntimeException(errorMessage.toString());
+		}
 	}
 }

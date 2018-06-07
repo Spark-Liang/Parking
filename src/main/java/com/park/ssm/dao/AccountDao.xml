@@ -124,7 +124,12 @@
 		</foreach>
 		where id=#{id}
 	</update>
-
+    
+    <update id="updateCardStatus">
+    update Account 
+    set state=${state.getInd()}
+    where cardId=#{cardId}
+    </update>
 
 <select id="getCardMessage" resultMap="accountRoughResult">
 	select 

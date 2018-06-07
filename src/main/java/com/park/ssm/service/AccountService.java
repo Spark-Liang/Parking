@@ -75,5 +75,11 @@ public interface AccountService {
 	 * @return
 	 */
 	public int getPositionNumByUser(Integer lotId,long userId);
-	
+
+	/**
+	 * 停止停车卡（操作员） 
+	 * @param cardId
+	 * @return
+	 */
+	public int stopCard(long cardId);
 }
