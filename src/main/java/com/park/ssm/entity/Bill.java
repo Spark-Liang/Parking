@@ -2,6 +2,8 @@ package com.park.ssm.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -18,167 +20,81 @@ public class Bill implements Serializable {
 	
 	private Long id;
 	//信息相关
-	private User user;
-	private ParkingLot parkingLot;
-	private Account account;
-	//计费相关
-	private Double price;
-	private Date billStartDate;
-	private Date billEndDate;
-	private boolean isPaid;
-	private Date lastPayDate;
-	
 	private Long userId;
 	private Long parkingLotId;
 	private Long accountId;
-	public Date getLastPayDate() {
-		return lastPayDate;
-	}
-
-	public void setLastPayDate(Date lastPayDate) {
-		this.lastPayDate = lastPayDate;
-	}
-
+	//计费相关
+	private Double price;
+	private List<TimeQuantum> timeQuantums;
+	private boolean isPaid;
+	private Date lastPayDate;//用户最晚缴费日期
+	
 	public Long getId() {
 		return id;
 	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public ParkingLot getParkingLot() {
-		return parkingLot;
-	}
-
-	public Account getAccount() {
-		return account;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public Date getBillStartDate() {
-		return billStartDate;
-	}
-
-	public Date getBillEndDate() {
-		return billEndDate;
-	}
-
-	public boolean isPaid() {
-		return isPaid;
-	}
-
-	public void setPaid(boolean isPaid) {
-		this.isPaid = isPaid;
-	}
-//----------------------------------------------------
-	
-	@Override
-	public String toString() {
-		return "Bill [id=" + id + ", user=" + user + ", parkingLot=" + parkingLot + ", account=" + account + ", price="
-				+ price + ", billStartDate=" + billStartDate + ", billEndDate=" + billEndDate + ", isPaid=" + isPaid
-				+ ", lastPayDate=" + lastPayDate + "]";
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public void setParkingLot(ParkingLot parkingLot) {
-		this.parkingLot = parkingLot;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
-	public void setBillStartDate(Date billStartDate) {
-		this.billStartDate = billStartDate;
-	}
-
-	public void setBillEndDate(Date billEndDate) {
-		this.billEndDate = billEndDate;
-	}
-	
 	public Long getUserId() {
 		return userId;
 	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-	
-	
-	public Long getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
-	}
-
 	public Long getParkingLotId() {
 		return parkingLotId;
 	}
-
-	public void setParkingLotId(Long parkingLotId) {
-		this.parkingLotId = parkingLotId;
+	public Long getAccountId() {
+		return accountId;
 	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public Double getPrice() {
+		return price;
 	}
-
+	public List<TimeQuantum> getTimeQuantums() {
+		return timeQuantums;
+	}
+	public boolean isPaid() {
+		return isPaid;
+	}
+	public Date getLastPayDate() {
+		return lastPayDate;
+	}
+	
+	@Override
+	public String toString() {
+		return "Bill [id=" + id + ", userId=" + userId + ", parkingLotId=" + parkingLotId + ", accountId=" + accountId
+				+ ", price=" + price + ", timeQuantums=" + timeQuantums + ", isPaid=" + isPaid + ", lastPayDate="
+				+ lastPayDate + "]";
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((account == null) ? 0 : account.hashCode());
-		result = prime * result + ((billEndDate == null) ? 0 : billEndDate.hashCode());
-		result = prime * result + ((billStartDate == null) ? 0 : billStartDate.hashCode());
+		result = prime * result + ((accountId == null) ? 0 : accountId.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + (isPaid ? 1231 : 1237);
 		result = prime * result + ((lastPayDate == null) ? 0 : lastPayDate.hashCode());
-		result = prime * result + ((parkingLot == null) ? 0 : parkingLot.hashCode());
+		result = prime * result + ((parkingLotId == null) ? 0 : parkingLotId.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((timeQuantums == null) ? 0 : timeQuantums.hashCode());
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
-
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Bill))
 			return false;
 		Bill other = (Bill) obj;
-		if (account == null) {
-			if (other.account != null)
+		if (accountId == null) {
+			if (other.accountId != null)
 				return false;
-		} else if (!account.equals(other.account))
-			return false;
-		if (billEndDate == null) {
-			if (other.billEndDate != null)
-				return false;
-		} else if (!billEndDate.equals(other.billEndDate))
-			return false;
-		if (billStartDate == null) {
-			if (other.billStartDate != null)
-				return false;
-		} else if (!billStartDate.equals(other.billStartDate))
+		} else if (!accountId.equals(other.accountId))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -192,23 +108,29 @@ public class Bill implements Serializable {
 				return false;
 		} else if (!lastPayDate.equals(other.lastPayDate))
 			return false;
-		if (parkingLot == null) {
-			if (other.parkingLot != null)
+		if (parkingLotId == null) {
+			if (other.parkingLotId != null)
 				return false;
-		} else if (!parkingLot.equals(other.parkingLot))
+		} else if (!parkingLotId.equals(other.parkingLotId))
 			return false;
 		if (price == null) {
 			if (other.price != null)
 				return false;
 		} else if (!price.equals(other.price))
 			return false;
-		if (user == null) {
-			if (other.user != null)
+		if (timeQuantums == null) {
+			if (other.timeQuantums != null)
 				return false;
-		} else if (!user.equals(other.user))
+		} else if (!timeQuantums.equals(other.timeQuantums))
+			return false;
+		if (userId == null) {
+			if (other.userId != null)
+				return false;
+		} else if (!userId.equals(other.userId))
 			return false;
 		return true;
 	}
+	
 	
 	
 	
