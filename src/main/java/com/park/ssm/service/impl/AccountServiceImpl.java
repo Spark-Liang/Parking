@@ -133,8 +133,8 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	@Transactional
-	public int isNotPayBill(long userId) {
-		return billdao.isNotPayBill(userId);
+	public int isNotPayBill(long userId,long parkingLotId) {
+		return billdao.isNotPayBill(userId,parkingLotId);
 	}
 	
 	@Override

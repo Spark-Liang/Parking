@@ -39,7 +39,7 @@ public interface AccountService {
 	 * 根据用户ID查看该用户是否存在未缴费的账单
 	 * @param userId
 	 */
-	public int isNotPayBill(long userId);
+	public int isNotPayBill(long userId,long parkingLotId);
 
 	/**
 	 * 根据停车场编号判断是否有空余车位

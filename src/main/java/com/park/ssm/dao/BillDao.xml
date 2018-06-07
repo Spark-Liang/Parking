@@ -80,6 +80,9 @@
 			<if test="userId != null">
 				and userId=#{userId}
 			</if>
+				<if test="parkingLotId != null">
+				and parkingLotId=#{parkingLotId}
+			</if>
 		</where>
 		and isPaid=0
 	</select>

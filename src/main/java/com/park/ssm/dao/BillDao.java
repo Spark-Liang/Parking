@@ -62,7 +62,7 @@ public interface BillDao {
 	 * @param id
 	 * @return
 	 */
-	public abstract int  isNotPayBill(@Param("userId")Long userId);
+	public abstract int  isNotPayBill(@Param("userId")Long userId,@Param("parkingLotId")Long parkingLotId);
 	
 	/**
 	 * 根据用户显示其所有账单

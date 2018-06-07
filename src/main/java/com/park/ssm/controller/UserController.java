@@ -126,13 +126,13 @@ public class UserController {
 			if (falg != 2) {
 				User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
 				if (user != null) {
-					int bill = accountService.isNotPayBill(userId);// 判断是否存在未支付的账单
+					int bill = accountService.isNotPayBill(userId,LotId);// 判断是否存在未支付的账单
 					if (bill > 0) {
 						message = "开卡失败，该账户存在未缴费的账单，请先支付帐单！";
 					} else {
 						Account cardMessage = new Account();
 						cardMessage = accountService.getCardMessage(cardId);
-						if (cardMessage != null) {
+						if (cardMessage != null){
 							message = "开卡失败，该停车卡已与帐户绑定，请重新选择！";
 						} else {
 							if (accountService.isNotFullPosition(LotId)) {// 该停车场的停车位是否已经满了
@@ -180,7 +180,6 @@ public class UserController {
 				result.put("cardId", cardId);
 				result.put("accountId", accountId);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				message = e.getMessage();
 			}
 		} else {
@@ -209,13 +208,15 @@ public class UserController {
 			Account account = accountService.getCardMessage(OldCardId);
 			if (account != null){
 				Account NewCardAccount = accountService.getCardMessage(NewCardId);
-				if (NewCardAccount != null) {
-					message = "更换失败，该停车卡已与帐户绑定，请重新输入！";
-				} else {
-					int bill = accountService.isNotPayBill(userId);// 判断是否存在未支付的账单
-					if(bill>0){
-						message = "无法更换，该账户存在未缴费的账单，请先支付帐单！";
-					}
+				long LotId=account.getParkingLotId();
+				int bill = accountService.isNotPayBill(userId,LotId);// 判断是否存在未支付的账单
+				if(bill>0){
+					message = "无法更换，该账户存在未缴费的账单，请先支付帐单！";
+				}
+				else {
+					if (NewCardAccount != null) {
+						message = "更换失败，该停车卡已与帐户绑定，请重新输入！";
+					} 
 					else {
 						AccountState state=account.getState();
 						if(state.getInd()==-1){
