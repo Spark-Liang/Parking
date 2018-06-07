@@ -17,31 +17,78 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/AllUseTools.js"></script>
 <script src="js/aopDefind.js"></script>
+<script src="js/laydate.js"></script> 
+
 </head>
 
 <style type="text/css">
+body{padding: 20px;}
+  .demo-input{padding-left: 10px; height: 38px; min-width: 262px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+
 
 </style>
 <script type="text/javascript">
 	
 </script>
 <body>
+<div class="col-md-4">
 	<input type="text"  class="form-control input-sm" id="exampleInputName2" placeholder="手机号">
 	<input type="text"  class="form-control input-sm" id="exampleInputName2" placeholder="停车场id">
 	<input type="text"  class="form-control input-sm" id="exampleInputName2" placeholder="账户id">
 	<input type="text"  class="form-control input-sm" id="exampleInputName2" placeholder="价格">
-	<input type="checkbox" name="pay"  class="form-control input-sm"  value="1">已经支付
-	<input type="checkbox" name="pay" class="form-control input-sm"  value="0">没有支付
+	<input type="radio" name="pay" class="form-control input-sm"  value="1">已经支付
+	<input type="radio" name="pay" class="form-control input-sm"  value="0">没有支付
+	<br/>
+	<br/>
+	<br/>
+	开始日期
+	<input type="text"  class="demo-input" placeholder="格子主题" id="test31">
+	<br/><br/>
+	结束日期
+	<input type="text"  class="demo-input date2" placeholder="格子主题" id="test30">
+		<br/><br/>
 	<button class="btn btn-primary btn-sm">提交</button>
 	
+</div>
+		
 	<script type="text/javascript">
 		var iphone = $('input:eq(0)').val();
-		var pardid = $('input:eq(1)').val();
+		var parkid = $('input:eq(1)').val();
 		var accountid = $('input:eq(2)').val();
 		var price = $('input:eq(3)').val();
-		var price = $('input[name="pay"]:checked').val();
-		var myData = new Data();
-		console.log(myData);
+		var pay = $('input[name="pay"]:checked').val();
+		var startdate = $('.date1').val();
+		var enddata = $('.date2').val();
+		console.log(myDate);
+		$.ajax({
+			url:'user/insertBill',
+			type:'POST',
+			dataType:'json',
+			data:{
+				'userId':iphone,
+				'parkingLotId':parkid,
+				'accountId':accountid,
+				'price':price,
+				'isPaid':pay,
+				'billStartDate':date1,
+				'billEndDate':date2
+			},success:function(json){
+				console.log(json);
+			},error:function(json){
+				console.log(json);
+			}
+		});
+		
+		//年月选择器
+		lay('#version').html('-v'+ laydate.v);
+
+	//格子主题
+    laydate.render({
+      elem: '#test31'
+      ,theme: 'grid'
+    });
+
+
 	</script>
 </body>
 

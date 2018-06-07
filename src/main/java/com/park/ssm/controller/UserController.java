@@ -392,7 +392,25 @@ public class UserController {
 		return strInsertBill;
 	}
 	
-	
+	@RequestMapping(value="changeCurrentBill",method=RequestMethod.POST)
+	@ResponseBody
+	public String changeCurrentBill(Account account) {
+		Map<String,Object> map=new HashMap<>();
+		int result=0;
+		try {
+			result=billService.updateCurrentBill(account);
+			if(result>0) {
+				map.put("msg", 1);
+			}else {
+				map.put("msg", 0);
+			}
+			
+		}catch(Exception e) {
+			map.put("msg", "error");
+		}
+		String strChangeCurrentBill=new JSONObject(map).toString();
+		return strChangeCurrentBill;
+	}
 	@RequestMapping("inputbillpage")
 	public String page() {
 		return "InputBill";

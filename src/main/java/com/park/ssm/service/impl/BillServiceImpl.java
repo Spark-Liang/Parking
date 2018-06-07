@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.park.ssm.dao.BillDao;
 import com.park.ssm.entity.Bill;
+import com.park.ssm.entity.Account;
 import com.park.ssm.service.BillService;
 
 /**
@@ -32,6 +33,18 @@ public class BillServiceImpl implements BillService {
 		int result=0;
 		try {
 			result=billDao.addBill(bill);
+		}catch(Exception e) {
+			result=0;
+		}
+		return result;
+	}
+
+	@Override
+	public int updateCurrentBill(Account account) {
+		// TODO Auto-generated method stub
+		int result=0;
+		try {
+			result=billDao.changeCurrentBillId(account);
 		}catch(Exception e) {
 			result=0;
 		}

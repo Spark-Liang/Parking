@@ -137,12 +137,12 @@
 				<h3>用户停卡</h3>
 				<div class="col-md-3">
 				    <div class="form-group">
-						<label for="exampleInputName2">手机号码</label>
-						<input type="text" onblur="checkBill(this)" class="form-control input-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
+						<label for="exampleInputName2">手机号码</label><span>fsd</span>
+						<input type="text"  class="form-control inut-sm" id="exampleInputName2" placeholder="请输入正确的手机号格式">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
-						<input type="text" onblur="checkCar(this)" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
+						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
 					</div>
 					<div class="form-group">
 						<label for="exampleInputEmail2">停车场</label>
@@ -181,7 +181,7 @@
 					<form class="form-inline">
 						<div class="form-group">
 							<label for="exampleInputName2">手机号</label>
-							<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="手机号">
+							<input type="text" class="form-control input-sm input-userId" id="exampleInputName2" placeholder="手机号">
 						</div>
 						<button type="button" class="btn btn-primary btn-sm search-card">搜索</button>		
 					</form>
@@ -215,10 +215,7 @@
 		});
 	}) */
 	
-	//停卡的时候输入手机号的输入框失去焦点的时候检查是否有账单没有支付
-	function checkBill(a){
-		
-	}
+	
 		//两个模块之间的跳转
 		function skip(num,a) {
 			$('.breadcrumb a').css({'font-weight':'500'})
@@ -371,6 +368,7 @@
 			inf[1] = $(this).parent().find('input:eq(1)').val();
 			inf[2] = $(this).parent().find('select').val();
 			var check = checkinf(this,inf);
+			checkBill(inf[0]);
 			if(check == 1){
 				/* $.ajax({
 					url:'',
@@ -389,6 +387,29 @@
 				
 			}
 		})
+		//停卡的时候输入手机号的输入框失去焦点的时候检查是否有账单没有支付
+		function checkBill(a){
+				$.ajax({
+					url:'user/getAllAccount',
+					dataType:'json',
+					type:'POST',
+					data:{
+						'userId':a,
+						'isGetAll':'false'
+					},success:function(json){
+						console.log(json);
+						if(json.message!=" "){
+							alert(json.message);
+						}else{
+							if(json.list[0].currentBill != null){
+								alert('fds')
+							}
+						}
+					},error:function(){
+						
+					}
+				})
+		}
 		//检查输入格式是否正确  b是按钮元素 a是传过来的数组
 		function checkinf(b,a) {
 			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
@@ -476,7 +497,9 @@
 		//点击更换停车卡按钮触发的事件 a是元素自身
  		function updateCard(a){
 			$('.edit-money').remove();
-			id = $(a).data('value');
+			
+			var id = $(a).parent().parent().find('td:eq(0)').text();
+			console.log(id);
 			content ="请输入新的卡号"
 			$(a).parent().parent().find('td:eq(1)').append(function (){
 				return NumEdit(id,content);
@@ -485,6 +508,7 @@
 		function moneyok(a){
 			var OldCardId = $(a).data('value');
 		    var NewCardId = $(a).parent().parent().find('input').val();
+		    var userId = $('.input-userId').val();
 		    var object = /^\d{7}$/g;
 		  // $(a).parent().parent().parent().find('span:eq(0)').text(aa);
 		    var object = /^\d{7}$/;
@@ -496,14 +520,15 @@
 		                dataType:'json',
 		                data:{
 		                	'OldCardId':OldCardId,
-		                	'NewCardId':NewCardId
+		                	'NewCardId':NewCardId,
+		                	'userId':userId
 		                },success:function(json){
 		                	console.log(json)
 		                    if(json.flag==1){
 		                    	alert('修改成功');
 		                         $(a).parent().parent().parent().parent().find('td:eq(0)').text(NewCardId);
 		                         $(a).parent().parent().fadeOut();
-		                    }else if(json.flag==2){
+		                    }else if(json.flag==0){
 		                    	alert(json.message);
 		                    }
 		                    else if(json.error){
@@ -521,7 +546,6 @@
 		
 		//点击支付帐单的触发事件 
 		function paymoney(a){
-			
 			$('.pay-money').fadeIn();
 		}
 		//关闭支付帐单的弹框
