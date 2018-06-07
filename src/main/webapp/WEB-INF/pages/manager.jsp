@@ -240,7 +240,7 @@
     	var id = $(a).data('value');
         var aa = $(a).parent().parent().find('input').val();
        /*  $(a).parent().parent().parent().find('span:eq(0)').text(aa); */
-        var object = /^\d{2,5}$/;
+        var object = /^[1-9]{1}\d{1,4}$/;
             if(object.test(aa)){
             	$.ajax({
                     url:'inneruser/changeParkingLotPrice',
@@ -261,7 +261,7 @@
                              $(a).parent().parent().parent().find('span:eq(0)').text(aa);
                              $(a).parent().parent().fadeOut();
                         }else if(json.error){
-                        	alert('修改失败');
+                        	alert('程序内部错误，修改失败，请重试！');
                         }
                     },error:function(){
 
