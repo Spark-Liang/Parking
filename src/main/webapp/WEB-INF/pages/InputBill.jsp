@@ -32,9 +32,13 @@ body{padding: 20px;}
 </script>
 <body>
 <div class="col-md-4">
+	手机号
 	<input type="text"  class="form-control input-sm" id="exampleInputName2" placeholder="手机号">
+	停车场id
 	<input type="text"  class="form-control input-sm" id="exampleInputName2" placeholder="停车场id">
+	账户id
 	<input type="text"  class="form-control input-sm" id="exampleInputName2" placeholder="账户id">
+	价格
 	<input type="text"  class="form-control input-sm" id="exampleInputName2" placeholder="价格">
 	<input type="radio" name="pay" class="form-control input-sm"  value="1">已经支付
 	<input type="radio" name="pay" class="form-control input-sm"  value="0">没有支付
@@ -42,10 +46,10 @@ body{padding: 20px;}
 	<br/>
 	<br/>
 	开始日期
-	<input type="text"  class="demo-input" placeholder="格子主题" id="test31">
+	<input type="text"  class="demo-input" placeholder="开始日期" id="test31">
 	<br/><br/>
 	结束日期
-	<input type="text"  class="demo-input" placeholder="格子主题" id="test30">
+	<input type="text"  class="demo-input" placeholder="结束日期" id="test30">
 		<br/><br/>
 	<button class="btn btn-primary btn-sm">提交</button>
 	
@@ -58,9 +62,9 @@ body{padding: 20px;}
 			var accountid = $('input:eq(2)').val();
 			var price = $('input:eq(3)').val();
 			var pay = $('input[name="pay"]:checked').val();
-			var startdate = $('.date1').val();
-			var enddata = $('.date2').val();
-			alert(iphone)
+			var startdate = $('#test31').val();
+			var enddate = $('#test30').val();
+			alert(enddate)
 			$.ajax({
 				url:'user/insertBill',
 				type:'POST',
@@ -72,7 +76,7 @@ body{padding: 20px;}
 					'price':price,
 					'isPaid':pay,
 					'billStartDate':startdate,
-					'billEndDate':enddata,
+					'billEndDate':enddate,
 				},success:function(json){
 					console.log(json);
 				},error:function(json){
@@ -87,6 +91,11 @@ body{padding: 20px;}
 	//格子主题
     laydate.render({
       elem: '#test31'
+      ,theme: 'grid'
+    });
+  //格子主题
+    laydate.render({
+      elem: '#test30'
       ,theme: 'grid'
     });
 

@@ -40,9 +40,12 @@ public class AccountServiceImpl implements AccountService {
 	private ParkingPositionDao parkingpositiondao;
 	
 	@Override
-	public List<Account> findAccountrById(long userId,boolean isFindAll) {
+	public List<Account> findAccountrById(Long userId
+			,Integer parkingLotId,Long parkingPositionId,Long cardId
+			,Integer pageNum,Integer pageSize
+			,boolean isFindAll) {
 		List<Account> list=null;
-		List<Account> listDB=accountdao.findAccountrById(userId, null, null, null, null, null);
+		List<Account> listDB=accountdao.findAccountrById(userId, parkingLotId, parkingPositionId, cardId, pageNum, pageSize);
 		System.out.println("---------------------------listDB="+listDB);
 		if(isFindAll==true) {
 			list=new ArrayList<Account>(listDB.size());

@@ -49,17 +49,22 @@ public class UserController {
 
 	/**
 	 * 操作员 根据客户ID获取客户的停车卡信息（拥有卡号的账户） userId 客户ID message 返回的结果信息
+	 * 如果提供了cardId，再通过cardId进行过滤
+	 * @param userId
+	 * @param cardId
 	 */
 	@RequestMapping(value = "getAllAccount", method = { RequestMethod.POST })
 	@ResponseBody
-	public String getAllAccount(@RequestParam("userId") long userId, @RequestParam("isGetAll") String isGetAll) {
-		Map result = new HashMap();
+	public Map<String,Object> getAllAccount(@RequestParam(value="userId") Long userId
+						,@RequestParam(value="cardId",required=false)Long cardId
+						,@RequestParam(value="isGetAll",required=false) Boolean isGetAll) {
+		Map<String,Object> result = new HashMap();
 		String message = "";
 		try {
 			User user = accountService.findUserByuserId(userId);// 判断客户帐户是否存在
-			Boolean bIsGetAll = Boolean.parseBoolean(isGetAll);
+			boolean isGetAllFlag=isGetAll!=null?isGetAll.booleanValue():false;
 			if (user != null) {
-				List<Account> list = accountService.findAccountrById(userId, bIsGetAll);
+				List<Account> list = accountService.findAccountrById(userId, null, null, cardId, null, null, isGetAllFlag);
 				result.put("list", list);
 			} else {
 				message = "不存在此用户";
@@ -69,7 +74,7 @@ public class UserController {
 			e.printStackTrace();
 			result.put("message", " 服务器出现错误");
 		}
-		return JSON.toJSONString(result);
+		return result;
 	}
 
 	/**

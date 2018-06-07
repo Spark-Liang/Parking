@@ -2,12 +2,31 @@ package com.park.ssm.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.User;
 
 public interface AccountService {
 	
-	public List<Account> findAccountrById(long userId,boolean isFindAll);//根据用户ID获取用户所有的帐户信息
+	/**
+	 * 通过不同的id组合返回Account的列表，isFindAll标识标识是否返回Account的所有Bill信息
+	 * @param userId
+	 * @param parkingLotId
+	 * @param parkingPositionId
+	 * @param cardId
+	 * @param pageNum
+	 * @param pageSize
+	 * @param isFindAll
+	 * @return
+	 */
+	public List<Account> findAccountrById(Long userId
+										,Integer parkingLotId
+										,Long parkingPositionId
+										,Long cardId
+										,Integer pageNum
+										,Integer pageSize
+										,boolean isFindAll);
 	
 	public User findUserByuserId(long userId);//根据用户ID获取用户基础信息
 	
