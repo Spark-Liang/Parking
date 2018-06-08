@@ -52,6 +52,12 @@
 	where name=#{_parameter}
 </select>
 
+<select id="loadPrkingLotForId"  resultMap="parkingLotRoughResult">
+	select 
+		*
+	from ParkingLot
+	where id=#{id}
+</select>
 
 <!-- 复杂查询条件 -->
 <sql id="condition" >

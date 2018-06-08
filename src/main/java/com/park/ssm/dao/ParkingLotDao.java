@@ -95,4 +95,10 @@ public interface ParkingLotDao {
 	 * @param id 停车场id
 	 * */
 	public abstract int getTotalLotNum(int id);
+	
+	/**
+	 * 获取停车场的名称
+	 * @param id 停车场id
+	 * */
+	public abstract List<ParkingLot> loadPrkingLotForId(@Param("id")int id);
 }

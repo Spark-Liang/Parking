@@ -19,6 +19,9 @@
 		<collection property="bills" column="{accountId=id}"
 			ofType="Bill" fetchType="lazy" select="com.park.ssm.dao.BillDao.listBillById"
 			autoMapping="true" />
+		<collection property="parkingLot" column="{id=parkingLotId}"
+			ofType="ParkingLot" fetchType="lazy" select="com.park.ssm.dao.ParkingLotDao.loadPrkingLotForId"
+			autoMapping="true" />
 	</resultMap>
 
 	<!-- dao相关sql -->
