@@ -13,6 +13,7 @@
 		</resultMap> -->
 	<sql id="sqlField">
 		id,userId,parkingLotId,accountId,price,isPaid
+		</sql>
 	<resultMap type="bill" id="billResultMap">
 		<id property="id" column="userId"></id>
 		
