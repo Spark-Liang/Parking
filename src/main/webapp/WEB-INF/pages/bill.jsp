@@ -168,55 +168,7 @@
         <br/>
         <div class="moudle-one moudle1 " >
             <h4>拥有的停车卡</h4>
-            <div class="admin-block">
-                <br/>
-                <p>卡号:<span>1023401</span></p>
-                <p>开卡日期：<span>2017.1.11</span></p>
-                <p style = "color:red">有未付款账单</p>
-                <!--<p>卡状态：正常使用</p>-->
-                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
-            </div>
-        
-            <div class="admin-block">
-                <br/>
-                <p>卡号:<span>1023402</span></p>
-                <p>开卡日期：<span>2017.2.21</span></p>
-                <!--<p>卡状态：正常使用</p>-->
-                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
-            </div>
-        
-            <div class="admin-block">
-                <br/>
-                <p>卡号:<span>1023403</span></p>
-                <p>开卡日期：<span>2017.3.10</span></p>
-                <!--<p>卡状态：正常使用</p>-->
-                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
-            </div>
-        
-            <div class="admin-block">
-                <br/>
-                <p>卡号:<span>1023404</span></p>
-                <p>开卡日期：<span>2018.3.11</span></p>
-                <p style = "color:red">有未付款账单</p>
-                <!--<p>卡状态：正常使用</p>-->
-                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
-            </div>
-       
-            <div class="admin-block">
-                <br/>
-                <p>卡号:<span>1023405</span></p>
-                <p>开卡日期：<span>2018.5.1</span></p>
-                <!--<p>卡状态：正常使用</p>-->
-                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
-            </div>
-        
-            <div class="admin-block">
-                <br/>
-                <p>卡号:<span>1023406</span></p>
-                <p>开卡日期：<span>2018.5.20</span></p>
-                <!--<p>卡状态：正常使用</p>-->
-                <button class="btn btn-md btn-block btn-primary" onclick = 'showBill()'>查看帐单</button>
-            </div>
+            
         </div>
     </div>
     
@@ -278,41 +230,8 @@
     console.log(card2.cardnum + card2.date + card2.remind);
     */
 
-    //添加成功之后把停车卡添加到页面中
-    card.prototype.cardadd = function() {
-        var parkname = this.parkname;
-        var cardnum = this.cardnum;
-        var date = this.date;
-        var status = this.status;
-        $('.moudle1').append(function() {
-            return "<div class='admin-block' >"
-                    + "<div>"
-                    + "<br/>"
-                    + "<p>卡号：<span>"
-                    + cardnum
-                    + "</span></p>"
-                    + "<p>开卡日期：<span>"
-                    + date
-                    + "</span></p>"
-                    +'<button class="btn btn-md btn-block btn-primary">查看帐单</button>'
-                    + "</div>" + "</div>";
-        });
-    }
-    /*for(var i = 0; i <= 6; i++){
-        $('.moudle1').append(function() {
-            return "<div class='admin-block' >"
-                    + "<div>"
-                    + "<br/>"
-                    + "<p>卡号：<span>"
-                    + "1234567"
-                    + "</span></p>"
-                    + "<p>开卡日期：<span>"
-                    + "date"
-                    + "</span></p>"
-                    +'<button class="btn btn-md btn-block btn-primary">查看帐单</button>'
-                    + "</div>" + "</div>";
-        });
-    }*/
+  
+   
 
     //点击检查帐单弹出帐单页面
     function showBill(){
@@ -359,11 +278,60 @@
         nooutbill.style.display = "block";
     }
 
+    //获取参数方法
+	function GetUrlParam(name){
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+    
+    //日期处理方法
+    function getDate(date){
+    	var mydate = new Date(date);
+    	var myMonth = mydate.getMonth()+1;
+    	var myYear = mydate.getFullYear();
+    	var myDay = mydate.getDate();
+    	return myYear + "." + myMonth + "." + myDay;
+    } 
     //页面加载后获取停车卡信息
-    /*$(document).ready(function(){
+    $(document).ready(function(){
+    	
+    	//调用方法获取url中的id参数
+    	var userId = GetUrlParam("id");
+    	//alert(userId);   
+    	 $.ajax({
+             url:'user/getAllAccount',
+             type:'POST',
+             dataType:'json',
+             data:{
+				userId: userId,
+				isGetAll: 'false'
+             },success: function(json){
+            	 var tip = "有未付款账单";
+            	 var l = json.list.length;
+            	 console.log(json);
+            	 for(var i = 0; i < l; i++){
+            		 var cardNum = json.list[i].cardId;
+                	 var startDate = getDate(json.list[i].stateStartDate);//转换日期格式
+                	 
+                	 //加载停车卡
+                	 $('.moudle1').append(function(){
+                         return "<div class='admin-block'>"
+                         +"<p>卡号："+cardNum+"</p>"
+                         +"<p>开卡日期："+startDate+"</p>"
+                         +"<p style = 'color: red'>"+tip+"</p>"
+                         +'<button class="btn btn-md btn-block btn-primary" onclick = "showBill()">查看帐单</button>';
+                	 });
+            	 }
+             },error: function(){
+
+             }
+         });
+    });
+    	/*
         $.ajax({
             url:'',
-            type:'GET',
+            type:'POST',
             dateType:'json',
             data{
 
@@ -380,7 +348,7 @@
 
             }
         });
-    });*/
+    });/
     
     //点击查看已出账单发送ajax请求获取账单信息
     /*var card = document.getElementsByClassName
