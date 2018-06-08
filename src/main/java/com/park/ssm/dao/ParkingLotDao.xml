@@ -21,6 +21,18 @@
 	</collection>
 </resultMap>
 
+<resultMap type="ParkingLot" id="parkingLotResult">
+	<id property="id" column="id" />
+	
+	<result property="totalPositionNum" column="totalPositionNum"/>
+	<result property="currentPrice" column="currentPrice" />
+	<result property="state" column="state" typeHandler="com.park.ssm.entity.type.ParkingLotStateHandler"/>
+	
+	<result property="name" column="name" />
+	<result property="location" column="location" />
+	<result property="cost" column="cost" />
+</resultMap>
+
 <resultMap type="ParkingPosition" id="parkingPosition">
 	<id property="id" column="id"/>
 	<result property="state" column="state"  typeHandler="com.park.ssm.entity.type.ParkingPositionStateHandler"/>
@@ -52,7 +64,7 @@
 	where name=#{_parameter}
 </select>
 
-<select id="loadPrkingLotForId"  resultMap="parkingLotRoughResult">
+<select id="loadPrkingLotForId"  resultMap="parkingLotResult">
 	select 
 		*
 	from ParkingLot
