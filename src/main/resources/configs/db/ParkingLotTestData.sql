@@ -160,6 +160,9 @@ create table Bill
 	,index accountId_idx(accountId)
 )engine=innodb auto_increment=1 charset='utf8';
 
+<<<<<<< HEAD
+--insert into Bill(userId,parkingLotId,accountId,price,isPaid)values(13745678910,5,13745678910,price,0);
+=======
 
 drop table if exists ParkingRecord;
 create table ParkingRecord
@@ -173,3 +176,4 @@ create table ParkingRecord
 )engine=innodb auto_increment=1 charset='utf8';
 
 
+>>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git

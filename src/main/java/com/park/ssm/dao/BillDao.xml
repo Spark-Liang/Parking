@@ -2,6 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--客户映射 指定到dao接口 -->
 <mapper namespace="com.park.ssm.dao.BillDao">
+	<!-- <resultMap type="bill" id="billResultMap"> <id property="id" column="userId"></id> 
+		<result property="billStartDate" column="billStartDate"></result> <result 
+		property="billEndDate" column="billStartDate"></result> <result property="price" 
+		column="price"></result> <result property="isPaid" column="isPaid"></result> 
+		<association property="user" javaType="User"> <id property="id" column="userId"/> 
+		</association> <association property="parkingLot" javaType="ParkingLot"> 
+		<id property="id" column="parkingLotId"/> </association> <association property="account" 
+		javaType="Account"> <id property="id" column="accountId"/> </association> 
+		</resultMap> -->
+	<sql id="sqlField">
+		id,userId,parkingLotId,accountId,price,isPaid
 	<resultMap type="bill" id="billResultMap">
 		<id property="id" column="userId"></id>
 		
@@ -27,28 +38,18 @@
 	<sql id="timeQuantumField">
 		startTime,endTime
 	</sql>
-	
+
 	<!-- 通过id加载账单 -->
-	<select id="loadBillById" parameterType="Long" resultMap="billResultMap">
+	<select id="loadBillById" parameterType="Long" resultType="Bill">
 		select
-			<include refid="billField" />
-			,<include refid="timeQuantumField" />
-		from 
-		(
-			select 
-				<include refid="billField" />
-			from Bill
-			where id=#{_parameter}
-		)a
-		inner join
-		AccountStateLog b
-		on a.id=b.billId
+		<include refid="sqlField" />
+		from Bill
+		where id=#{_parameter}
 	</select>
-	
 	<select id="loadBillByIdForUpdate" parameterType="Long"
 		resultType="Bill">
 		select
-		<include refid="billField" />
+		<include refid="sqlField" />
 		from Bill
 		where id=#{_parameter}
 		for update
@@ -57,11 +58,8 @@
 	<!-- 通过各種id組合加载账单 -->
 	<select id="listBillById" resultType="Bill">
 		select
-			<include refid="billField" />
-			,<include refid="timeQuantumField" />
-		from
-		(select <include refid="billField" />
-		from  Bill
+		<include refid="sqlField" />
+		from Bill
 		<where>
 			<if test="userId != null">
 				and userId=#{userId}
@@ -76,12 +74,7 @@
 		<if test="pageNum != null and pageSize != null">
 			limit ${(pageNum-1)*pageSize},#{pageSize}
 		</if>
-		)a
-		inner join
-		AccountStateLog b
-		on a.id=b.billId
 	</select>
-	
 	<select id="countBillById" parameterType="Long" resultType="Integer">
 		select
 		count(1)
@@ -117,11 +110,10 @@
 		</where>
 		and isPaid=0
 	</select>
-	
 	<select id="listBillByCardId" resultType="com.park.ssm.entity.Bill">
 		select
 
-		b.id,b.userId,b.billStartDate,b.billEndDate,b.lastPayDate,b.price,b.isPaid
+		b.id,b.userId,b.lastPayDate,b.price,b.isPaid
 		from Account a,Bill b
 		<where> b.userId=a.userId
 			and a.cardId=#{cardId}
@@ -134,8 +126,8 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 		insert into
-		Bill(userId,parkingLotId,accountId,price,billStartDate,billEndDate,isPaid)
-		values(#{userId},#{parkingLotId},#{accountId},#{price},#{billStartDate},#{billEndDate},#{isPaid})
+		Bill(userId,parkingLotId,accountId,price,isPaid)
+		values(#{userId},#{parkingLotId},#{accountId},#{price},,#{isPaid})
 	</insert>
 	<update id="changeCurrentBillId" parameterType="com.park.ssm.entity.Account">
 	update Account set currentBillId=#{billId}
