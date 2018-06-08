@@ -128,7 +128,7 @@
 		</selectKey>
 		insert into
 		Bill(userId,parkingLotId,accountId,price,isPaid)
-		values(#{userId},#{parkingLotId},#{accountId},#{price},,#{isPaid})
+		values(#{userId},#{parkingLotId},#{accountId},#{price},#{isPaid})
 	</insert>
 	<update id="changeCurrentBillId" parameterType="com.park.ssm.entity.Account">
 	update Account set currentBillId=#{billId}
