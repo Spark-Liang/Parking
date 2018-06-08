@@ -183,7 +183,8 @@
 							<tr>
 								<th class="col-md-1">卡号</th>
 								<th class="col-md-3"></th>
-								<th class="col-md-3">手机号</th>
+								<th class="col-md-2">停车场</th>
+								<th class="col-md-2">手机号</th>
 								<th class="col-md-2">状态</th>
 								<th>操作</th>
 							</tr>
@@ -428,30 +429,74 @@
 				return 0;
 			}else if(json.list[0].currentBill!=null){
 				alert('存在没有支付的账单');
-				payBills();
+				payBills(0);//0是表示有上季度的账单没有支付
 				return 0;
 			}else if(json.list[0].currentBill==null){
 				alert('需要先支付这个季度使用的费用');
+				payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
 			}else if(json.list[0].parking==true){
 				alert('停车卡正在使用');
 				return 0;
 			}else{
 				return 1;
 			}
+			//payBills函数中传过来的值是用于判断是存在账单还是不存在账单但是需要支付的状况
 			//用于显示用户的账单信息
-			function payBills(){
-				$('.payBill').show();
-				var sDate = new Date(json.list[0].currentBill.billStartDate);
-				var startDate = sDate.toLocaleString('chinese',{hour12:false});
-				var eDate = new Date(json.list[0].currentBill.billEndDate);
-				var endDate = eDate.toLocaleString('chinese',{hour12:false});
-				$('.BillTable').append(function(){
-					return "<tr>"
-					+"<td>"+json.list[0].userId+"</td>"
-					+"<td>"+startDate+"~"+endDate+"</td>"
-					+"<td>"+json.list[0].currentBill.price+"</td>"
-					+"</tr>"
-				})
+			function payBills(num){
+					$('.payBill').show();
+				if (num == 0 ){
+					var sDate = new Date(json.list[0].currentBill.billStartDate);
+					var startDate = sDate.toLocaleString('chinese',{hour12:false});
+					var eDate = new Date(json.list[0].currentBill.billEndDate);
+					var endDate = eDate.toLocaleString('chinese',{hour12:false});
+					$('.BillTable').append(function(){
+						return "<tr>"
+						+"<td>"+json.list[0].userId+"</td>"
+						+"<td>"+startDate+"~"+endDate+"</td>"
+						+"<td>"+json.list[0].currentBill.price+"</td>"
+						+"</tr>"
+					})
+				}else if(num == 1){
+					var date = new Date();
+					var day = date.getDate();
+					var month = date.getMonth()+1;
+					var year = date.getFullYear();
+					var time1 = date.toLocaleString('chinese',{hour12:false});
+					var time = time1.substring(0,9);
+					var allDayNum = allDay(month);
+					var useDay = useMuchDay(day,month);
+					var price = (json.list[0].parkingLot[0].cost * 3)*(useDay/allDayNum[0]);
+					var price1 = Math.ceil(price);
+					alert((json.list[0].parkingLot[0].cost * 3)+" "+(day/useDay));
+					$('.BillTable').append(function(){
+						return "<tr>"
+						+"<td>"+json.list[0].userId+"</td>"
+						+"<td>"+year+"-"+allDayNum[1]+"-1 ~"+time+"</td>"
+						+"<td>"+price1+"</td>"
+						+"</tr>"
+					})
+				}
+				function allDay(month){
+					var allday = new Array();
+					if(month<3){
+						allday[0]=90;
+						allday[1]=1;
+						return allday;
+					}else if(3<month<7){
+						allday[0]=91;
+						allday[1]=4;
+						return allday;
+					}else if(6<month<10){
+						allday[0]=92;
+						allday[1]=7;
+						return allday;
+					}else if(9<month<=12){
+						allday[0]=91;
+						allday[1]=10;
+						return allday;
+					}
+				}
+				
 			}
 		}
 		//检查输入格式是否正确  b是按钮元素 a是传过来的数组
@@ -506,6 +551,7 @@
 									return "<tr>"
 									+"<td>"+json.list[i].cardId+"</td>"
 									+"<td></td>"
+									+"<td>"+json.list[i].parkingLot[0].name+"</td>"
 									+"<td>"+json.list[i].userId+"</td>"
 									+"<td>"+json.list[i].state+"</td>"
 									+"<td>"
