@@ -1,6 +1,7 @@
 package com.park.ssm.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,10 +51,13 @@ public class InnerUserController {
 	 */
 	@SuppressWarnings("deprecation")
 	private boolean setPriceOrNot() {
-		Date date=new Date();
-		int month=date.getMonth()+1;
-		int day=date.getDate();
-		if(day==1&&(month==1||month==4||month==7||month==10)) {
+		Calendar c=Calendar.getInstance();
+		int currentMonth=c.get(Calendar.MONTH)+1;
+		int currentDate=c.get(Calendar.DATE);
+		System.out.println("----------currentMonth="+currentMonth+"-------------currentDate="+currentDate);;
+		if((currentMonth==3&&currentDate==31)||(currentMonth==12&&currentDate==31)) {
+			return false;
+		}else if((currentMonth==6&&currentDate==30)||(currentMonth==9&&currentDate==30)) {
 			return false;
 		}else {
 			return true;
