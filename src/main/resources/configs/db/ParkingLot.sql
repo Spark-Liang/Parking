@@ -3,7 +3,7 @@ create table ParkingLot
 	id int primary key auto_increment
 	
 	,totalPositionNum int not null
-	,currentPrice decimal(10,4) not null 
+	,currentPrice decimal(10,4) not null  default 10
 	,state tinyint default 0
 	
 	,name varchar(32) not null unique key

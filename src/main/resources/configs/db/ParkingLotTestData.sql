@@ -13,7 +13,7 @@ create table ParkingLot
 	id int primary key auto_increment
 	
 	,totalPositionNum int not null
-	,currentPrice decimal(10,4) not null 
+	,currentPrice decimal(10,4) not null  default 10
 	,state tinyint default 0
 	
 	,name varchar(32) not null unique
@@ -25,7 +25,8 @@ insert into ParkingLot(totalPositionNum,currentPrice,cost,name,location)
 values
  (4,10,100,'A','CC')
 ,(3,20,100,'B','CC')
-,(3,30,100,'C','CC')
+,(6,30,100,'C','CC')
+,(10,30,100,'TestAdd','CC')
 ;
 
 
@@ -72,19 +73,21 @@ create table Account
 
 insert into Account(userId,parkingLotId,parkingPositionId,cardId,price,currentStateLogId)
 values
- ('13745678910',1,1 ,'13745678910',10,1 )
-,('13745678911',1,2 ,'13745678911',10,2 )
-,('13745678912',1,3 ,'13745678912',10,3 )
-,('13745678913',1,4 ,'13745678913',10,4 )
-,('13745678914',2,5 ,'13745678914',20,5 )
-,('13745678915',2,6 ,'13745678915',20,6 )
-,('13745678916',2,7 ,'13745678916',20,7 )
-,('13745678917',3,8 ,'13745678917',30,8 )
-,('13745678918',3,9 ,'13745678918',30,9 )
-,('13745678919',3,10,'13745678919',30,10)
-,('13745678920',3,11,'13745678920',30,11)
-,('13719326102',3,12,'13719326102',30,12)
-,('13775119722',3,13,'13775119722',30,13)
+ ('13745678910',1,1 ,'0000001',10,1 )
+,('13745678911',1,2 ,'0000002',10,2 )
+,('13745678912',1,3 ,'0000003',10,3 )
+,('13745678913',1,4 ,'0000004',10,4 )
+,('13745678914',2,5 ,'0000005',20,5 )
+,('13745678915',2,6 ,'0000006',20,6 )
+,('13745678916',2,7 ,'0000007',20,7 )
+,('13745678917',3,8 ,'0000008',30,8 )
+,('13745678918',3,9 ,'0000009',30,9 )
+,('13745678919',3,10,'0000010',30,10)
+,('13745678920',3,11,'0000011',30,11)
+,('13719326102',3,12,'0000012',30,12)
+,('13775119722',3,13,'0000013',30,13)
+#已欠费账号
+,('13745678920',4,14,'0000013',10,14)
 ;
 
 drop table if exists AccountStateLog;
@@ -100,21 +103,25 @@ create table AccountStateLog
 	,index billId_idx(billId)
 )engine=innodb auto_increment=1 charset='utf8';
 
-insert into AccountStateLog (id,accountId,state,startTime) 
+insert into AccountStateLog (id,accountId,state,startTime,endTime,billId) 
 values
- (1 ,1 ,0,'2018-06-01')
-,(2 ,2 ,0,'2018-06-01')
-,(3 ,3 ,0,'2018-06-01')
-,(4 ,4 ,0,'2018-06-01')
-,(5 ,5 ,0,'2018-06-01')
-,(6 ,6 ,0,'2018-06-01')
-,(7 ,7 ,0,'2018-06-01')
-,(8 ,8 ,0,'2018-06-01')
-,(9 ,9 ,0,'2018-06-01')
-,(10,10,0,'2018-06-01')
-,(11,11,0,'2018-06-01')
-,(12,12,0,'2018-06-01')
-,(13,13,0,'2018-06-01')
+ (1 ,1 ,0,'2018-02-01',null,null)
+,(2 ,2 ,0,'2018-02-02',null,null)
+,(3 ,3 ,0,'2018-02-03',null,null)
+,(4 ,4 ,0,'2018-02-04',null,null)
+,(5 ,5 ,0,'2018-02-05',null,null)
+,(6 ,6 ,0,'2018-02-06',null,null)
+,(7 ,7 ,0,'2018-02-07',null,null)
+,(8 ,8 ,0,'2018-02-08',null,null)
+,(9 ,9 ,0,'2018-02-09',null,null)
+,(10,10,0,'2018-02-10',null,null)
+,(11,11,0,'2018-02-11',null,null)
+,(12,12,0,'2018-02-12',null,null)
+,(13,13,0,'2018-02-13',null,null)
+#已欠费账号
+,(14,14,0,'2017-10-10','2018-01-01 0:20:00',1)
+,(15,14,0,'2018-01-01 0:20:00','2018-01-01 0:20:00',null)
+,(16,14,-1,'2018-01-01 0:20:00',null,null)
 ;
 
 
@@ -160,9 +167,10 @@ create table Bill
 	,index accountId_idx(accountId)
 )engine=innodb auto_increment=1 charset='utf8';
 
-<<<<<<< HEAD
---insert into Bill(userId,parkingLotId,accountId,price,isPaid)values(13745678910,5,13745678910,price,0);
-=======
+insert into Bill (id,userId,parkingLotId,accountId,price,lastPayDate,isPaid)
+values
+(1,'13745678920',4,14,9.0110,0)
+;
 
 drop table if exists ParkingRecord;
 create table ParkingRecord
@@ -176,4 +184,3 @@ create table ParkingRecord
 )engine=innodb auto_increment=1 charset='utf8';
 
 
->>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
