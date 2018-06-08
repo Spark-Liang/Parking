@@ -54,6 +54,14 @@ public class Bill implements Serializable {
 		return lastPayDate;
 	}
 	
+	
+	public void setPaid(boolean isPaid) {
+		this.isPaid = isPaid;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 	@Override
 	public String toString() {
 		return "Bill [id=" + id + ", userId=" + userId + ", parkingLotId=" + parkingLotId + ", accountId=" + accountId

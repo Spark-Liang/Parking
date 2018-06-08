@@ -26,5 +26,10 @@ public interface BillService {
 	 */
 	public int insertBill(Bill bill);
 	
-	public int updateCurrentBill(Account account);
+	/**
+	 * 支付账单
+	 * @param bill
+	 * @return
+	 */
+	public int payBill(Bill bill);
 }

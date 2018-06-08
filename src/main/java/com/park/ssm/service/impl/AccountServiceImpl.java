@@ -16,6 +16,7 @@ import com.park.ssm.dao.BillDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
+import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.AccountService;
@@ -175,6 +176,19 @@ public class AccountServiceImpl implements AccountService {
 		}
 		else {
 			errorMessage.append("无法停卡！系统出错，请联系技术部门！\n");	
+			throw new RuntimeException(errorMessage.toString());
+		}
+	}
+	@Override
+	@Transactional
+	public int payBill(Account account) {
+		// TODO Auto-generated method stub
+		StringBuilder errorMessage=new StringBuilder();
+		int result=accountdao.updateCurrentBillId(account);
+		if(result>0) {
+			return result;
+		}else {
+			errorMessage.append("支付失败,请重试");
 			throw new RuntimeException(errorMessage.toString());
 		}
 	}

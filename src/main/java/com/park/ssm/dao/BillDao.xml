@@ -130,8 +130,8 @@
 		Bill(userId,parkingLotId,accountId,price,isPaid)
 		values(#{userId},#{parkingLotId},#{accountId},#{price},#{isPaid})
 	</insert>
-	<update id="changeCurrentBillId" parameterType="com.park.ssm.entity.Account">
-	update Account set currentBillId=#{billId}
+	<update id="updateIsPaid" >
+	update Bill set isPaid=#{isPaid}
 	where id=#{id}
 	</update>
 </mapper>

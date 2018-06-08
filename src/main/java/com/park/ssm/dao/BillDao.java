@@ -79,4 +79,6 @@ public interface BillDao {
 	public int addBill(Bill bill);
 	
 	public int changeCurrentBillId(Account account);
+	
+	public int updateIsPaid(Bill bill);
 }

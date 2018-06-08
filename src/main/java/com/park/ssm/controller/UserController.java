@@ -414,25 +414,22 @@ public class UserController {
 		return strInsertBill;
 	}
 	
-	@RequestMapping(value="changeCurrentBill",method=RequestMethod.POST)
+	/**
+	 * 支付账单(暂时只改了ispaid标识
+	 * @param bill
+	 * @return
+	 */
+	@RequestMapping(value="paybill",method=RequestMethod.POST)
 	@ResponseBody
-	public String changeCurrentBill(Account account) {
+	public String payBill(Bill bill) {
 		Map<String,Object> map=new HashMap<>();
 		int result=0;
-		try {
-			result=billService.updateCurrentBill(account);
-			if(result>0) {
-				map.put("msg", 1);
-			}else {
-				map.put("msg", 0);
-			}
-			
-		}catch(Exception e) {
-			map.put("msg", "error");
-		}
-		String strChangeCurrentBill=new JSONObject(map).toString();
-		return strChangeCurrentBill;
+		result=billService.payBill(bill);
+		map.put("msg", 1);
+		String strPayBill=new JSONObject(map).toString();
+		return strPayBill;
 	}
+	
 	@RequestMapping("inputbillpage")
 	public String page() {
 		return "InputBill";

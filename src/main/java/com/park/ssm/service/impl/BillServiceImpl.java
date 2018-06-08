@@ -40,15 +40,15 @@ public class BillServiceImpl implements BillService {
 	}
 
 	@Override
-	public int updateCurrentBill(Account account) {
+	public int payBill(Bill bill) {
 		// TODO Auto-generated method stub
-		int result=0;
-		try {
-			result=billDao.changeCurrentBillId(account);
-		}catch(Exception e) {
-			result=0;
+		StringBuilder errorMessage=new StringBuilder();
+		int result=billDao.updateIsPaid(bill);
+		if(result>0) {
+			return result;
+		}else {
+			errorMessage.append("支付失败,请重试");
+			throw new RuntimeException(errorMessage.toString());
 		}
-		return result;
 	}
-
 }
