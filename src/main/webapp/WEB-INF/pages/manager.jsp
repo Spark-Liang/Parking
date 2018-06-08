@@ -221,8 +221,13 @@
     	var mymonth = mydate.getMonth()+1;
     	var myday = mydate.getDate();
     	//console.log(typeof mymonth);
-    	if(mymonth === 1 || mymonth === 4 || mymonth === 7 || mymonth === 10){
-    		if(myday === 1){
+    	if(mymonth === 12 || mymonth === 3){
+    		if(myday === 31){
+    			alert("今天为出账日，不能修改价格");
+    			return;
+    		}
+    	}else if(mymonth === 6 || mymonth === 9){
+    		if(myday === 30){
     			alert("今天为出账日，不能修改价格");
     			return;
     		}
