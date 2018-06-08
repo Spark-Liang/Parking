@@ -41,16 +41,16 @@
 	</sql>
 
 	<!-- 通过id加载账单 -->
-	<select id="loadBillById" parameterType="Long" resultType="Bill">
+	<select id="loadBillById" parameterType="Long" resultMap="billResultMap">
 		select
-		<include refid="sqlField" />
-		from Bill
+		<include refid="billField" />,<include refid="timeQuantumField"/>
+		from (select )Bill
 		where id=#{_parameter}
 	</select>
 	<select id="loadBillByIdForUpdate" parameterType="Long"
 		resultType="Bill">
 		select
-		<include refid="sqlField" />
+		<include refid="billField" />
 		from Bill
 		where id=#{_parameter}
 		for update
