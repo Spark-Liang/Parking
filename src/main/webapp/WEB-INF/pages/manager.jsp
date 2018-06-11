@@ -40,63 +40,38 @@
         height: 70%;
         margin: 4% auto;
     }
+    
+     /*table样式*/
+    .tableStyle{
+        margin: 20px 0;
+        border-collapse:collapse;
+        text-align: center;
+    }
+    .tableStyle tr{
+        border-top: 1px grey solid;
+    }
+    .tableStyle td{
+
+        padding: 5px 20px;
+        color: black;
+    }
+    .tableStyle tr:nth-of-type(1){
+        border-top-color: black;
+    }
+    .tableStyle th{
+        padding: 5px 20px;
+        text-align: center;
+    }
+    .usageTable td{
+    	padding: 5px 50px;
+    }
 </style>
 <body>
 
     <div class="add-block2" style="display: none;">
     </div>
-    <div class = "showUsage">
-        <div class = "showUsage-1">
-            <div id="usageClose">
-                <img src="img/manger-close2.svg">
-                <strong>关闭</strong>
-            </div>
-            <div>
-                <br/>
-                <h4>按月查询</h4>
-                <div class="input-group manger-month">
-                    <input type="text" class="demo-input form-control" placeholder="年月选择器" id="test4">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary">查询</button>
-                    </span>
-                </div>
-
-            </div>
-                <br/>
-                <h4>停车场1</h4>
-                <p>地址：********************</p>
-                <table class="table manger-table table-condensed" align = "center">
-                    <thead>
-                        <tr>
-                            <th>车牌号</th>
-                            <th>使用次数</th>                  
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>861314</td>
-                            <td>52</td>
-                            
-                    </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                            <td>861314</td>
-                            <td>52</td>
-                            
-                    </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                            <td>861314</td>
-                            <td>52</td>
-                            
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    
+            
     <!--销售和收入查询-->
     <div class="showmoney">
         <div class="showmoney-1">
@@ -136,27 +111,70 @@
             </div>
             <br/>
             <h4>停车场1</h4>
-            <p>地址：********************</p>
-            <table class="table manger-table table-condensed">
+            
+            <!--
+            <br/>
+            <h4  style="color: #337ab7">销售和收入情况如下</h4>
+            <table class="tableStyle">
                 <thead>
                     <tr>
                         <th>车位数量</th>
                         <th>已售出车位</th>
-                        <th>已出帐单金额</th>
-                        <th>已收款金额</th>
-                        <th class = "nextQuarter">下季度预计收入</th>
+                        <th>已出帐单金额(RMB)</th>
+                        <th>已收款金额(RMB)</th>
+                        <th class = "nextQuarter">下季度预计收入(RMB)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>****</td>
-                        <td>***</td>
-                        <td>****</td>
-                        <td>***</td>
-                        <td class = "nextQuarter">***</td>
+                        <td>100</td>
+                        <td>50</td>
+                        <td>2500</td>
+                        <td>1500</td>
+                        <td class = "nextQuarter">7500</td>
                     </tr>
                 </tbody>
             </table>
+            <br>
+            <hr style="height:1px;border:none;border-top:1px solid #555555;" />
+            -->
+            
+            <!--使用情况-->
+            <br>
+            <h4  style="color: #337ab7">使用情况如下</h4>
+            <table class="tableStyle usageTable">
+                    <thead>
+                        <tr>
+                            <th>账户ID</th>
+                            <th>卡号</th>
+                            <th>使用次数</th>                  
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1234567</td>
+                            <td>52</td>
+                            
+                    </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>3112352</td>
+                            <td>3</td>
+                            
+                    </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>4444444</td>
+                            <td>12</td>
+                            
+                    </tr>
+                    </tbody>
+                </table>
         </div>
     </div>
     <div class="dh">
@@ -301,7 +319,7 @@
                  +"<p>停车费：￥<span>"+json.res[i].currentPrice+"</span>元/月<img onclick='editmoney(this)' data-value='"+json.res[i].id+"' class='pull-right' src='img/manger-editor.svg'></p>"
                  +"</div>"
                 /*  +"<button class='btn btn-md btn-block btn-primary btn-use' onclick='usagecheck(this)'>查看使用情况</button>" */
-                 +"<button class='btn btn-md btn-block btn-primary' onclick='moneycheck(this)'>查看销售和收入</button>"
+                 +"<button class='btn btn-md btn-block btn-primary' onclick='moneycheck(this)'>查看使用情况</button>"
                  +"</div>"
              })
              }
