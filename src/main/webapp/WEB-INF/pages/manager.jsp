@@ -236,8 +236,8 @@
     function editmoney(a){
     	//判断是不是出单日
     	var mydate = new Date();
-    	var mymonth = 6;//mydate.getMonth()+1;
-    	var myday =30; //mydate.getDate();
+    	var mymonth =mydate.getMonth()+1;
+    	var myday =mydate.getDate();
     	//console.log(typeof mymonth);
     	if(mymonth === 12 || mymonth === 3){
     		if(myday === 31){
@@ -350,6 +350,8 @@
     $('.nextQuarter').fadeOut();
     var lookBtn = document.getElementsByClassName("lookBtn")[0];
     lookBtn.addEventListener("click",function(){
+    	var test3 = $('#test3').val();
+    	alert(test3);
         var newDate = new Date();
         if(dateChoose){
             if(dateChoose.year == newDate.getFullYear() && dateChoose.month == (newDate.getMonth() + 1)){
