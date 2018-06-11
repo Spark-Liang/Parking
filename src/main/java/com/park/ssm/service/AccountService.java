@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.park.ssm.entity.Account;
+import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 
 public interface AccountService {
@@ -82,4 +83,12 @@ public interface AccountService {
 	 * @return
 	 */
 	public int stopCard(long cardId);
+	
+	/**
+	 * pay Bill支付账单
+	 * @param currentBillId
+	 * @param id
+	 * @return
+	 */
+	public int payBill(Account account);
 }

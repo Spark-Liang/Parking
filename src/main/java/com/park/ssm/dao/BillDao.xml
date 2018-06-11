@@ -13,24 +13,24 @@
 		</resultMap> -->
 	<sql id="sqlField">
 		id,userId,parkingLotId,accountId,price,isPaid
-		</sql>
+	</sql>
 	<resultMap type="bill" id="billResultMap">
 		<id property="id" column="userId"></id>
-		
-		<result property="userId" column="userId"/>
-		<result property="parkingLotId" column="parkingLotId"/>
-		<result property="accountId" column="accountId"/>
 
-		<result property="price" column="price"/>
-		<result property="isPaid" column="isPaid"/>
-		<result property="lastPayDate" column="lastPayDate"/>
-		
-		<collection property="timeQuantums" >
-			<result property="startTime" column="startTime"/>
-			<result property="endTime" column="endTime"/>
+		<result property="userId" column="userId" />
+		<result property="parkingLotId" column="parkingLotId" />
+		<result property="accountId" column="accountId" />
+
+		<result property="price" column="price" />
+		<result property="isPaid" column="isPaid" />
+		<result property="lastPayDate" column="lastPayDate" />
+
+		<collection property="timeQuantums">
+			<result property="startTime" column="startTime" />
+			<result property="endTime" column="endTime" />
 		</collection>
 	</resultMap>
-	
+
 	<sql id="billField">
 		id
 		,userId,parkingLotId,accountId
@@ -41,16 +41,22 @@
 	</sql>
 
 	<!-- 通过id加载账单 -->
-	<select id="loadBillById" parameterType="Long" resultType="Bill">
+	<select id="loadBillById" parameterType="Long" resultMap="billResultMap">
 		select
-		<include refid="sqlField" />
-		from Bill
-		where id=#{_parameter}
+		<include refid="billField" />
+		,
+		<include refid="timeQuantumField" />
+		from (select
+		<include refid="billField" />
+		from Bill where id=#{_parameter})a
+		inner join AccountStateLog b
+		on
+		a.id=b.billId
 	</select>
 	<select id="loadBillByIdForUpdate" parameterType="Long"
 		resultType="Bill">
 		select
-		<include refid="sqlField" />
+		<include refid="billField" />
 		from Bill
 		where id=#{_parameter}
 		for update
@@ -105,7 +111,7 @@
 			<if test="userId != null">
 				and userId=#{userId}
 			</if>
-				<if test="parkingLotId != null">
+			<if test="parkingLotId != null">
 				and parkingLotId=#{parkingLotId}
 			</if>
 		</where>
@@ -115,12 +121,13 @@
 		select
 
 		b.id,b.userId,b.lastPayDate,b.price,b.isPaid
-		from Account a,Bill b
+		from Account a,Bill
+		b
 		<where> b.userId=a.userId
 			and a.cardId=#{cardId}
 		</where>
 	</select>
-	
+
 	<insert id="addBill" parameterType="com.park.ssm.entity.Bill">
 		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
 			<!-- SELECT LAST_INSERT_ID()：获取刚insert到数据表中的记录的键值，只适用于自增键字段 -->
@@ -130,8 +137,8 @@
 		Bill(userId,parkingLotId,accountId,price,isPaid)
 		values(#{userId},#{parkingLotId},#{accountId},#{price},#{isPaid})
 	</insert>
-	<update id="changeCurrentBillId" parameterType="com.park.ssm.entity.Account">
-	update Account set currentBillId=#{billId}
-	where id=#{id}
+	<update id="updateIsPaid">
+		update Bill set isPaid=#{isPaid}
+		where id=#{id}
 	</update>
 </mapper>

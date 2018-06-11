@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.park.AutoRollBackTest;
+import com.park.ssm.entity.Account;
 import com.park.ssm.entity.Bill;
 
 import junit.framework.Assert;
@@ -21,6 +22,9 @@ public class TestBillService extends AutoRollBackTest {
 
 	@Autowired
 	private BillService billService;
+	
+	@Autowired
+	private AccountService accountService;
 
 	@Test
 	public void testFindBillByUserId() {
@@ -29,4 +33,26 @@ public class TestBillService extends AutoRollBackTest {
 		Assert.assertEquals(3, list.get(0).getLastPayDate());
 	}
 	
+	@Test
+	public void testPayBill() {
+		int result=0;
+		
+		Bill bill=new Bill();
+		bill.setPaid(true);
+		bill.setId(Long.valueOf(6l));
+		result=billService.payBill(bill);
+		Assert.assertEquals(1, result);
+	}
+	
+	@Test
+	public void testPayBillA() {
+		int resulta=0;
+		Bill bill=new Bill();
+		bill.setPaid(true);
+		bill.setId(Long.valueOf(6l));
+		Account account=new Account();
+		account.setCurrentBill(bill);
+		resulta=accountService.payBill(account);
+		Assert.assertEquals(1, resulta);
+	}
 }

@@ -20,7 +20,8 @@
 			ofType="Bill" fetchType="lazy" select="com.park.ssm.dao.BillDao.listBillById"
 			autoMapping="true" />
 		<collection property="parkingLot" column="{id=parkingLotId}"
-			ofType="ParkingLot" fetchType="lazy" select="com.park.ssm.dao.ParkingLotDao.loadPrkingLotForId"
+			ofType="ParkingLot" fetchType="lazy"
+			select="com.park.ssm.dao.ParkingLotDao.loadPrkingLotForId"
 			autoMapping="true" />
 	</resultMap>
 
@@ -31,7 +32,7 @@
 		,parkingLotId
 		,parkingPositionId
 		,cardId
-		
+
 		,state
 		,isParking
 		,currentBillId
@@ -78,7 +79,7 @@
 	</select>
 	<select id="countAccountrById" resultType="Integer">
 		select
-			count(1)
+		count(1)
 		from Account
 		<where>
 			<if test="userId != null">
@@ -104,23 +105,25 @@
 	</select>
 
 	<!-- 添加新卡，通过数据库调用存储过程实现 -->
-	<select id="addNewCard"  statementType="CALLABLE" useCache="false">
-		call addNewCard(
-			#{cardId}
-			,#{userId}
-			,#{parkingLotId}
-			,#{accountId,mode=OUT,jdbcType=BIGINT,javaType=Long}
-			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+	<select id="addNewCard" statementType="CALLABLE" useCache="false">
+		call
+		addNewCard(
+		#{cardId}
+		,#{userId}
+		,#{parkingLotId}
+		,#{accountId,mode=OUT,jdbcType=BIGINT,javaType=Long}
+		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
 		);
 	</select>
 
 	<update id="setAccountState">
 		update Account
 		set state=${state.getInd()}
-		where id=#{id}
+		where
+		id=#{id}
 	</update>
 
-	<update id="modifyAccount" parameterType="Map" >
+	<update id="modifyAccount" parameterType="Map">
 		update Account
 		set
 		<foreach collection="map" index="key" item="value" separator=",">
@@ -135,41 +138,49 @@
 		</foreach>
 		where id=#{id}
 	</update>
-    
-    <update id="updateCardStatus">
-    update Account 
-    set state=${state.getInd()},cardId=Null
-    where cardId=#{cardId}
-    </update>
 
-<select id="getCardMessage" resultMap="accountRoughResult">
-	select 
+	<update id="updateCardStatus">
+		update Account
+		set state=${state.getInd()},cardId=Null
+		where cardId=#{cardId}
+	</update>
+
+	<select id="getCardMessage" resultMap="accountRoughResult">
+		select
 		*
-	from Account
-	where cardId=#{_paramter}
-	for update
-</select>
+		from Account
+		where cardId=#{_paramter}
+		for update
+	</select>
 
-<select id="getAccountNum" resultType="Integer" >
-	select 
+	<select id="getAccountNum" resultType="Integer">
+		select
 		count(id)
-	from Account
-	where userId=#{_paramter}
-</select>
+		from Account
+		where userId=#{_paramter}
+	</select>
 
 
-<select id="parkCar" statementType="CALLABLE" useCache="false" >
-	call parkCar(
+	<select id="parkCar" statementType="CALLABLE" useCache="false">
+		call parkCar(
 		#{accountId}
-		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}	
-	)
-</select>
+		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+		)
+	</select>
 
-<select id="pickCar" statementType="CALLABLE" useCache="false">
-	call pickCar(
+	<select id="pickCar" statementType="CALLABLE" useCache="false">
+		call pickCar(
 		#{accountId}
-		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}	
-	)
-</select>
+		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+		)
+	</select>
 
+	<update id="updateCurrentBillId">
+		update Account set currentBillId=null
+		<where>
+			currentBillId=#{currentBill}
+			and
+			id=#{id}
+		</where>
+	</update>
 </mapper>

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
 import com.park.ssm.entity.Account;
+import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.type.AccountState;
 
 /**AccountDao功能：
@@ -120,4 +121,11 @@ public interface AccountDao {
 	 */
 	public abstract int updateCardStatus(@Param("cardId")long cardId,@Param("state")AccountState state);
 	
+	/**
+	 * 更新currentBillId
+	 * @param currentBillId
+	 * @param id
+	 * @return
+	 */
+	public int updateCurrentBillId(Account account);
 }
