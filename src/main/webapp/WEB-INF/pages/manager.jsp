@@ -234,19 +234,20 @@
     
     //修改价格
     function editmoney(a){
-    	//判断是不是出单日
+    	//判断是不是出单日，获取当前日期
     	var mydate = new Date();
-    	var mymonth =mydate.getMonth()+1;
-    	var myday =mydate.getDate();
+    	var mymonth = mydate.getMonth()+1;
+    	var myday = mydate.getDate();
+    	console.log(mydate);
     	//console.log(typeof mymonth);
     	if(mymonth === 12 || mymonth === 3){
     		if(myday === 31){
-    			alert("今天为出账日，不能修改价格");
+    			alert("今天为出账日，不能更改价格");
     			return;
     		}
     	}else if(mymonth === 6 || mymonth === 9){
     		if(myday === 30){
-    			alert("今天为出账日，不能修改价格");
+    			alert("今天为出账日，不能更改价格");
     			return;
     		}
     	}
