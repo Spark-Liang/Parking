@@ -1,17 +1,19 @@
 package com.park.ssm.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.park.ssm.entity.ParkingLot;
+import com.park.ssm.entity.ParkingRecord;
 
 /**
  * 包含的基本功能：
  * 1.对停车场的增加
  * 2.对停车场的删除和批量删除
- * 
+ * 3.修改价格和查看停车场
  * @author ASNPHXJ
  *
  */
@@ -81,4 +83,12 @@ public interface ParkingLotService {
 	 * */
 	public abstract List<Integer> listDeleteParkingLot(List<Integer> ids);
 	
+	/**
+	 * 统计使用情况
+	 * @param lotId
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	public List<ParkingRecord> sumUsage(Integer lotId,Date startTime,Date endTime);
 }

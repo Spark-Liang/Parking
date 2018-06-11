@@ -1,6 +1,7 @@
 package com.park.ssm.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.park.ssm.dao.ParkingLotDao;
 import com.park.ssm.dao.ParkingLotDao.CONDITION;
 import com.park.ssm.dao.ParkingPositionDao;
+import com.park.ssm.dao.ParkingRecordDao;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.ParkingPosition;
+import com.park.ssm.entity.ParkingRecord;
 import com.park.ssm.entity.type.ParkingLotState;
 import com.park.ssm.service.ParkingLotService;
 import com.park.ssm.util.PersistentUtil;
@@ -28,6 +31,9 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 	private ParkingLotDao parkingLotDao;
 	@Autowired
 	private ParkingPositionDao parkingPositionDao;
+	
+	@Autowired
+	private ParkingRecordDao parkingRecordDao;
 	
 	private Logger logger=LogManager.getLogger(this.getClass());
 	
@@ -153,6 +159,13 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 		if(logger!=null) {
 			logger.info(message);
 		}
+	}
+
+	@Override
+	@Transactional
+	public List<ParkingRecord> sumUsage(Integer lotId, Date startTime, Date endTime) {
+		// TODO Auto-generated method stub
+		return parkingRecordDao.countUsage(lotId, startTime, endTime);
 	}
 
 

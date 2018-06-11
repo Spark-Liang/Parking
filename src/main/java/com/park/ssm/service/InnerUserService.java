@@ -4,7 +4,11 @@ package com.park.ssm.service;
 import java.util.List;
 
 import com.park.ssm.entity.InnerUser;
-
+/**
+ * 内部员工操作 
+ * @author ASNPHX4
+ *
+ */
 public interface InnerUserService {
 	public InnerUser findInnerUserByNickname(String nickname);//根据昵称查找用户,主要用于添加用户时验证昵称是否已经存在
 
