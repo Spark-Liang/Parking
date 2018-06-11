@@ -25,15 +25,14 @@
 		<result property="isPaid" column="isPaid" />
 		<result property="lastPayDate" column="lastPayDate" />
 
-		<collection property="timeQuantums">
+		<collection property="timeQuantums" javaType="List" ofType="TimeQuantum">
 			<result property="startTime" column="startTime" />
 			<result property="endTime" column="endTime" />
 		</collection>
 	</resultMap>
 
 	<sql id="billField">
-		id
-		,userId,parkingLotId,accountId
+		userId,parkingLotId,accountId
 		,price,isPaid,lastPayDate
 	</sql>
 	<sql id="timeQuantumField">
@@ -43,20 +42,23 @@
 	<!-- 通过id加载账单 -->
 	<select id="loadBillById" parameterType="Long" resultMap="billResultMap">
 		select
-		<include refid="billField" />
-		,
-		<include refid="timeQuantumField" />
-		from (select
-		<include refid="billField" />
-		from Bill where id=#{_parameter})a
-		inner join AccountStateLog b
-		on
-		a.id=b.billId
+			a.id
+			,<include refid="billField" />
+			,<include refid="timeQuantumField" />
+		from 
+			(select
+				id,<include refid="billField" />
+			from Bill where id=#{_parameter})a
+			inner join 
+			(select 
+				billId,<include refid="timeQuantumField"/>
+			from AccountStateLog )b
+			on a.id=b.billId
 	</select>
 	<select id="loadBillByIdForUpdate" parameterType="Long"
 		resultType="Bill">
 		select
-		<include refid="billField" />
+			id,<include refid="billField" />
 		from Bill
 		where id=#{_parameter}
 		for update
@@ -65,22 +67,33 @@
 	<!-- 通过各種id組合加载账单 -->
 	<select id="listBillById" resultType="Bill">
 		select
-		<include refid="sqlField" />
-		from Bill
-		<where>
-			<if test="userId != null">
-				and userId=#{userId}
+			a.id
+			,<include refid="billField" />
+			,<include refid="timeQuantumField" />
+		from
+			(select
+				id,<include refid="billField" />
+			from Bill
+			<where>
+				<if test="userId != null">
+					and userId=#{userId}
+				</if>
+				<if test="accountId != null">
+					and accountId=#{accountId}
+				</if>
+				<if test="parkingLotId != null">
+					and parkingLotId=#{parkingLotId}
+				</if>
+			</where>
+			<if test="pageNum != null and pageSize != null">
+				limit ${(pageNum-1)*pageSize},#{pageSize}
 			</if>
-			<if test="accountId != null">
-				and accountId=#{accountId}
-			</if>
-			<if test="parkingLotId != null">
-				and parkingLotId=#{parkingLotId}
-			</if>
-		</where>
-		<if test="pageNum != null and pageSize != null">
-			limit ${(pageNum-1)*pageSize},#{pageSize}
-		</if>
+			)a
+			inner join
+			(select 
+				billId,<include refid="timeQuantumField"/>
+			from AccountStateLog )b
+			on a.id=b.billId
 	</select>
 	<select id="countBillById" parameterType="Long" resultType="Integer">
 		select
