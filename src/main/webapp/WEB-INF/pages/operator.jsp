@@ -509,7 +509,7 @@
 				alert('手机格式有误');
 				$(b).parent().find('input:eq(0)').parent().addClass('has-error');num++;
 			}
-			var object = /^\d{7}$/;
+			var object = /^[1-9]{1}\d{6}$/;
 			if(object.test(a[1])){
 				$(b).parent().find('input:eq(1)').parent().removeClass('has-error');
 			}else{

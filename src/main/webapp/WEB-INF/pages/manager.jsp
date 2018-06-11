@@ -218,8 +218,8 @@
     function editmoney(a){
     	//判断是不是出单日
     	var mydate = new Date();
-    	var mymonth = mydate.getMonth()+1;
-    	var myday = mydate.getDate();
+    	var mymonth = 6;//mydate.getMonth()+1;
+    	var myday =30; //mydate.getDate();
     	//console.log(typeof mymonth);
     	if(mymonth === 12 || mymonth === 3){
     		if(myday === 31){
