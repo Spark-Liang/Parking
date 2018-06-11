@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.park.ssm.annotation.Permission;
 import com.park.ssm.entity.InnerUser;
 import com.park.ssm.entity.ParkingLot;
+import com.park.ssm.entity.ParkingRecord;
 import com.park.ssm.service.InnerUserService;
 import com.park.ssm.service.ParkingLotService;
 import com.park.ssm.util.Encryption;
@@ -54,7 +55,7 @@ public class InnerUserController {
 		Calendar c=Calendar.getInstance();
 		int currentMonth=c.get(Calendar.MONTH)+1;
 		int currentDate=c.get(Calendar.DATE);
-		System.out.println("----------currentMonth="+currentMonth+"-------------currentDate="+currentDate);;
+		//System.out.println("----------currentMonth="+currentMonth+"-------------currentDate="+currentDate);;
 		if((currentMonth==3&&currentDate==31)||(currentMonth==12&&currentDate==31)) {
 			return false;
 		}else if((currentMonth==6&&currentDate==30)||(currentMonth==9&&currentDate==30)) {
@@ -315,31 +316,25 @@ public class InnerUserController {
 		String strChangeParkingLotPrice=new JSONObject(map).toString();
 		return strChangeParkingLotPrice;
 	}
+	
 	/**
-	 * 前端下拉列表查询InnerUser
-	 * 
-	 * @param nickname
-	 * @param sex
-	 * @param phone
+	 * 查看使用情况统计
+	 * @param lotId
+	 * @param startTime
+	 * @param endTime
 	 * @return
-	 * 
-	 * @RequestMapping(value = "selectInnerUserByFuzzy", method = RequestMethod.GET)
-	 * @ResponseBody public String selectInnerUserByFuzzy(@PathVariable("nickname")
-	 *               String nickname, @PathVariable("sex") String
-	 *               sex, @PathVariable("phone") String phone) { int intSex = -1;//
-	 *               由于数据库设置了0表示男，1表示女，故初始值只能设置为0和1以外的整数 int intPhone = 0;
-	 *               List<InnerUser> list = new ArrayList<>(); Map<String, Object>
-	 *               map = new HashMap<>(); // 非空才转化成整型 if (null != sex &&
-	 *               !"".equals(sex)) { try { intSex = Integer.parseInt(sex); }
-	 *               catch (Exception e) { map.put("msg", "error"); } } if (null !=
-	 *               phone && !"".equals(phone)) { try { intPhone =
-	 *               Integer.parseInt(phone); } catch (Exception e) { map.put("msg",
-	 *               "error"); } }
-	 * 
-	 *               try { list = innerUserService.findInnerUserByFuzzy(nickname,
-	 *               intSex, intPhone); if (!list.isEmpty()) { map.put("msg", list);
-	 *               } else { map.put("msg", null); } } catch (Exception e) {
-	 *               map.put("msg", "error"); } String strFuzzySearch = new
-	 *               JSONObject(map).toString(); return strFuzzySearch; }
 	 */
+	@ResponseBody
+	@RequestMapping(value="sumUsage",method=RequestMethod.GET)
+	public Map<String,Object> sumUsage(@PathVariable("lotId")Integer lotId,@PathVariable("startTime")Date startTime,@PathVariable("endTime")Date endTime) {
+		List<ParkingRecord> list=new ArrayList<>();
+		list=parkingLotService.sumUsage(lotId, startTime, endTime);
+		Map<String,Object> result=new HashMap<>();
+		if(!list.isEmpty()) {
+			result.put("list", list);
+		}else {
+			result.put("msg", 0);
+		}
+		return result;
+	}
 }
