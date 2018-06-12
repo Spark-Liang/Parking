@@ -17,7 +17,7 @@ public interface BillService {
 	 * @param cardId
 	 * @return
 	 */
-	public List<Bill> listBillByCardId(Long cardId);
+	public List<Bill> listBillById(Long userId,Long accountId,Integer lotId,Integer pageNum,Integer pageSize);
 	
 	/**
 	 * 增加Bill

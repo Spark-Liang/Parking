@@ -177,24 +177,6 @@ begin
     on a.accountId=b.accountId
     ;
     # 计算账单价格插入账单表
-    select * from tmpBillStateLogMap;
-    select 
-		a.newBillId
-		,b.userid as userId
-		,b.parkingLotId as parkingLotId
-		,a.accountId as accountId
-		,cast(b.price * totalDays/@globalTotalDays as decimal(10,4))
-		as billPrice
-		,@globalLastPayDate
-	from 
-		(select accountId,newBillId,sum(Days) totalDays
-        from tmpBillStateLogMap 
-        group by 1,2
-        )a
-        inner join
-		Account b
-		on a.accountId=b.id
-		;
 	insert into Bill(id,userId,parkingLotId,accountId,price,lastPayDate)
 	select 
 		a.newBillId
@@ -341,7 +323,7 @@ $
 #开卡的存储过程
 ###############################################################################
 drop procedure if exists addNewCard$
-create procedure addNewCard(in cardId bigint,in userId bigint,in lotId int,out accountId bigint,out flag int)
+create procedure addNewCard(in cardId bigint,in user_id bigint,in lot_id int,out accountId bigint,out flag int)
 BEGIN
 	declare positionId bigint;
 	declare tmpAccountId bigint;
@@ -351,28 +333,19 @@ BEGIN
 	declare checkParkingPosition bit;
     declare exit handler for sqlexception
 	begin
-<<<<<<< HEAD
-=======
 		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
         rollback;
         set autocommit=1;
 		call logErr('addNewCard',@sql_state,@msg);
->>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
 		#判断事务完成状态
 		# flag=0 事务正常完成
 		# flag=1 用户有其他卡为非正常状态
 		# flag=2 没有空停车位
 		# flag=4 系统执行错误
-	    /*
-	    select @checkUser checkUser,@checkParkingPosition checkParkingPosition,(@checkUser<<1)|(@checkParkingPosition) flag ;
-		*/
 	    set flag=(1<<2)|(@checkUser<<1)|(@checkParkingPosition)
 		;
 	    set accountId=@tmpAccountId
 	    ;
-        get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
-        select @sql_state sql_state,@msg msg;
-		rollback;
 	end
 	;
     
@@ -382,99 +355,50 @@ BEGIN
 	#开始更新操作
 	start transaction;
 	#添加相应的账号
-	select
-		@tmpAccountId:=nullif(
-				(select id+1 from Account 
-				where id>=(select max(id) from Account)
-				order by id desc
-				limit 1
-				for update) 
-                ,1)id
-		,a.userId
-		,lotId
-		,@positionId:=b.id parkingPositionId
-		,cardId
-		,currentPrice
-	from 
-		#检查对应parkingLot和User下没有没有不能使用的账号
-		(select userId,@checkUser:=0
-		from (select userId as userId) tmpUserId 
-		where
-			(select count(1) from Account
-			where userId = userId
-			  and parkingLotId = lotId
-			  and state=-1
-			for update
-			)=0 
-		)a
-		inner join
-		#检查停车场是否有空停车位,并锁定该行
-		(select id ,@checkParkingPosition:=0
-		from ParkingPosition
-		where parkingLotId=lotId
-		  and state=0
-		limit 1
-		for update
-		)b
-		inner join
-		(select currentPrice
-		from ParkingLot where id=lotId
-		)c
-	;
 	insert into Account(id,userId,parkingLotId,parkingPositionId,cardId,price)
 	select
-		@tmpAccountId:=nullif(
-				(select id+1 from Account 
-				where id>=(select max(id) from Account)
-				order by id desc
-				limit 1
-				for update) 
-                ,1)id
-		,a.userId
-		,lotId
+		@tmpAccountId:=
+			nullif((select max(id)+1 from Account for update),1)
+		,a.tmp_user_id
+		,lot_id
 		,@positionId:=b.id parkingPositionId
 		,cardId
 		,currentPrice
 	from 
 		#检查对应parkingLot和User下没有没有不能使用的账号
-		(select userId,@checkUser:=0
-		from (select userId as userId) tmpUserId 
+		(select tmp_user_id,@checkUser:=0
+		from (select user_id as tmp_user_id) tmpUserId 
 		where
 			(select count(1) from Account
-			where userId = userId
-			  and parkingLotId = lotId
+			where userId = user_id
+			  and parkingLotId = lot_id
 			  and state=-1
 			for update
-			)=0 
+			)=0
 		)a
 		inner join
 		#检查停车场是否有空停车位,并锁定该行
 		(select id ,@checkParkingPosition:=0
 		from ParkingPosition
-		where parkingLotId=lotId
+		where parkingLotId=lot_id
 		  and state=0
 		limit 1
 		for update
 		)b
 		inner join
 		(select currentPrice
-		from ParkingLot where id=lotId
+		from ParkingLot where id=lot_id
 		)c
 	;
 	#在AccountStateLog添加新账号的StateLog
+	set @tmpAccountStateLogId:=
+			nullif((select max(id)+1 from AccountStateLog for update)
+				,1)
+	;
 	insert into AccountStateLog (id,accountId,state,startTime)
 	values
     (
-		@tmpAccountStateLogId:=
-			case 
-				when 
-					(select @tmpAccountStateLogId:=id+1 from AccountStateLog
-					where id>=(select max(id) from AccountStateLog)
-					order by id desc
-					limit 1 for update
-					) is not null then @tmpAccountStateLogId
-				else 1
-			end
+		@tmpAccountStateLogId
 		,@tmpAccountId
 		,0
 		,now()
@@ -491,10 +415,6 @@ BEGIN
 		accountId=@tmpAccountId
 	where id=@positionId
 	;
-<<<<<<< HEAD
-	commit;
-	set flag=0;
-=======
 	#判断事务完成状态
 	# flag=0 事务正常完成
 	# flag=1 用户有其他卡为非正常状态
@@ -506,7 +426,6 @@ BEGIN
 	else commit;
 	end if;
 	set autocommit=1;
->>>>>>> branch 'master' of https://github.com/Spark-Liang/Parking.git
     set accountId=@tmpAccountId;
 END 
 $
