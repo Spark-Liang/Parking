@@ -135,7 +135,7 @@
 		values(#{userId},#{parkingLotId},#{accountId},#{price},#{isPaid})
 	</insert>
 	<update id="updateIsPaid">
-		update Bill set isPaid=#{isPaid}
+		update Bill set isPaid=true
 		where id=#{id}
 	</update>
 </mapper>

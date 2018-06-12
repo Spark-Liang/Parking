@@ -302,6 +302,9 @@ public class InnerUserController {
 		InnerUser manager=(InnerUser)session.getAttribute("innerUser");
 		int typeflag=manager.getTypeflag();
 		Map<String,Object> map=new HashMap<>();
+		if(setPriceOrNot()==false) {
+			map.put("msg", "出账日不能修改价格");
+		}
 		if(typeflag==1&&setPriceOrNot()==true) {
 			try {
 				parkingLotService.updateParkingLot(parkingLot);
@@ -309,9 +312,6 @@ public class InnerUserController {
 			}catch(Exception e) {
 				map.put("msg", "程序内部错误");
 			}
-		}
-		if(setPriceOrNot()==false) {
-			map.put("msg", "出账日不能修改价格");
 		}
 		String strChangeParkingLotPrice=new JSONObject(map).toString();
 		return strChangeParkingLotPrice;
