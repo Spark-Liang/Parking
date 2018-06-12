@@ -19,9 +19,9 @@
 		<where>
 			p.accountId=a.id and
 			lotId=#{lotId}
-			and startTime=#{startTime}
-			and endTime=#{endTime}
+			and startTime&gt;=#{startTime}
+			and endTime&lt;=#{endTime}
 		</where>
-		group by p.accountId
+		group by p.accountId,a.cardId
 	</select>
 </mapper>
