@@ -415,7 +415,7 @@ public class UserController {
 	}
 	
 	/**
-	 * 支付账单(暂时只改了ispaid标识
+	 * operator支付账单
 	 * @param bill
 	 * @return
 	 */
