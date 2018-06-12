@@ -16,7 +16,6 @@ import com.park.ssm.dao.BillDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
-import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.AccountService;
@@ -48,8 +47,8 @@ public class AccountServiceImpl implements AccountService {
 		List<Account> list = null;
 		List<Account> listDB = accountdao.findAccountrById(userId, parkingLotId, parkingPositionId, cardId, pageNum,
 				pageSize);
-		System.out.println("---------------------------listDB=" + listDB);
-		if (isFindAll == true) {
+		//System.out.println("---------------------------listDB=" + listDB);
+		if (isFindAll == false) {
 			list = new ArrayList<Account>(listDB.size());
 			try {
 				for (Account account : listDB) {

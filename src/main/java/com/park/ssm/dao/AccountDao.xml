@@ -7,22 +7,22 @@
 	<resultMap type="Account" id="accountRoughResult">
 		<id property="id" column="id" />
 		<result property="userId" column="userId" />
-		<result property="parkingLotId" column="parkingLotId" />
 		<result property="parkingPositionId" column="parkingPositionId" />
 		<result property="cardId" column="cardId" />
 		<result property="state" column="state"
 			typeHandler="com.park.ssm.entity.type.AccountStateHandler" />
 		<result property="isParking" column="isParking" />
+		<association property="parkingLot" column="{id=parkingLotId}"
+			javaType="ParkingLot" fetchType="eager"
+			select="com.park.ssm.dao.ParkingLotDao.loadPrkingLotForId"
+			autoMapping="true" />
 		<association property="currentBill" column="currentBillId"
 			fetchType="eager" select="com.park.ssm.dao.BillDao.loadBillById" />
 
 		<collection property="bills" column="{accountId=id}"
 			ofType="Bill" fetchType="lazy" select="com.park.ssm.dao.BillDao.listBillById"
 			autoMapping="true" />
-		<collection property="parkingLot" column="{id=parkingLotId}"
-			ofType="ParkingLot" fetchType="lazy"
-			select="com.park.ssm.dao.ParkingLotDao.loadPrkingLotForId"
-			autoMapping="true" />
+		
 	</resultMap>
 
 	<!-- dao相关sql -->

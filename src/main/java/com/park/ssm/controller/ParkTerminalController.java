@@ -48,7 +48,6 @@ public class ParkTerminalController {
 		}else {
 			result.put("res", true);
 		}
-		
 		return result;
 	}
 }

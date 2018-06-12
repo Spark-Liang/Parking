@@ -104,7 +104,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		long cardId=13745678911l;
 		Account account=dao.getCardMessage(cardId);
 		Assert.assertNotNull(account);
-		System.out.println("停车场编号为："+account.getParkingLotId()+"停车位编号为："+account.getParkingPositionId());
+		System.out.println("停车场编号为："+account.getParkingLot().getId()+"停车位编号为："+account.getParkingPositionId());
 		Account accountInDB=new Account();
 		PersistentUtil.<Account>merge(account, accountInDB,Account.class);
 		account.setCardId(100l);

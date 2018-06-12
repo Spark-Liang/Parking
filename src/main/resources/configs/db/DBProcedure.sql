@@ -133,24 +133,6 @@ begin
     on a.accountId=b.accountId
     ;
     # 计算账单价格插入账单表
-    select * from tmpBillStateLogMap;
-    select 
-		a.newBillId
-		,b.userid as userId
-		,b.parkingLotId as parkingLotId
-		,a.accountId as accountId
-		,cast(b.price * totalDays/@globalTotalDays as decimal(10,4))
-		as billPrice
-		,@globalLastPayDate
-	from 
-		(select accountId,newBillId,sum(Days) totalDays
-        from tmpBillStateLogMap 
-        group by 1,2
-        )a
-        inner join
-		Account b
-		on a.accountId=b.id
-		;
 	insert into Bill(id,userId,parkingLotId,accountId,price,lastPayDate)
 	select 
 		a.newBillId

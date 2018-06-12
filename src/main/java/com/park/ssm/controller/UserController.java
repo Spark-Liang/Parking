@@ -210,7 +210,7 @@ public class UserController {
 			Account account = accountService.getCardMessage(OldCardId);
 			if (account != null){
 				Account NewCardAccount = accountService.getCardMessage(NewCardId);
-				long LotId=account.getParkingLotId();
+				long LotId=account.getParkingLot().getId();
 				int bill = accountService.isNotPayBill(userId,LotId);// 判断是否存在未支付的账单
 				if(bill>0){
 					message = "无法更换，该账户存在未缴费的账单，请先支付帐单！";
