@@ -228,7 +228,7 @@
       ,type: 'month'
       ,done: function(value, date, endDate){//控件选择完毕后的回调---点击日期、清空、现在、确定均会触发。
        
-        dateChoose = date;     //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+        dateChoose = date;//得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
       }
     });
     
@@ -320,7 +320,7 @@
                  +"<p>停车费：￥<span>"+json.res[i].currentPrice+"</span>元/月<img onclick='editmoney(this)' data-value='"+json.res[i].id+"' class='pull-right' src='img/manger-editor.svg'></p>"
                  +"</div>"
                 /*  +"<button class='btn btn-md btn-block btn-primary btn-use' onclick='usagecheck(this)'>查看使用情况</button>" */
-                 +"<button class='btn btn-md btn-block btn-primary' onclick='moneycheck(this)'>查看使用情况</button>"
+                 +"<button class='btn btn-md btn-block btn-primary' onclick='seeUsage(this)' data-lotid='"+json.res[i].id+"'>查看使用情况</button>"
                  +"</div>"
              })
              }
@@ -330,23 +330,7 @@
      })
     })
     
-    //ajax获取停车场价格
-    /*$(window).ready(function(){
-        $.ajax({
-            url:"",
-            type:"GET",
-            dataType:"json",
-            data:{
-
-            },
-            success:function(json){
-                $('.parking-money span').text(json);
-            },
-            error:function(){
-
-            }
-        });
-    })*/
+    
     //选择日期后点击查询，ajax传日期以及获取相应数据
     $('.nextQuarter').fadeOut();
     var lookBtn = document.getElementsByClassName("lookBtn")[0];
@@ -363,6 +347,27 @@
             }
         }
     });
+    
+    //查看某一停车场的使用情况
+    function seeUsage(a){
+    	$('.showmoney').fadeIn();
+    	console.log(a);
+    	var lotId = $(a).data('lotid');
+    	console.log(lotId);
+    	$.ajax({
+    		url:'',
+    		dataType: 'json',
+    		data: {
+    			lotId: lotId
+    		},
+    		success: function(res){
+    			
+    		},
+    		error: function(){
+    			alert("数据请求发送失败");
+    		}
+    	});
+    }
 </script>
 </body>
 

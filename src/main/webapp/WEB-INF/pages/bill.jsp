@@ -115,8 +115,9 @@
                         
                     </tr>
                     </thead>
-                    <tbody>
-                    
+                    <tbody id = "outBillData">
+                    <!-- 写死的静态数据 -->
+                    <!--
                     <tr>
                         <td>1</td>
                         <td>2017.1.1-2017.3.31</td>
@@ -138,7 +139,7 @@
                         <td>400</td>
                         <td>未付款</td>
                     </tr>
-                    
+                     -->
                     </tbody>
                 </table> 
             </div>
@@ -152,7 +153,7 @@
                         <th>预计下季度付款金额(RMB)</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id = "noOutBillData">
                     <tr>                  
                         <td>2018.4.1-2018.6.30</td>
                         <td>250</td>
@@ -182,82 +183,98 @@
     <!--点击查看帐单按钮显示帐单内容-->
     
 <script type="text/javascript">
-    /*$(document).ready(function(){
-        $.ajax({
-            type: "GET",
-            dateType: "json",
-            url:"",
-            date{
-
-            },success:function(responce){
-                var res=responce.res;
-                console.log(res);
-                var length = res.length;
-                for (var i = 0;i<length;i++){
-                    var tmpBill = new bill(res[i]);
-                    tmpBill.billadd();
-                        
-                }
-            },error:function(){
-
-            }
-        });
-    });*/
-    //将ajax请求回来的停车卡数据保存
-
-    function card(option){
-        this.cardnum = option.cardnum;
-        this.date = option.date;
-        if(option.status == "1"){
-           
-        }else{
-            this.remind = "";
-        }
-       
-        //console.log(this.cardnum + this.date + this.remind);
-    }
-
-    //测试
-    /*var option = {
-        cardnum: '123',
-        date: '2018',
-        status: '1'
-    };
-    console.log(option.cardnum + option.date +option.status);
-    var option2 = {
-        cardnum: 'abc',
-        date: '2018',
-        status: '0'
-    };
-    var card1 =new card(option);
-    console.log(card1.cardnum + card1.date + card1.remind);
-    var card1 =new card(option2);
-    console.log(card1.cardnum + card1.date + card1.remind);
-    var card2 =new card(option2);
-    console.log(card2.cardnum + card2.date + card2.remind);
-    */
-
-  
-   
 
     //点击检查帐单弹出帐单页面
-    function showBill(){
-        console.log(this);//保存卡号，用来请求账单信息
+    function showBill(a){
+        console.log(a);//保存卡号，用来请求账单信息
+        var accountId = $(a).data('accountid');
+        console.log("accountId:"+accountId);
         span1.classList.add("mystyle");
         span2.classList.remove("mystyle");
         var showBill = document.getElementsByClassName("showBill")[0];
         showBill.style.display = 'block';
         outbill.style.display = "block";
         nooutbill.style.display = "none";
-
+        
+		//ajax发送账户ID给后台拿账单数据
+		var userId = GetUrlParam("id");
+		$.ajax({
+			url: "user/checkBillInfo",
+			type: 'GET',
+			data:{
+				userId: userId,
+				accountId: accountId
+			},
+			dataType:'json',
+			success: function(respon){
+				//先把旧数据删除
+				$("tbody").find("tr").remove();
+				console.log(respon);
+				console.log(respon.msg);
+				var length = respon.msg.length;
+				for(var i = 0; i <= length; i++){
+					var id = respon.msg[i].id;//获取账单编号id
+					//日期通过getDate函数转换格式
+					var startTime = getDate(respon.msg[i].timeQuantums[0].startTime);
+					var endTime = getDate(respon.msg[i].timeQuantums[0].endTime);
+					var lastPayDate = getDate(respon.msg[i].lastPayDate);//获取最后缴费日期
+					//console.log(lastPayDate);
+					var price = respon.msg[i].price;//获取应付金额
+					//console.log("应付金额为："+price);
+					
+					//根据paid的布尔值来判断账单是否已经付款
+					var payState = "已付款";
+					if(respon.msg[i].paid === false){
+						payState = "未付款";
+					}
+					var flag = respon.msg[i].timeQuantums.length;//获取日期长度用来判断账单是否有断开日期
+					if(flag === 1 ){
+						var startTime = getDate(respon.msg[i].timeQuantums[0].startTime);
+						var endTime = getDate(respon.msg[i].timeQuantums[0].endTime);
+						var time = startTime + "-"+endTime;
+						//已出账单详细数据信息添加到表格
+						$('#outBillData').append(function(){
+							return "<tr>"
+							+"<td>"+id+"</td>"
+							+"<td>"+time+"</td>"
+							+"<td>"+lastPayDate+"</td>"
+							+"<td>"+price+"</td>"
+							+"<td>"+payState+"</td></tr>"
+						});
+						//console.log("time为："+time);
+					}else if(flag === 2){
+						var startTime = getDate(respon.msg[i].timeQuantums[0].startTime);
+						var endTime = getDate(respon.msg[i].timeQuantums[0].endTime);
+						var time = startTime + "-"+endTime;
+						var startTime2 = getDate(respon.msg[i].timeQuantums[1].startTime);
+						var endTime2 = getDate(respon.msg[i].timeQuantums[1].endTime);
+						var time2 = startTime2 + "-"+endTime2;
+						$('#outBillData').append(function(){
+							return "<tr>"
+							+"<td>"+id+"</td>"
+							+"<td>"+time+"<br>"+time2+"</td>"
+							+"<td>"+lastPayDate+"</td>"
+							+"<td>"+price+"</td>"
+							+"<td>"+payState+"</td></tr>"
+						});
+					}					
+				}
+				
+			},
+			error: function(){
+				alert("数据请求发送失败");
+			}
+		});
+		
     }
+
     //点击关闭，关闭帐单页面
     function closeBill(){
         var showBill = document.getElementsByClassName("showBill")[0];
         showBill.style.display = 'none';
     }
 
-    //帐单导航样式变化
+    //查看已出账单和未出账单选项的样式变化
     var billMenu = document.getElementsByClassName("billMenu")[0];
     console.log(billMenu);
     var span1 = billMenu.getElementsByTagName("span")[0];
@@ -300,6 +317,7 @@
     	var myDay = mydate.getDate();
     	return myYear + "." + myMonth + "." + myDay;
     } 
+    
     //页面加载后获取停车卡信息
     $(document).ready(function(){
     	
@@ -315,66 +333,32 @@
 				isGetAll: 'false'
              },success: function(json){
             	 console.log(json);
-            	 var tip = "有未付款账单";
             	 var l = json.list.length;
             	 for(var i = 0; i < l; i++){
+            		 var tip = "有未付款账单";
+            		 console.log(json.list[i].currentBill.paid);
+            		 if(json.list[i].currentBill.paid === true){
+            			 tip = "";
+            		 }
             		 var cardNum = json.list[i].cardId;
                 	 var startDate = getDate(json.list[i].stateStartDate);//转换日期格式
-                	 
+                	 var accountId = json.list[i].currentBill.accountId;
+                	 var userId = json.list[i].userId;
                 	 //加载停车卡
                 	 $('.moudle1').append(function(){
                          return "<div class='admin-block'>"
                          +"<p>卡号："+cardNum+"</p>"
                          +"<p>开卡日期："+startDate+"</p>"
                          +"<p style = 'color: red'>"+tip+"</p>"
-                         +'<button class="btn btn-md btn-block btn-primary" onclick = "showBill()">查看帐单</button>';
+                         +'<button class="btn btn-md btn-block btn-primary" onclick = "showBill(this)" data-accountid="'+accountId+'">查看帐单</button>';
                 	 });
             	 }
              },error: function(){
-
+				alert("数据请求发送失败");
              }
          });
     });
-    	/*
-        $.ajax({
-            url:'',
-            type:'POST',
-            dateType:'json',
-            data{
-
-            },
-            success: function(responce){
-                var data =responce.msg;
-                var length = data.length;
-                for (var i = 0; i<length; i++){
-                var card1 = new card(data[i]);
-                    card1.cardadd();
-                }
-            },
-            error: function(){
-
-            }
-        });
-    });/
-    
-    //点击查看已出账单发送ajax请求获取账单信息
-    /*var card = document.getElementsByClassName
-    function(){
-        $.ajax({
-            url:'',
-            type: 'GET',
-            dataType:'json',
-            data{
-                cardId: cardId;
-            },
-            success: function(){
-
-            },
-            error: function(){
-
-            }
-        });
-    }*/
+    	
 </script>
 </body>
 
