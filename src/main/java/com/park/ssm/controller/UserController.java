@@ -425,7 +425,7 @@ public class UserController {
 		Map<String,Object> map=new HashMap<>();
 		int result=0;
 		result=billService.payBill(bill);
-		map.put("msg", 1);
+		map.put("msg", result);
 		String strPayBill=new JSONObject(map).toString();
 		return strPayBill;
 	}

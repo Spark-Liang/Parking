@@ -38,7 +38,6 @@ public class TestBillService extends AutoRollBackTest {
 	@Test
 	public void testPayBill() {
 		int result = 0;
-
 		Bill bill = new Bill();
 		bill.setPaid(true);
 		bill.setId(Long.valueOf(6l));
