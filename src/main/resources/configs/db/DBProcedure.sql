@@ -1,6 +1,50 @@
 use train_db;
-#生成bill的储存过程
 DELIMITER $
+################################################################################
+#记录存储过程错误日志的存储过程
+###############################################################################
+create table if not exists ErrLog
+(
+	id bigint primary key auto_increment
+	,procedureName varchar(128) not null
+	,sql_err_state varchar(16) 
+	,msg varchar(1024)
+	,errTime datetime not null
+)engine=innodb auto_increment=1
+$
+drop procedure if exists logErr$
+create procedure logErr(in procedure_name varchar(128),in sql_state varchar(16),in message varchar(1024))
+begin
+	declare tryTimes int;
+	declare successFlag int;
+	declare continue handler for sqlexception 
+	begin
+		rollback;
+		set @tryTimes=@tryTimes+1;
+	end
+	;
+	
+	set @successFlag=0;
+	set @tryTimes=0;
+	set autocommit=0;
+	while @tryTimes<=3 and @successFlag=0
+	do
+		start transaction;
+		insert into ErrLog(procedureName,sql_err_state,msg,errTime)
+		values
+		(procedure_name,sql_state,message,now())
+		;
+		commit;
+		set @successFlag=1;
+	end while
+	;
+	set autocommit=1;
+end
+$
+
+################################################################################
+#生成bill的存储过程
+###############################################################################
 drop procedure if exists generateBill$
 create procedure generateBill(in execTime dateTime,out flag int)
 begin
@@ -12,7 +56,7 @@ begin
     declare exit handler for sqlexception
 	begin
 		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
-		select @sql_state sql_state,@msg msg;
+		call  logErr('generateBill',@sql_state,@msg);
         set flag=1;
         rollback;
         set autocommit=1;
@@ -152,12 +196,18 @@ begin
 		on a.accountId=b.id
 	;
 	# 更新Account表中,Bill表中最新的bill即是account新的currentBill
+	# 同时更新最新的ParkingLot的价格到Account上
 	update 
 		Account a 
 		inner join
 		tmpBillStateLogMap b
 		on a.id=b.accountId
-	set a.currentBillId=b.newBillId
+		inner join
+		ParkingLot c
+		on a.parkingLotId=c.id
+	set 
+		a.currentBillId=b.newBillId
+		,a.price=c.currentPrice
 	;
     # 更新AccountStateLog中的billId
     update 
@@ -175,7 +225,9 @@ begin
     #truncate table tmpBillStateLogMap;
 end
 $
-
+################################################################################
+#系统自动停卡的存储过程
+###############################################################################
 drop procedure if exists updateAllAccountState$
 create procedure updateAllAccountState(in execTime dateTime,out flag int)
 begin
@@ -183,7 +235,7 @@ begin
 	declare exit handler for sqlexception
 	begin
 		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT,@table_name=TABLE_NAME;
-        select @sql_state sql_state,@msg msg,@table_name table_name;
+        call logErr('updateAllAccountState',@sql_state,@msg);
 		rollback;
 		set autocommit=1;
 		set flag=1;
@@ -267,7 +319,9 @@ begin
     truncate TABLE tmpUpdateInfo;
 end
 $
-
+################################################################################
+#开卡的存储过程
+###############################################################################
 drop procedure if exists addNewCard$
 create procedure addNewCard(in cardId bigint,in user_id bigint,in lot_id int,out accountId bigint,out flag int)
 BEGIN
@@ -280,8 +334,9 @@ BEGIN
     declare exit handler for sqlexception
 	begin
 		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
-        select @sql_state sql_state,@msg msg;
-		rollback;
+        rollback;
+        set autocommit=1;
+		call logErr('addNewCard',@sql_state,@msg);
 		#判断事务完成状态
 		# flag=0 事务正常完成
 		# flag=1 用户有其他卡为非正常状态
@@ -296,7 +351,7 @@ BEGIN
     
 	set @checkUser=1;
 	set @checkParkingPosition=1;
-	
+	set autocommit=0;
 	#开始更新操作
 	start transaction;
 	#添加相应的账号
@@ -370,16 +425,32 @@ BEGIN
 	then rollback;
 	else commit;
 	end if;
+	set autocommit=1;
     set accountId=@tmpAccountId;
 END 
 $
 
+
+
+################################################################################
+#停车和提车相关的存储过程
+###############################################################################
 drop procedure if exists parkCar$
 create procedure parkCar(in accountId bigint,out flag int)
 begin
 	declare parkingRecordId bigint;
-	declare continue handler for sqlexception set flag=1;
+	declare exit handler for sqlexception 
+	begin
+		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
+        call logErr('parkCar',@sql_state,@msg);
+		rollback;
+		set autocommit=1;
+		set flag=1;
+	end
+	;
 	set flag=0;
+	set autocommit=0;
+	
 	start transaction;
 	insert into ParkingRecord (id,lotId,positionId,accountId,startTime)
 	select
@@ -407,20 +478,25 @@ begin
 			,isParking = 1
 	where id=accountId
 	;
-	if (flag > 0) then
-		rollback;
-	else
-		commit;
-	end if
-	;
+	commit;
+	set autocommit=1;
+	set flag=0;
 end 
 $
 
 drop procedure if exists pickCar$
 create procedure pickCar(in accountId bigint,out flag int)
 begin
-	declare continue handler for sqlexception set flag=1;
-	set flag=0;
+	declare exit handler for sqlexception 
+	begin
+		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
+        call logErr('pickCar',@sql_state,@msg);
+		rollback;
+		set autocommit=1;
+		set flag=1;
+	end
+	;
+	set autocommit=0;
 	start transaction;
 	update ParkingRecord
 		set endTime = now()
@@ -431,12 +507,9 @@ begin
 			,isParking=0
 	where id=accountId
 	;
-	if (flag > 0) then
-		rollback;
-	else
-		commit;
-	end if
-	;
+	commit;
+	set autocommit=1;
+	set flag=0;
 end 
 $
 
