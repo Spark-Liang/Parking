@@ -152,7 +152,8 @@
 						<thead>
 							<tr>
 								<th class="col-md-3">手机号</th>
-								<th class="col-me-6">账单时间</th>
+								<th class="col-me-5">账单时间</th>
+								<th class="col-me-1">价格</th>
 								<th>账单金额</th>
 							</tr>
 						</thead>
@@ -160,7 +161,8 @@
 							<!--  -->
 						</tbody>
 					</table>
-					<button class="btn btn-primary btn-sm pull-right">支付账单</button>
+					<button class="btn btn-primary btn-sm pull-right payBill-close">关闭</button>
+					<button class="btn btn-primary btn-sm pull-right payBill-btn">支付账单</button>
 				</div>
 			</div>
 		</div>
@@ -352,6 +354,10 @@
 				$(this).parent().find('input').parent().addClass('has-error');
 			}
  		})
+ 		
+ 		
+ 		/*                                     */
+ 		//操作员帮助用户进行停卡模块的方法分割
 		//点击停卡按钮的操作
 		$('.deletecard').click(function(){
 			var inf = new Array();
@@ -453,6 +459,7 @@
 						return "<tr>"
 						+"<td>"+json.list[0].userId+"</td>"
 						+"<td>"+startDate+"~"+endDate+"</td>"
+						+"<td>"+json.list[0].parkingLot[0].cost+" ￥/每月</td>"
 						+"<td>"+json.list[0].currentBill.price+"</td>"
 						+"</tr>"
 					})
@@ -467,11 +474,11 @@
 					var useDay = useMuchDay(day,month);
 					var price = (json.list[0].parkingLot[0].cost * 3)*(useDay/allDayNum[0]);
 					var price1 = Math.ceil(price);
-					alert((json.list[0].parkingLot[0].cost * 3)+" "+(day/useDay));
 					$('.BillTable').append(function(){
 						return "<tr>"
 						+"<td>"+json.list[0].userId+"</td>"
 						+"<td>"+year+"-"+allDayNum[1]+"-1 ~"+time+"</td>"
+						+"<td>"+json.list[0].parkingLot[0].cost+" ￥/每月</td>"
 						+"<td>"+price1+"</td>"
 						+"</tr>"
 					})
@@ -509,7 +516,7 @@
 				alert('手机格式有误');
 				$(b).parent().find('input:eq(0)').parent().addClass('has-error');num++;
 			}
-			var object = /^[1-9]{1}\d{6}$/;
+			var object = /^\d{7}$/;
 			if(object.test(a[1])){
 				$(b).parent().find('input:eq(1)').parent().removeClass('has-error');
 			}else{
@@ -528,7 +535,20 @@
 				return 0;
 			}
 		}
+		//停卡时候有未支付账单的时候点击支付账单触发的方法
+		$('.payBill-btn').click(function (){
+			alert('fff');
+		});
+		//点击关闭的按钮
+		$('.payBill-close').click(function (){
+		 	$('.payBill').hide();
+		})
 		
+		
+		
+		
+		
+		//操作员搜索停车卡信息模块的开始
 		$('.search-card').click(function(){
 			$('.tbody-add tr').remove();
 			var iphone = $(this).parent().find('input:eq(0)').val();
@@ -633,7 +653,7 @@
 		        	$(a).parent().parent().find('input').parent().addClass('has-error');
 		        }  
 		}
-		
+		//下面两个方法都是操作员搜索停车卡信息模块的
 		//点击支付帐单的触发事件 
 		function paymoney(a){
 			$('.pay-money').fadeIn();

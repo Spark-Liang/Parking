@@ -415,7 +415,7 @@ public class UserController {
 	}
 	
 	/**
-	 * 支付账单(暂时只改了ispaid标识
+	 * operator支付账单
 	 * @param bill
 	 * @return
 	 */
@@ -425,7 +425,7 @@ public class UserController {
 		Map<String,Object> map=new HashMap<>();
 		int result=0;
 		result=billService.payBill(bill);
-		map.put("msg", 1);
+		map.put("msg", result);
 		String strPayBill=new JSONObject(map).toString();
 		return strPayBill;
 	}

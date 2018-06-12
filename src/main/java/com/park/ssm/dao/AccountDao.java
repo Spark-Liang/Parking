@@ -126,6 +126,6 @@ public interface AccountDao {
 	 * @param currentBillId
 	 * @param id
 	 * @return
-	 */
-	public int updateCurrentBillId(Account account);
+	 
+	public int updateCurrentBillId(Account account);*/
 }
