@@ -80,11 +80,11 @@
 <body>
 	<div class="pay-money alert alert-info">
 		<h4>确认支付帐单</h4>
-		<p>卡号：<span></span><p>
+		<p>卡号：<span>gfd</span><p>
 		<p>停车场：<span></span><p>
-		<h3>支付金额：<span></span></h3>
+		<h3>支付金额：<span>fds</span></h3>
 		<br/>
-		<a class="btn btn-block btn-primary">支付</a>
+		<a class="btn btn-block btn-primary" data-value="0" onclick="paybill(this)">支付</a>
 		<a class="btn btn-block btn-primary">取消</a>
 	</div>
 	<!-- 导航条 -->
@@ -561,22 +561,30 @@
 					type:'POST',
 					data:{
 						'userId':iphone,
-						'isGetAll':'false'
+						'isGetAll':'true'
 					},success:function(json){
 						console.log(json);
+						/* conslog.log(json.list[i].currentBill) */
 						if(json.message==''){
 							var l = json.list.length;
-							for(var i =0;i<l;i++){
-								$('.tbody-add').append(function (){
+							for (var i = 0 ;i<l;i++){
+								if (json.list[i].currentBill!=null){
+									billid = json.list[i].currentBill.id;
+									price = json.list[i].currentBill.price;
+								}else{
+									billid = 0;
+									price = 0;
+								}
+								$('.tbody-add').append(function (arr){
 									return "<tr>"
 									+"<td>"+json.list[i].cardId+"</td>"
 									+"<td></td>"
-									+"<td>"+json.list[i].parkingLot[0].name+"</td>"
+									+"<td>"+json.list[i].parkingLot.name+"</td>"
 									+"<td>"+json.list[i].userId+"</td>"
 									+"<td>"+json.list[i].state+"</td>"
 									+"<td>"
 									+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
-									+"<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
+									+"<a class='btn btn-default btn-xs' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"'>支付帐单</a>"
 									+"</td>"
 								+"</tr>";
 								});
@@ -584,15 +592,6 @@
 						}else{
 							alert(json.message);
 						}
-						
-							/* <div class='col-md-3 search-inf'>"
-							+"<h4>卡号：<span>"+json.list[i].cardId+"</span></h4>"
-							+"<p>手机号：<span>"+json.list[i].userId+"</span></p>"
-							+"<p>卡状态：<span>"+json.list[i].state+"</span></p>"
-							+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
-							+"&nbsp;<a class='btn btn-default btn-xs' onclick='paymoney(this)'>支付帐单</a>"
-						+"</div> */
-						
 					},error:function(){
 						alert('系统出错')
 					}
@@ -656,7 +655,41 @@
 		//下面两个方法都是操作员搜索停车卡信息模块的
 		//点击支付帐单的触发事件 
 		function paymoney(a){
-			$('.pay-money').fadeIn();
+			var billId = $(a).data("billid");
+			if(billId == 0){
+				alert('当前停车卡没有需要支付的账单');
+			}
+			else{
+				var park = $(a).data("park");
+				var price = $(a).data("price");
+				var cardid = $(a).data("cardid");
+				$('.pay-money').fadeIn();
+				$('.pay-money span:eq(0)').text(cardid);
+				$('.pay-money span:eq(1)').text(park);
+				$('.pay-money span:eq(2)').text(price);
+				$('.pay-money a:eq(0)').attr("data-value",billId);
+			}
+		}
+		//点击支付按钮触发事件
+		function paybill(a){
+			//a是元素自身
+			var billid = $(a).data("value");
+			var bill = new Object();
+			bill.id = billid;
+			bill.isPaid = true;
+			console.log(bill)
+			$.ajax({
+				url:'user/paybill',
+				type:'POST',
+				dataType:'json',
+				data:
+					bill
+				,success:function(json){
+					console.log(json);
+				},error:function(){
+					
+				}
+			})
 		}
 		//关闭支付帐单的弹框
 		$('.pay-money a:eq(1)').click(function (){
