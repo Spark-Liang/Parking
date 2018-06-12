@@ -153,11 +153,11 @@ public class UserController {
 				}
 			}
 			result.put("falg", falg);
-			result.put("message", message);
+			result.put("error", message);
 		} catch (Exception e) {
 			e.printStackTrace();
 			falg = 0;
-			result.put("message", " 系统出错，请联系技术部门！");
+			result.put("error", " 系统出错，请联系技术部门！");
 		}
 		return JSON.toJSONString(result);
 	}
@@ -187,7 +187,7 @@ public class UserController {
 		} else {
 			message = "输入数据有误，请重新输入！";
 		}
-		result.put("message", message);
+		result.put("error", message);
 		return result;
 	}
 
@@ -239,11 +239,11 @@ public class UserController {
 			}else {
 				message = "该停车卡不存在，请重新输入！";
 			}
-			result.put("message", message);
+			result.put("error", message);
 			result.put("flag",flag);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("message", " 系统出错，请联系技术部门！");
+			result.put("error", " 系统出错，请联系技术部门！");
 			result.put("flag",flag);
 		}
 		return JSON.toJSONString(result);

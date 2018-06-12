@@ -35,7 +35,16 @@
     	</mvc:interceptor>
     </mvc:interceptors>
     
-
+    
+    
+	<!-- 防sql注入攻击——拦截器配置 -->
+    <mvc:interceptors>
+    	<mvc:interceptor>
+    		<mvc:mapping path="/**"/>
+    		 <mvc:exclude-mapping path="/index.jsp"/>
+    	   <bean class="com.park.ssm.interceptor.SqlInjectInterceptor"/>
+    	</mvc:interceptor>
+    </mvc:interceptors>
 
 
     <bean id="htmlInternalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">

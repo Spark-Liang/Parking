@@ -266,7 +266,7 @@
 			inf[0] = $(this).parent().find('input:eq(0)').val();
 			inf[1] = $(this).parent().find('input:eq(1)').val();
 			inf[2] = $(this).parent().find('select').val();
-			var check = checkinf(this,inf);
+		 	var check = checkinf(this,inf);
 			if(check==1){
 				 $.ajax({
 					url:'user/addNewCard',//检测新卡是否已经存在
