@@ -24,7 +24,7 @@ public class BillServiceImpl implements BillService {
 	@Override
 	public List<Bill> listBillById(Long userId,Long accountId,Integer lotId,Integer pageNum,Integer pageSize) {
 		// TODO Auto-generated method stub
-		System.out.println("-----------------------"+billDao.listBillById(userId, accountId, lotId, pageNum, pageSize));
+		//System.out.println("-----------------------"+billDao.listBillById(userId, accountId, lotId, pageNum, pageSize));
 		return billDao.listBillById(userId, accountId, lotId, pageNum, pageSize);
 	}
 	

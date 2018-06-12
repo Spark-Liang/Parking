@@ -29,10 +29,10 @@ public class TestBillService extends AutoRollBackTest {
 	private AccountService accountService;
 
 	@Test
-	public void testFindBillByUserId() {
+	public void testListBillById() {
 		List<Bill> list = new ArrayList<Bill>();
-		list = billService.listBillById(Long.valueOf(5689784l), null, null, null, null);
-		Assert.assertEquals(3, list.get(0).getLastPayDate());
+		list = billService.listBillById(Long.valueOf(13745678910l), Long.valueOf(2l), null, null, null);
+		Assert.assertEquals(true, list.get(0).isPaid());
 	}
 
 	@Test
@@ -42,16 +42,6 @@ public class TestBillService extends AutoRollBackTest {
 		bill.setPaid(true);
 		bill.setId(Long.valueOf(6l));
 		result = billService.payBill(bill);
-		Assert.assertEquals(0, result);
+		Assert.assertEquals(1, result);
 	}
-
-	/**
-	 * 
-	 * 
-	 * @Test public void testPayBillA() { int resulta=0; Bill bill=new Bill();
-	 *       bill.setPaid(true); bill.setId(Long.valueOf(6l)); Account account=new
-	 *       Account(); account.setCurrentBill(bill);
-	 *       resulta=accountService.payBill(account); Assert.assertEquals(1,
-	 *       resulta); }
-	 */
 }
