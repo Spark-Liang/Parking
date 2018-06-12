@@ -51,25 +51,13 @@ public interface BillDao {
 											,@Param("parkingLotId")Integer parkingLotId);
 	
 	/**
-	 * 更新对应的id的bill的ispaid状态为1
-	 * @param id
-	 * @return
-	 */
-	public abstract int updateBillStateById(long id);
-	
-	/**
 	 * 查询是否存在bill的ispaid状态为1
 	 * @param id
 	 * @return
 	 */
 	public abstract int  isNotPayBill(@Param("userId")Long userId,@Param("parkingLotId")Long parkingLotId);
 	
-	/**
-	 * 根据用户显示其所有账单
-	 * @param userId
-	 * @return
-	 */
-	public List<Bill> listBillByCardId(Long cardId);
+	
 	
 	/**
 	 * 增加账单

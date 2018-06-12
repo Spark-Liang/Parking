@@ -22,10 +22,10 @@ public class BillServiceImpl implements BillService {
 	@Autowired
 	private BillDao billDao;
 	@Override
-	public List<Bill> listBillByCardId(Long userId) {
+	public List<Bill> listBillById(Long userId,Long accountId,Integer lotId,Integer pageNum,Integer pageSize) {
 		// TODO Auto-generated method stub
-		System.out.println("-----------------------"+billDao.listBillByCardId(userId));
-		return billDao.listBillByCardId(userId);
+		System.out.println("-----------------------"+billDao.listBillById(userId, accountId, lotId, pageNum, pageSize));
+		return billDao.listBillById(userId, accountId, lotId, pageNum, pageSize);
 	}
 	
 	@Override

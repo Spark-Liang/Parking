@@ -15,7 +15,7 @@
 		id,userId,parkingLotId,accountId,price,isPaid
 	</sql>
 	<resultMap type="bill" id="billResultMap">
-		<id property="id" column="userId"></id>
+		<id property="id" column="userId"/>
 
 		<result property="userId" column="userId" />
 		<result property="parkingLotId" column="parkingLotId" />
@@ -65,7 +65,7 @@
 	</select>
 
 	<!-- 通过各種id組合加载账单 -->
-	<select id="listBillById" resultType="Bill">
+	<select id="listBillById" resultMap="billResultMap">
 		select
 			a.id
 			,<include refid="billField" />
@@ -112,12 +112,6 @@
 		</where>
 	</select>
 
-	<update id="updateBillStateById">
-		update Bill
-		set isPaid=1
-		where id=#{_parameter}
-	</update>
-
 	<select id="isNotPayBill" parameterType="Long" resultType="Integer">
 		select count(id) from Bill
 		<where>
@@ -129,16 +123,6 @@
 			</if>
 		</where>
 		and isPaid=0
-	</select>
-	<select id="listBillByCardId" resultType="com.park.ssm.entity.Bill">
-		select
-
-		b.id,b.userId,b.lastPayDate,b.price,b.isPaid
-		from Account a,Bill
-		b
-		<where> b.userId=a.userId
-			and a.cardId=#{cardId}
-		</where>
 	</select>
 
 	<insert id="addBill" parameterType="com.park.ssm.entity.Bill">
