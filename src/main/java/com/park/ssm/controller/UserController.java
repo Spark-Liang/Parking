@@ -153,7 +153,7 @@ public class UserController {
 				}
 			}
 			result.put("falg", falg);
-			result.put("error", message);
+			result.put("message", message);
 		} catch (Exception e) {
 			e.printStackTrace();
 			falg = 0;
