@@ -676,7 +676,7 @@
 			var billid = $(a).data("value");
 			var bill = new Object();
 			bill.id = billid;
-			bill.isPaid = true;
+			//bill.isPaid = true;
 			console.log(bill)
 			$.ajax({
 				url:'user/paybill',
