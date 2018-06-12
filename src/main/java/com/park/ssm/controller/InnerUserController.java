@@ -326,7 +326,7 @@ public class InnerUserController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="sumUsage",method=RequestMethod.GET)
-	public Map<String,Object> sumUsage(@PathVariable("lotId")Integer lotId,@PathVariable("startTime")Date startTime,@PathVariable("endTime")Date endTime) {
+	public Map<String,Object> sumUsage(@RequestParam("lotId")Integer lotId,@RequestParam("startTime")Date startTime,@RequestParam("endTime")Date endTime) {
 		List<ParkingRecord> list=new ArrayList<>();
 		list=parkingLotService.sumUsage(lotId, startTime, endTime);
 		Map<String,Object> result=new HashMap<>();
