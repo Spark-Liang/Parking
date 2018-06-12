@@ -25,7 +25,7 @@ public class TaskJob {
 	 * 每季度最后一天凌晨0点整生成账单
 	 */
 //  @Scheduled(cron="0/30 * * * * ?")//每隔三十秒触发一次
-    @Scheduled(cron="0 15 10 L * ?")
+//    @Scheduled(cron="0 15 10 L * ?")
     @Transactional
     public void creatBill() {
     	Map<String, Object> paramMap = new HashMap<>();

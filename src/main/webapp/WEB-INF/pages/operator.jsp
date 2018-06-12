@@ -300,7 +300,7 @@
 							}
 							else{						
 								if(result.falg==3){
-									var con = confirm('该用户不存在，是否新增用户？');
+									var con = confirm('该用户不存在，是否停止开卡并新增用户？');
 									if(con){
 										$('.add-user').show();
 										$('.add-user span').text(inf[0]);
@@ -342,7 +342,7 @@
 						console.log(json);
 						if(json.status){
 							$('.addUserBtn').parent().hide();
-							alert('成功新增用户')
+							alert('成功新增用户,请重新操作开卡')
 						}
 						
 					},error:function(){
@@ -433,7 +433,11 @@
 				alert('存在没有支付的账单以及停车卡正在使用');
 				payBills();
 				return 0;
-			}else if(json.list[0].currentBill!=null){
+			}else if(json.list[0].currentBill==null&&json.list[0].parking==true){
+				alert('需要先支付这个季度使用的费用并且此停车卡正在使用');
+				payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
+			}
+			else if(json.list[0].currentBill!=null){
 				alert('存在没有支付的账单');
 				payBills(0);//0是表示有上季度的账单没有支付
 				return 0;
@@ -451,15 +455,17 @@
 			function payBills(num){
 					$('.payBill').show();
 				if (num == 0 ){
-					var sDate = new Date(json.list[0].currentBill.billStartDate);
-					var startDate = sDate.toLocaleString('chinese',{hour12:false});
-					var eDate = new Date(json.list[0].currentBill.billEndDate);
-					var endDate = eDate.toLocaleString('chinese',{hour12:false});
+					var sDate = new Date(json.list[0].currentBill.timeQuantums[0].startTime);
+					var sDate1 = sDate.toLocaleString('chinese',{hour12:false});
+					var startDate = sDate1.substring(0,9);
+					var eDate = new Date(json.list[0].currentBill.timeQuantums[0].endTime);
+					var eDate1 = eDate.toLocaleString('chinese',{hour12:false});
+					var endDate = eDate1.substring(0,9);
 					$('.BillTable').append(function(){
 						return "<tr>"
 						+"<td>"+json.list[0].userId+"</td>"
 						+"<td>"+startDate+"~"+endDate+"</td>"
-						+"<td>"+json.list[0].parkingLot[0].cost+" ￥/每月</td>"
+						+"<td>"+json.list[0].parkingLot.cost+" ￥/每月</td>"
 						+"<td>"+json.list[0].currentBill.price+"</td>"
 						+"</tr>"
 					})
@@ -472,13 +478,13 @@
 					var time = time1.substring(0,9);
 					var allDayNum = allDay(month);
 					var useDay = useMuchDay(day,month);
-					var price = (json.list[0].parkingLot[0].cost * 3)*(useDay/allDayNum[0]);
+					var price = (json.list[0].parkingLot.cost * 3)*(useDay/allDayNum[0]);
 					var price1 = Math.ceil(price);
 					$('.BillTable').append(function(){
 						return "<tr>"
 						+"<td>"+json.list[0].userId+"</td>"
 						+"<td>"+year+"-"+allDayNum[1]+"-1 ~"+time+"</td>"
-						+"<td>"+json.list[0].parkingLot[0].cost+" ￥/每月</td>"
+						+"<td>"+json.list[0].parkingLot.cost+" ￥/每月</td>"
 						+"<td>"+price1+"</td>"
 						+"</tr>"
 					})
@@ -555,53 +561,60 @@
 			var object = /^1{1}[3-9]{1}[0-9]{9}$/;
 			if(object.test(iphone)){
 				$(this).parent().find('input:eq(0)').parent().removeClass('has-error');
-			    $.ajax({
-					url:'user/getAllAccount',
-					dataType:'json',
-					type:'POST',
-					data:{
-						'userId':iphone,
-						'isGetAll':'true'
-					},success:function(json){
-						console.log(json);
-						/* conslog.log(json.list[i].currentBill) */
-						if(json.message==''){
-							var l = json.list.length;
-							for (var i = 0 ;i<l;i++){
-								if (json.list[i].currentBill!=null){
+				searchCard(iphone);
+			}else{
+				alert('手机号格式出错');
+				$(this).parent().find('input:eq(0)').parent().addClass('has-error');
+			}
+		})
+		function searchCard(iphone){
+			$.ajax({
+				url:'user/getAllAccount',
+				dataType:'json',
+				type:'POST',
+				data:{
+					'userId':iphone,
+					'isGetAll':'true'
+				},success:function(json){
+					console.log(json);
+					/* conslog.log(json.list[i].currentBill) */
+					if(json.message==''){
+						var l = json.list.length;
+						for (var i = 0 ;i<l;i++){
+							if (json.list[i].currentBill!=null){
+								if(json.list[i].currentBill.paid!=true){
 									billid = json.list[i].currentBill.id;
 									price = json.list[i].currentBill.price;
 								}else{
 									billid = 0;
 									price = 0;
 								}
-								$('.tbody-add').append(function (arr){
-									return "<tr>"
-									+"<td>"+json.list[i].cardId+"</td>"
-									+"<td></td>"
-									+"<td>"+json.list[i].parkingLot.name+"</td>"
-									+"<td>"+json.list[i].userId+"</td>"
-									+"<td>"+json.list[i].state+"</td>"
-									+"<td>"
-									+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
-									+"<a class='btn btn-default btn-xs' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"'>支付帐单</a>"
-									+"</td>"
-								+"</tr>";
-								});
+							}else{
+								billid = 0;
+								price = 0;
 							}
-						}else{
-							alert(json.message);
+							$('.tbody-add').append(function (arr){
+								return "<tr>"
+								+"<td>"+json.list[i].cardId+"</td>"
+								+"<td></td>"
+								+"<td>"+json.list[i].parkingLot.name+"</td>"
+								+"<td>"+json.list[i].userId+"</td>"
+								+"<td>"+json.list[i].state+"</td>"
+								+"<td>"
+								+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
+								+"<a class='btn btn-default btn-xs' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"'>支付帐单</a>"
+								+"</td>"
+							+"</tr>";
+							});
 						}
-					},error:function(){
-						alert('系统出错')
+					}else{
+						alert(json.message);
 					}
-				})
-			}else{
-				alert('手机号格式出错');
-				$(this).parent().find('input:eq(0)').parent().addClass('has-error');
-			}
-		})
-		
+				},error:function(){
+					alert('系统出错')
+				}
+			})
+		}
 		//模块2
 		//点击更换停车卡按钮触发的事件 a是元素自身
  		function updateCard(a){
@@ -676,7 +689,6 @@
 			var billid = $(a).data("value");
 			var bill = new Object();
 			bill.id = billid;
-			//bill.isPaid = true;
 			console.log(bill)
 			$.ajax({
 				url:'user/paybill',
@@ -686,6 +698,10 @@
 					bill
 				,success:function(json){
 					console.log(json);
+					$('.tbody-add tr').remove();
+					var iphone = $('.input-userId').val();
+					console.log(iphone);
+					searchCard(iphone);
 				},error:function(){
 					
 				}
