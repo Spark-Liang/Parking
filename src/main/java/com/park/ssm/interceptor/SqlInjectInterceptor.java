@@ -20,17 +20,20 @@ public class SqlInjectInterceptor implements HandlerInterceptor{//sql注入攻�
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-	            Enumeration<String> names = request.getParameterNames();  
-	            while(names.hasMoreElements()){  
-	                String name = names.nextElement();  
-	                String[] values = request.getParameterValues(name);  
-	                for(String value: values){  
-	                    if(judgeXSS(value.toLowerCase())){  
-	                    	 sendMessage(response);
-	                    	 return false;
-	                    }  
-	                }  
-	            }       
+		String requestType = request.getHeader("X-Requested-With");//获取http请求头类型
+		if("XMLHttpRequest".equals(requestType)){//比较请求头是否为XMLHttpRequest
+			Enumeration<String> names = request.getParameterNames();//从request中获取参数元素  
+            while(names.hasMoreElements()){  //是否存在下一个参数元素
+                String name = names.nextElement();  //获取下一个元素
+                String[] values = request.getParameterValues(name);  
+                for(String value: values){  
+                    if(judgeXSS(value.toLowerCase())){  
+                    	 sendMessage(response);
+                    	 return false;
+                    }  
+                }  
+            }    
+		}  
 	        return true; 
 	}
 

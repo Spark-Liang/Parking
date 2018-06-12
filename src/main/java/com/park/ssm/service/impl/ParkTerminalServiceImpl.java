@@ -73,7 +73,7 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 		
 
 		// 判断是否与停车场对应
-		if (!parkingLotId.equals(account.getParkingLot().getId())) {
+		if (!parkingLotId.equals(account.getParkingLotId())) {
 			throw new RuntimeException("停车卡与停车场不匹配");
 		}
 		// 判断是否已经停车
@@ -167,7 +167,7 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 
 	private String canPick(Integer parkingLotId, Account account) {
 		// 判断是否与停车场对应
-		if (!parkingLotId.equals(account.getParkingLot().getId())) {
+		if (!parkingLotId.equals(account.getParkingLotId())) {
 			throw new RuntimeException("停车卡与停车场不匹配");
 		}
 		// 判断是否已经停车

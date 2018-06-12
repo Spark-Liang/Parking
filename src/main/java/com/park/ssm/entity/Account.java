@@ -20,7 +20,7 @@ public class Account implements Serializable {
 
 	private Long id;
 	private Long userId;
-	private ParkingLot parkingLot;
+	private Integer parkingLotId;
 	private Long parkingPositionId;
 	private Long cardId;
 	
@@ -29,132 +29,82 @@ public class Account implements Serializable {
 	private boolean isParking;
 	private Bill currentBill;
 	private List<Bill> bills;
-	/**
-	 * @return the id
-	 */
+	
+	private List<ParkingLot> parkingLot;
+	
+	public List<ParkingLot> getParkingLot() {
+		return parkingLot;
+	}
+	public void setParkingLot(List<ParkingLot> parkingLot) {
+		this.parkingLot = parkingLot;
+	}
 	public Long getId() {
 		return id;
 	}
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
-	/**
-	 * @return the userId
-	 */
 	public Long getUserId() {
 		return userId;
 	}
-	/**
-	 * @param userId the userId to set
-	 */
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	/**
-	 * @return the parkingLot
-	 */
-	public ParkingLot getParkingLot() {
-		return parkingLot;
+	public Integer getParkingLotId() {
+		return parkingLotId;
 	}
-	/**
-	 * @param parkingLot the parkingLot to set
-	 */
-	public void setParkingLot(ParkingLot parkingLot) {
-		this.parkingLot = parkingLot;
+	public void setParkingLotId(Integer parkingLotId) {
+		this.parkingLotId = parkingLotId;
 	}
-	/**
-	 * @return the parkingPositionId
-	 */
 	public Long getParkingPositionId() {
 		return parkingPositionId;
 	}
-	/**
-	 * @param parkingPositionId the parkingPositionId to set
-	 */
 	public void setParkingPositionId(Long parkingPositionId) {
 		this.parkingPositionId = parkingPositionId;
 	}
-	/**
-	 * @return the cardId
-	 */
 	public Long getCardId() {
 		return cardId;
 	}
-	/**
-	 * @param cardId the cardId to set
-	 */
 	public void setCardId(Long cardId) {
 		this.cardId = cardId;
 	}
-	/**
-	 * @return the state
-	 */
 	public AccountState getState() {
 		return state;
 	}
-	/**
-	 * @param state the state to set
-	 */
 	public void setState(AccountState state) {
 		this.state = state;
 	}
-	/**
-	 * @return the stateStartDate
-	 */
 	public Date getStateStartDate() {
 		return stateStartDate;
 	}
-	/**
-	 * @param stateStartDate the stateStartDate to set
-	 */
 	public void setStateStartDate(Date stateStartDate) {
 		this.stateStartDate = stateStartDate;
 	}
-	/**
-	 * @return the isParking
-	 */
 	public boolean isParking() {
 		return isParking;
 	}
-	/**
-	 * @param isParking the isParking to set
-	 */
 	public void setParking(boolean isParking) {
 		this.isParking = isParking;
 	}
-	/**
-	 * @return the currentBill
-	 */
 	public Bill getCurrentBill() {
 		return currentBill;
 	}
-	/**
-	 * @param currentBill the currentBill to set
-	 */
 	public void setCurrentBill(Bill currentBill) {
 		this.currentBill = currentBill;
 	}
-	/**
-	 * @return the bills
-	 */
 	public List<Bill> getBills() {
 		return bills;
 	}
-	/**
-	 * @param bills the bills to set
-	 */
 	public void setBills(List<Bill> bills) {
 		this.bills = bills;
 	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Account [id=" + id + ", userId=" + userId + ", parkingLot=" + parkingLot + ", parkingPositionId="
+		return "Account [id=" + id + ", userId=" + userId + ", parkingLotId=" + parkingLotId + ", parkingPositionId="
 				+ parkingPositionId + ", cardId=" + cardId + ", state=" + state + ", stateStartDate=" + stateStartDate
 				+ ", isParking=" + isParking + ", currentBill=" + currentBill + ", bills=" + bills + "]";
 	}
@@ -170,7 +120,7 @@ public class Account implements Serializable {
 		result = prime * result + ((currentBill == null) ? 0 : currentBill.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + (isParking ? 1231 : 1237);
-		result = prime * result + ((parkingLot == null) ? 0 : parkingLot.hashCode());
+		result = prime * result + ((parkingLotId == null) ? 0 : parkingLotId.hashCode());
 		result = prime * result + ((parkingPositionId == null) ? 0 : parkingPositionId.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		result = prime * result + ((stateStartDate == null) ? 0 : stateStartDate.hashCode());
@@ -211,10 +161,10 @@ public class Account implements Serializable {
 			return false;
 		if (isParking != other.isParking)
 			return false;
-		if (parkingLot == null) {
-			if (other.parkingLot != null)
+		if (parkingLotId == null) {
+			if (other.parkingLotId != null)
 				return false;
-		} else if (!parkingLot.equals(other.parkingLot))
+		} else if (!parkingLotId.equals(other.parkingLotId))
 			return false;
 		if (parkingPositionId == null) {
 			if (other.parkingPositionId != null)
@@ -235,6 +185,11 @@ public class Account implements Serializable {
 			return false;
 		return true;
 	}
+	
+	
+	
+	
+	
 	
 	
 }

@@ -7,22 +7,22 @@
 	<resultMap type="Account" id="accountRoughResult">
 		<id property="id" column="id" />
 		<result property="userId" column="userId" />
+		<result property="parkingLotId" column="parkingLotId" />
 		<result property="parkingPositionId" column="parkingPositionId" />
 		<result property="cardId" column="cardId" />
 		<result property="state" column="state"
 			typeHandler="com.park.ssm.entity.type.AccountStateHandler" />
 		<result property="isParking" column="isParking" />
-		<association property="parkingLot" column="{id=parkingLotId}"
-			javaType="ParkingLot" fetchType="eager"
-			select="com.park.ssm.dao.ParkingLotDao.loadPrkingLotForId"
-			autoMapping="true" />
 		<association property="currentBill" column="currentBillId"
 			fetchType="eager" select="com.park.ssm.dao.BillDao.loadBillById" />
 
 		<collection property="bills" column="{accountId=id}"
 			ofType="Bill" fetchType="lazy" select="com.park.ssm.dao.BillDao.listBillById"
 			autoMapping="true" />
-		
+		<collection property="parkingLot" column="{id=parkingLotId}"
+			ofType="ParkingLot" fetchType="lazy"
+			select="com.park.ssm.dao.ParkingLotDao.loadPrkingLotForId"
+			autoMapping="true" />
 	</resultMap>
 
 	<!-- dao相关sql -->
@@ -106,16 +106,14 @@
 
 	<!-- 添加新卡，通过数据库调用存储过程实现 -->
 	<select id="addNewCard" statementType="CALLABLE" useCache="false">
-		<![CDATA[{
-			call
-			addNewCard(
-			 #{cardId}
-			,#{userId}
-			,#{parkingLotId}
-			,#{accountId,mode=OUT,jdbcType=BIGINT,javaType=java.lang.Long}
-			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
-			)
-		}]]>
+		call
+		addNewCard(
+		#{cardId}
+		,#{userId}
+		,#{parkingLotId}
+		,#{accountId,mode=OUT,jdbcType=BIGINT,javaType=Long}
+		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+		);
 	</select>
 
 	<update id="setAccountState">
@@ -164,21 +162,17 @@
 
 
 	<select id="parkCar" statementType="CALLABLE" useCache="false">
-		<![CDATA[{
-			call parkCar(
-			#{accountId}
-			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
-			)
-		}]]>
+		call parkCar(
+		#{accountId}
+		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+		)
 	</select>
 
 	<select id="pickCar" statementType="CALLABLE" useCache="false">
-		<![CDATA[{
-			call pickCar(
-			#{accountId}
-			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
-			)
-		}]]>
+		call pickCar(
+		#{accountId}
+		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+		)
 	</select>
 <!-- 
 	<update id="updateCurrentBillId">

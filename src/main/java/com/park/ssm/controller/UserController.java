@@ -153,7 +153,7 @@ public class UserController {
 				}
 			}
 			result.put("falg", falg);
-			result.put("message", message);
+			result.put("error", message);
 		} catch (Exception e) {
 			e.printStackTrace();
 			falg = 0;
@@ -210,7 +210,7 @@ public class UserController {
 			Account account = accountService.getCardMessage(OldCardId);
 			if (account != null){
 				Account NewCardAccount = accountService.getCardMessage(NewCardId);
-				long LotId=account.getParkingLot().getId();
+				long LotId=account.getParkingLotId();
 				int bill = accountService.isNotPayBill(userId,LotId);// 判断是否存在未支付的账单
 				if(bill>0){
 					message = "无法更换，该账户存在未缴费的账单，请先支付帐单！";
@@ -338,10 +338,10 @@ public class UserController {
 	 */
 	@RequestMapping(value = "checkBillInfo", method = RequestMethod.GET)
 	@ResponseBody
-	public String checkBillInfo(@RequestParam("userId") Long userId,@RequestParam("accountId")Long accountId) {
+	public String checkBillInfo(@PathVariable("userId") Long userId) {
 		Map<String, Object> map = new HashMap<>();
 		List<Bill> list = new ArrayList<>();
-		list = billService.listBillById(userId, accountId, null, null, null);
+		list = billService.listBillByCardId(userId);
 		String message = "您还没有账单";
 		if (!list.isEmpty()) {
 			map.put("msg", list);
@@ -414,9 +414,8 @@ public class UserController {
 		return strInsertBill;
 	}
 	
-
 	/**
-	 * operator支付账单
+	 * 支付账单(暂时只改了ispaid标识
 	 * @param bill
 	 * @return
 	 */
@@ -426,7 +425,7 @@ public class UserController {
 		Map<String,Object> map=new HashMap<>();
 		int result=0;
 		result=billService.payBill(bill);
-		map.put("msg", result);
+		map.put("msg", 1);
 		String strPayBill=new JSONObject(map).toString();
 		return strPayBill;
 	}
