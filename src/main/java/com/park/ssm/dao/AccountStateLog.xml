@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.park.ssm.dao.AccountStateLogDao">
+
+
+	<resultMap type="AccountStateLog" id="accountStateLogResult">
+		<id property="id" column="id" />
+		<result property="accountId" column="accountId" />
+		<result property="state" column="state"
+			typeHandler="com.park.ssm.entity.type.AccountStateHandler" />
+		<result property="startTime" column="startTime" />
+		<result property="endTime" column="endTime" />
+		<result property="billId" column="billId" />
+	</resultMap>
+
+	<!-- dao相关sql -->
+	<sql id="sqlField">
+		id
+		,accountId
+		,state
+		,startTime
+		,endTime
+		,billId
+	</sql>
+
+
+	
+	<!-- 通过AccountId查找Log -->
+	<select id="listLogByAccountId" resultMap="accountStateLogResult">
+		select
+			<include refid="sqlField"/>
+		from AccountStateLog
+		where
+			accountId=#{accountId,jdbcType=BIGINT}
+			<if test="state != null">
+				and state=#{state.ind}
+			</if>
+			<if test="startTime != null">
+				and startTime &gt; #{startTime}
+			</if>
+			<if test="endTime != null">
+				and endTime &lt; #{endTime}
+			</if>
+			<if test="isLogWithBill != null">
+				<if test="isLogWithBill.equals(true)">
+					and billId is not null
+				</if>
+				<if test="isLogWithBill.equals(false)">
+					and billId is null
+				</if>
+			</if>
+		<if test="pageNum != null and pageSize != null">
+			limit ${(pageNum-1)*pageSize},#{pageSize}
+		</if>
+	</select>
+	
+</mapper>

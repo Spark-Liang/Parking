@@ -439,48 +439,49 @@ drop procedure if exists parkCar$
 create procedure parkCar(in accountId bigint,out flag int)
 begin
 	declare parkingRecordId bigint;
+	declare iscurParking int;
 	declare exit handler for sqlexception 
 	begin
 		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
         call logErr('parkCar',@sql_state,@msg);
 		rollback;
 		set autocommit=1;
-		set flag=1;
+		set flag=(1<<1)|iscurParking;
 	end
 	;
 	set flag=0;
 	set autocommit=0;
 	
 	start transaction;
-	insert into ParkingRecord (id,lotId,positionId,accountId,startTime)
-	select
-		@parkingRecordId:=
-			case 
-				when 
-					(select @parkingRecordId:=id+1 from ParkingRecord
-					where id>=(select max(id) from ParkingRecord)
-					order by id desc
-					limit 1 for update
-					) is not null then @parkingRecordId
-				else 1
-			end id
-		,parkingLotId lotId
-		,parkingPositionId positionId
-		,accountId 
-		,now() startTime
-	from 
-		(select * from Account
+	set iscurParking:=
+		(select isParking from Account where id=accountId for update);
+	if iscurParking = 0 then
+	begin
+		set @parkingRecordId:=
+				nullif((select max(id)+1 from ParkingRecord for update),1)
+		;
+		update Account
+			set currentParkingRecId = @parkingRecordId
+				,isParking = 1
 		where id=accountId
-		for update) tmp
-	;
-	update Account
-		set currentParkingRecId = @parkingRecordId
-			,isParking = 1
-	where id=accountId
+		;
+		insert into ParkingRecord (id,lotId,positionId,accountId,startTime)
+		select
+			@parkingRecordId
+			,parkingLotId lotId
+			,parkingPositionId positionId
+			,accountId 
+			,now() startTime
+		from 
+			(select * from Account
+			where id=accountId
+			for update) tmp
+		;
+	end 
 	;
 	commit;
 	set autocommit=1;
-	set flag=0;
+	set flag=iscurParking;
 end 
 $
 

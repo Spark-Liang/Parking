@@ -48,10 +48,17 @@ public class ParkTerminalServiceImpl implements ParkTerminalService {
 		resultMap.put("accountId", accountInDB.getId());
 		accountDao.parkCar(resultMap);
 		Integer flag=(Integer) resultMap.get("flag");
-		if(flag==0) {
-			reason=null;
+		if(flag!=0) {
+			StringBuilder errMsg=new StringBuilder();
+			if((flag & 1) !=0) {
+				errMsg.append("错误原因：该停车卡已停车");
+			}
+			if((flag & (1<<1)) !=0) {
+				errMsg.append("错误原因：系统内部运行错误");
+			}
+			reason=errMsg.toString();
 		}else {
-			reason="系统内部错误，请重试";
+			reason=null;
 		}
 		
 		return reason;
