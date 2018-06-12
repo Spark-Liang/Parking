@@ -348,7 +348,7 @@ BEGIN
 		# flag=2 没有空停车位
 		# flag=4 系统执行错误
 	    if @sql_state=23000 then
-	    	set flag=(1<<4)|(@checkUser<<1)|(@checkParkingPosition);
+	    	set flag=(1<<2)|(@checkUser<<1)|(@checkParkingPosition);
 	    else
 	    	set flag=(1<<3)|(@checkUser<<1)|(@checkParkingPosition);
 	    end if
