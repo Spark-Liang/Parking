@@ -89,6 +89,6 @@ public interface AccountService {
 	 * @param currentBillId
 	 * @param id
 	 * @return
-	 */
-	public int payBill(Account account);
+	 
+	public int payBill(Account account);*/
 }

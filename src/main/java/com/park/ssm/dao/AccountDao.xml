@@ -174,7 +174,7 @@
 		,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
 		)
 	</select>
-
+<!-- 
 	<update id="updateCurrentBillId">
 		update Account set currentBillId=null
 		<where>
@@ -182,5 +182,5 @@
 			and
 			id=#{id}
 		</where>
-	</update>
+	</update> -->
 </mapper>

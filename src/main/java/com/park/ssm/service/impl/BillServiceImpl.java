@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.park.ssm.dao.BillDao;
 import com.park.ssm.entity.Bill;
@@ -40,6 +41,7 @@ public class BillServiceImpl implements BillService {
 	}
 
 	@Override
+	@Transactional
 	public int payBill(Bill bill) {
 		// TODO Auto-generated method stub
 		StringBuilder errorMessage=new StringBuilder();
