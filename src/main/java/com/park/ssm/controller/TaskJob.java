@@ -1,5 +1,9 @@
 package com.park.ssm.controller;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,20 +24,46 @@ public class TaskJob {
 	/*
 	 * 每季度最后一天凌晨0点整生成账单
 	 */
-    @Scheduled(cron="0/30 * * * * ?")//每隔三十秒触发一次
-  //@Scheduled(cron="0 0 0 L 3,6,9,12 ? *")
+//  @Scheduled(cron="0/30 * * * * ?")//每隔三十秒触发一次
+    @Scheduled(cron="0 15 10 L * ?")
     @Transactional
     public void creatBill() {
-    	System.out.println("A任务进行中");
+    	Map<String, Object> paramMap = new HashMap<>();
+    	Date date=new Date();
+    	paramMap.put("date", date);
+//    	billDao.generateBill(paramMap);
+    	int flag = (int) paramMap.get("flag");
+    	StringBuilder errorMessage = new StringBuilder();
+		if (flag == 0) {
+			System.out.print("BBBBBBB");
+		}
+		if(flag==1) {
+			System.out.println("bbbbbbbbbb");
+			errorMessage.append("执行存储过程出现错误！！");
+			throw new RuntimeException(errorMessage.toString());	
+		}
     }  
     
     /*
      * 当到每个季度的下一个月的第一天凌晨0点整 ，自动停止未支付帐单的停车卡与回收相应车位
      */
-    @Scheduled(cron="0/30 * * * * ?")//每隔三十秒触发一次
-  //@Scheduled(cron="0 0 0 L 1,4,7,10 ? *")
+//  @Scheduled(cron="0/5 * * * * ?")//每隔三十秒触发一次
+//  @Scheduled(cron="0 0 0 L 1,4,7,10 ? *")
     @Transactional
     public void  autoStopCard() {
-    	System.out.println("B任务进行中");
+    	Map<String, Object> paramMap = new HashMap<>();
+    	Date date=new Date();
+    	paramMap.put("date", date);
+//    	accountDao.updateAllAccountState(paramMap);
+    	int flag = (int) paramMap.get("flag");
+    	StringBuilder errorMessage = new StringBuilder();
+		if (flag == 0) {
+			System.out.println("AAAAAA");
+		}
+		if(flag==1) {
+			System.out.println("aaaaaa");
+			errorMessage.append("执行存储过程出现错误！！");
+			throw new RuntimeException(errorMessage.toString());	
+		}
     }
 }  
