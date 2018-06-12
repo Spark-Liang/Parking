@@ -322,6 +322,11 @@ $
 ################################################################################
 #开卡的存储过程
 ###############################################################################
+# flag=0 事务正常完成
+# flag=1 用户有其他卡为非正常状态
+# flag=2 没有空停车位
+# flag=4 停车卡id重复
+# flag=8 系统执行错误
 drop procedure if exists addNewCard$
 create procedure addNewCard(in cardId bigint,in user_id bigint,in lot_id int,out accountId bigint,out flag int)
 BEGIN
@@ -342,7 +347,11 @@ BEGIN
 		# flag=1 用户有其他卡为非正常状态
 		# flag=2 没有空停车位
 		# flag=4 系统执行错误
-	    set flag=(1<<2)|(@checkUser<<1)|(@checkParkingPosition)
+	    if @sql_state=23000 then
+	    	set flag=(1<<4)|(@checkUser<<1)|(@checkParkingPosition);
+	    else
+	    	set flag=(1<<3)|(@checkUser<<1)|(@checkParkingPosition);
+	    end if
 		;
 	    set accountId=@tmpAccountId
 	    ;
@@ -456,28 +465,29 @@ begin
 	set iscurParking:=
 		(select isParking from Account where id=accountId for update);
 	if iscurParking = 0 then
-	begin
-		set @parkingRecordId:=
-				nullif((select max(id)+1 from ParkingRecord for update),1)
-		;
-		update Account
-			set currentParkingRecId = @parkingRecordId
-				,isParking = 1
-		where id=accountId
-		;
-		insert into ParkingRecord (id,lotId,positionId,accountId,startTime)
-		select
-			@parkingRecordId
-			,parkingLotId lotId
-			,parkingPositionId positionId
-			,accountId 
-			,now() startTime
-		from 
-			(select * from Account
+		begin
+			set @parkingRecordId:=
+					nullif((select max(id)+1 from ParkingRecord for update),1)
+			;
+			update Account
+				set currentParkingRecId = @parkingRecordId
+					,isParking = 1
 			where id=accountId
-			for update) tmp
-		;
-	end 
+			;
+			insert into ParkingRecord (id,lotId,positionId,accountId,startTime)
+			select
+				@parkingRecordId
+				,parkingLotId lotId
+				,parkingPositionId positionId
+				,accountId 
+				,now() startTime
+			from 
+				(select * from Account
+				where id=accountId
+				for update) tmp
+			;
+		end;
+    end if
 	;
 	commit;
 	set autocommit=1;

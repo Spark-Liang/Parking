@@ -91,6 +91,14 @@ public class AccountServiceImpl implements AccountService {
 			if ((flag & (1 << 1)) != 0) {
 				errorMessage.append("失败原因：没有空停车位\n");
 			}
+			// flag的第三位非0表示：停车卡id重复
+			if ((flag & (1 << 2)) != 0) {
+				errorMessage.append("失败原因：停车卡id重复\n");
+			}
+			// flag的第四位非0表示：系统内部错误
+			if ((flag & (1 << 3)) != 0) {
+				errorMessage.append("失败原因：系统错误\n");
+			}
 			throw new RuntimeException(errorMessage.toString());
 		}
 

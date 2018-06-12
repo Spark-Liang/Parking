@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <script src="js/jquery-3.3.1.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/aopDefind.js"></script>
 </head>
 <style>
 	.module{
@@ -169,17 +170,15 @@
 					alert(msg);
 				},
 				success : function(response) {
-					if(response.error != null && response.error != ""){
-						alert("停车失败，原因:"+response.error);
-						return;
+					if(response.res == true){
+						alert("停车成功");	
+					}else{
+						alert("停车失败\n"+response.reason);
 					}
-					if(response.reason != null && response.reason != ""){
-						alert("停车失败，原因:"+response.reason);
-						return;
-					}
-					alert("停车成功");
+					
 				}
 			});
+			
 		}
 	}
 	function pickCar(a){
@@ -197,15 +196,12 @@
 					alert(msg);
 				},
 				success : function(response) {
-					if(response.error != null && response.error != ""){
-						alert("提车失败，原因:"+response.error);
-						return;
+					if(response.res == true){
+						alert("提车成功");
+					}else{
+						alert("提车失败\n"+response.reason);
 					}
-					if(response.reason != null && response.reason != ""){
-						alert("提车失败，原因:"+response.reason);
-						return;
-					}
-					alert("提车成功");
+					
 				}
 			});
 		}
