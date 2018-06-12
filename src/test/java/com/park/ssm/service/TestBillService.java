@@ -31,7 +31,7 @@ public class TestBillService extends AutoRollBackTest {
 	@Test
 	public void testFindBillByUserId() {
 		List<Bill> list = new ArrayList<Bill>();
-		list = billService.listBillByCardId(Long.valueOf(5689784l));
+		list = billService.listBillById(Long.valueOf(5689784l), null, null, null, null);
 		Assert.assertEquals(3, list.get(0).getLastPayDate());
 	}
 

@@ -338,10 +338,10 @@ public class UserController {
 	 */
 	@RequestMapping(value = "checkBillInfo", method = RequestMethod.GET)
 	@ResponseBody
-	public String checkBillInfo(@PathVariable("userId") Long userId) {
+	public String checkBillInfo(@RequestParam("userId") Long userId) {
 		Map<String, Object> map = new HashMap<>();
 		List<Bill> list = new ArrayList<>();
-		list = billService.listBillByCardId(userId);
+		list = billService.listBillById(userId, null, null, null, null);
 		String message = "您还没有账单";
 		if (!list.isEmpty()) {
 			map.put("msg", list);
@@ -414,6 +414,7 @@ public class UserController {
 		return strInsertBill;
 	}
 	
+
 	/**
 	 * operator支付账单
 	 * @param bill

@@ -48,7 +48,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(account.getUserId(), accountInDB.getUserId());
 	}*/
 	
-//	@Test
+	@Test
 	public void testListById() {
 		//test data
 		Long userId=13745678911L;
@@ -58,7 +58,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		Assert.assertEquals(false, accounts.isEmpty());
 	}
 	
-//	@Test
+	@Test
 	public void testUpdate() throws IllegalArgumentException, IllegalAccessException {
 		//test data
 		Long id=1L;
@@ -73,8 +73,8 @@ public class TestAccountDao extends AutoRollBackTest {
 		assertEquals(newAccountInDB.getState(), AccountState.STOP);
 	}
 
-//	@Test
-//	@Rollback(true)
+	@Test
+	@Rollback(true)
 	public void testAddNewCard() {//测试增加新停车卡
 		//添加能够停车的停车场
 		ParkingLotService parkingLotService=applicationContext.getBean(ParkingLotService.class);
@@ -99,7 +99,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		//System.out.println("数量为"+num);
 	}
 	
-//	@Test
+	@Test
 	public void testchangeNewCard() throws IllegalArgumentException, IllegalAccessException {//测试更换停车卡
 		long cardId=13745678911l;
 		Account account=dao.getCardMessage(cardId);
@@ -118,18 +118,18 @@ public class TestAccountDao extends AutoRollBackTest {
 	}
 	
 	
-	//@Test
+	@Test
 	public void testDate() {//测试日期是否相等
 		String times = new SimpleDateFormat("MMdd").format(new Date());
 		String exetime = "0529";
 		System.out.println(times.equals(exetime));
 	}
-//	@Test
+	@Test
 	public void testgetAllcard() {//测试获取所有的card
 		long userId=13745678910l;
 		List<Account> list=dao.findAccountrById(userId,null,null,null,null,null);
 	}
-//	@Test
+	@Test
 	public void testgetCardMessage() {
 		long cardId=1l;
 		Account account=dao.getCardMessage(cardId);
@@ -137,7 +137,7 @@ public class TestAccountDao extends AutoRollBackTest {
 		System.out.println(state.getInd());
 	}
 	
-//	@Test
+	@Test
 	public void testAddUser() {
 		long userId=18826237366l;
 		String password="123456";
