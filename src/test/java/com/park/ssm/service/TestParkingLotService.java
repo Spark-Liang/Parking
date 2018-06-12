@@ -1,5 +1,8 @@
 package com.park.ssm.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +10,10 @@ import org.springframework.stereotype.Component;
 import com.park.AutoRollBackTest;
 import com.park.ssm.dao.ParkingLotDao;
 import com.park.ssm.dao.ParkingPositionDao;
+import com.park.ssm.dao.ParkingRecordDao;
 import com.park.ssm.entity.ParkingLot;
 import com.park.ssm.entity.ParkingPosition;
+import com.park.ssm.entity.ParkingRecord;
 import com.park.ssm.entity.type.ParkingLotState;
 
 import junit.framework.Assert;
@@ -19,6 +24,9 @@ public class TestParkingLotService extends AutoRollBackTest {
 	private ParkingLotService service;
 	@Autowired
 	private ParkingPositionDao parkingPositionDao;
+	
+	@Autowired
+	private ParkingRecordDao parkingRecordDao;
 
 	@Test
 	public void testsaveParkingLot(){
@@ -156,6 +164,23 @@ public class TestParkingLotService extends AutoRollBackTest {
 
 		Assert.assertEquals(parkingLot.getState(), ParkingLotState.INACTIVE);
 
+	}
+	
+	@Test
+	public void testSumUsage() {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		Date startTime,endTime;
+		List<ParkingRecord> list=new ArrayList<>();
+		try {
+			startTime = sdf.parse("2018-04-01");
+			endTime=sdf.parse("2018-04-30");
+			list=parkingRecordDao.countUsage(1, startTime, endTime);
+			System.out.println(list);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Assert.assertEquals(true, list.isEmpty());
 	}
 
 }

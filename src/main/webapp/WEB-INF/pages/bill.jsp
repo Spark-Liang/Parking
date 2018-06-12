@@ -67,18 +67,21 @@
     }
     .tableStyle td{
 
-        padding: 5px 20px;
+        padding: 5px 18px;
         
     }
     .tableStyle tr:nth-of-type(1){
         border-top-color: black
     }
     .tableStyle th{
-        padding: 5px 20px;
+        padding: 5px 18px;
         text-align: center;
     }
     .nooutbill table{
         margin:100px 0;
+    }
+    .nooutbill th{
+        padding: 5px 60px;
     }
 </style>
 <body>
@@ -97,7 +100,9 @@
                 <p class = "billMenu"><a ><span class = "mystyle">查看已出帐单</span></a>&nbsp<span style="font-size: 200%">|</span>&nbsp<a ><span>查看未出帐单</span></a></p>
 
             </div>
+            
             <!--已出账单详细信息-->
+            
             <div class = "outbill">
                 <table class="tableStyle">
                     <thead>
@@ -111,27 +116,29 @@
                     </tr>
                     </thead>
                     <tbody>
+                    
                     <tr>
                         <td>1</td>
                         <td>2017.1.1-2017.3.31</td>
-                        <td>2017.4.29</td>
-                        <td>500</td>
+                        <td>2017.4.30</td>
+                        <td>600</td>
                         <td>已付款</td>
                     </tr>
                     <tr>
                         <td>2</td>
                         <td>2017.4.1-2017.6.30</td>
-                        <td>2017.7.1</td>
-                        <td>500</td>
+                        <td>2017.7.31</td>
+                        <td>600</td>
                         <td>已付款</td>
                     </tr>
                     <tr>
                         <td>3</td>
-                        <td>2017.7.1-2017.9.30</td>
-                        <td></td>
-                        <td>500</td>
+                        <td>2017.7.1-2017.7.31<br>2017.9.1-2017.9.30</td>
+                        <td>2017.10.31</td>
+                        <td>400</td>
                         <td>未付款</td>
                     </tr>
+                    
                     </tbody>
                 </table> 
             </div>
@@ -147,7 +154,7 @@
                 </thead>
                 <tbody>
                     <tr>                  
-                        <td>2018.5.20-2018.6.30</td>
+                        <td>2018.4.1-2018.6.30</td>
                         <td>250</td>
                     </tr>
                 </tbody>
@@ -307,9 +314,9 @@
 				userId: userId,
 				isGetAll: 'false'
              },success: function(json){
+            	 console.log(json);
             	 var tip = "有未付款账单";
             	 var l = json.list.length;
-            	 console.log(json);
             	 for(var i = 0; i < l; i++){
             		 var cardNum = json.list[i].cardId;
                 	 var startDate = getDate(json.list[i].stateStartDate);//转换日期格式

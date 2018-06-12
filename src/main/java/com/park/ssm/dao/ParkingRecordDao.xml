@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--客户映射 指定到dao接口 -->
+<mapper namespace="com.park.ssm.dao.ParkingRecordDao">
+	<resultMap type="com.park.ssm.dao.ParkingRecordDao" id="countUsageMap">
+		<id property="id" column="id"></id>
+		<result property="accountId" column="accountId"></result>
+		<result property="NUM" column="NUM" jdbcType="NUMERIC"></result>
+		<association property="account" javaType="Account">
+			<id property="id" column="id"></id>
+			<result property="cardId" column="cardId"></result>
+		</association>
+	</resultMap>
+
+	<!-- manager查看停车场使用情况 -->
+	<select id="countUsage" resultMap="countUsageMap">
+		select p.accountId,a.cardId,count(p.accountId) from ParkingRecord
+		p,Account a
+		<where>
+			p.accountId=a.id and
+			lotId=#{lotId}
+			and startTime=#{startTime}
+			and endTime=#{endTime}
+		</where>
+		group by p.accountId
+	</select>
+</mapper>

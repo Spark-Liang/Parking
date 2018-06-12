@@ -169,7 +169,6 @@ public class AccountServiceImpl implements AccountService {
 	public int stopCard(long cardId) {
 		StringBuilder errorMessage=new StringBuilder();
 		AccountState state=AccountState.getValueByInd(-2);
-		
 		int status=accountdao.updateCardStatus(cardId,state);
 		if(status>0) {
 			return 1;
