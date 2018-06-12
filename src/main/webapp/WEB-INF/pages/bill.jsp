@@ -212,7 +212,7 @@
 				console.log(respon);
 				console.log(respon.msg);
 				var length = respon.msg.length;
-				for(var i = 0; i <= length; i++){
+				for(var i = length-1; i >= 0; i--){
 					var id = respon.msg[i].id;//获取账单编号id
 					//日期通过getDate函数转换格式
 					var startTime = getDate(respon.msg[i].timeQuantums[0].startTime);
@@ -330,7 +330,7 @@
              dataType:'json',
              data:{
 				userId: userId,
-				isGetAll: 'false'
+				isGetAll: 'true'
              },success: function(json){
             	 console.log(json);
             	 var l = json.list.length;
