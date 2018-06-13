@@ -2,6 +2,7 @@ package com.park.ssm.service;
 
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,5 +21,12 @@ public class TestAccountService extends AutoRollBackTest{
 		System.out.println(accounts);
 		accounts=accountService.findAccountrById(13745678910L, null, null, null, null, null, true);
 		System.out.println(accounts);
+	}
+	
+	@Test
+	public void testGetPrice() {
+		Double execpteds=10.0;
+		Double actuals=accountService.getPrice(Long.valueOf(2l));
+		Assert.assertEquals(execpteds, actuals);
 	}
 }

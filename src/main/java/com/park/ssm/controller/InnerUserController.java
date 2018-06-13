@@ -29,8 +29,8 @@ import com.park.ssm.service.ParkingLotService;
 import com.park.ssm.util.Encryption;
 
 /**
- * InnerUser控制器
- * 实现员工的相关功能
+ * InnerUser控制器 实现员工的相关功能
+ * 
  * @author ASNPHX4
  *
  */
@@ -39,33 +39,85 @@ import com.park.ssm.util.Encryption;
 public class InnerUserController {
 	@Autowired
 	private InnerUserService innerUserService;
-	
+
 	@Autowired
 	private ParkingLotService parkingLotService;
-	
+
 	@RequestMapping("page")
 	public String loginPage() {
 		return "login";
 	}
-	
+
 	/**
 	 * 判断是否为季度第一天
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
 	private boolean setPriceOrNot() {
-		Calendar c=Calendar.getInstance();
-		int currentMonth=c.get(Calendar.MONTH)+1;
-		int currentDate=c.get(Calendar.DATE);
-		//System.out.println("----------currentMonth="+currentMonth+"-------------currentDate="+currentDate);;
-		if((currentMonth==3&&currentDate==31)||(currentMonth==12&&currentDate==31)) {
+		Calendar c = Calendar.getInstance();
+		int currentMonth = c.get(Calendar.MONTH) + 1;
+		int currentDate = c.get(Calendar.DATE);
+		// System.out.println("----------currentMonth="+currentMonth+"-------------currentDate="+currentDate);;
+		if ((currentMonth == 3 && currentDate == 31) || (currentMonth == 12 && currentDate == 31)) {
 			return false;
-		}else if((currentMonth==6&&currentDate==30)||(currentMonth==9&&currentDate==30)) {
+		} else if ((currentMonth == 6 && currentDate == 30) || (currentMonth == 9 && currentDate == 30)) {
 			return false;
-		}else {
+		} else {
 			return true;
 		}
 	}
+	
+	/**
+	 * 得出年份
+	 * @param desYear
+	 * @return
+	 */
+	private String splitYear(String desYear) {
+		String year = null;
+		char chr[] = desYear.toCharArray();
+		for (int i = 0; i < chr.length; i++) {
+			if (chr[i] == '-') {
+				year = desYear.substring(0, i);
+				System.out.println("--------------------"+year);
+				break;
+			}
+		}
+		return year;
+	}
+	
+	/**
+	 * 得出月份
+	 * @param desMonth
+	 * @return
+	 */
+	private String splitMonth(String desMonth) {
+		String month = null;
+		char chr[] = desMonth.toCharArray();
+		for (int i = 0; i < chr.length; i++) {
+			if (chr[i] == '-') {
+				month = desMonth.substring(i + 1, chr.length);
+				System.out.println("--------------------"+month);
+				break;
+			}
+		}
+		return month;
+	}
+	
+	/**
+	 * 判断是否为闰年
+	 * @param year
+	 * @return
+	 */
+	private boolean isLeanYear(String year) {
+		int intYear = Integer.parseInt(year);
+		if (intYear % 4 == 0 && intYear % 100 != 0 || intYear % 400 == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * 登陆控制器
 	 * 
@@ -80,19 +132,19 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "login", method = { RequestMethod.POST })
 	@ResponseBody
-	public String login(HttpSession session, String nickname,String password) {
+	public String login(HttpSession session, String nickname, String password) {
 		InnerUser innerUser = new InnerUser();
-		//int intTypeflag = Integer.parseInt(typeflag.trim());
-		Encryption en=new Encryption();
-		//innerUser.setNickname(nickname.trim());
-		//innerUser.setPassword(password.trim());
-		//innerUser.setTypeflag(intTypeflag);
-		//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+salt);
+		// int intTypeflag = Integer.parseInt(typeflag.trim());
+		Encryption en = new Encryption();
+		// innerUser.setNickname(nickname.trim());
+		// innerUser.setPassword(password.trim());
+		// innerUser.setTypeflag(intTypeflag);
+		// System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+salt);
 		if (null != nickname.trim() && !"".equals(nickname.trim())) {
 			if (null != password && !"".equals(password)) {
 				try {
-					String salt=innerUserService.findSaltByNickname(nickname.trim());
-					String passwordAndSalt=en.SHA512(password.trim()+salt);
+					String salt = innerUserService.findSaltByNickname(nickname.trim());
+					String passwordAndSalt = en.SHA512(password.trim() + salt);
 					innerUser = innerUserService.findInnerUser(nickname.trim(), passwordAndSalt);
 				} catch (Exception e) {
 					return JSON.toJSONString(null);
@@ -155,7 +207,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "addInnerUser", method = { RequestMethod.POST })
 	@ResponseBody
-	@Permission(value={Permission.Type.ADMIN})
+	@Permission(value = { Permission.Type.ADMIN })
 	public String addInnerUser(InnerUser innerUser, HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
@@ -163,18 +215,18 @@ public class InnerUserController {
 		Map<String, Object> map = new HashMap<>();
 		if (typeflag == 0) {// admin的typefalg为0，只有admin才能添加
 			try {
-				String password=innerUser.getPassword();
-				Encryption en=new Encryption();
-				String salt=en.createSalt();
+				String password = innerUser.getPassword();
+				Encryption en = new Encryption();
+				String salt = en.createSalt();
 				innerUser.setSalt(salt);
-				password+=salt;
-				password=en.SHA512(password);
+				password += salt;
+				password = en.SHA512(password);
 				innerUser.setPassword(password);
 				result = innerUserService.insertInnerUser(innerUser);
 				if (result > 0) {
 					map.put("msg", 1);
 					map.put("innerUser", innerUser);
-					System.out.println("------------------------------"+innerUser);
+					System.out.println("------------------------------" + innerUser);
 				} else {
 					map.put("msg", 0);
 				}
@@ -196,7 +248,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "changeInnerUser", method = { RequestMethod.POST })
 	@ResponseBody
-	@Permission(value={Permission.Type.ADMIN})
+	@Permission(value = { Permission.Type.ADMIN })
 	public String changeInnerUser(InnerUser innerUser, HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		int result = 0;
@@ -204,12 +256,12 @@ public class InnerUserController {
 		Map<String, Object> map = new HashMap<>();
 		if (typeflag == 0) {// admin的typefalg为0，只有admin才能修改
 			try {
-				String password=innerUser.getPassword();
-				Encryption en=new Encryption();
-				String salt=en.createSalt();
+				String password = innerUser.getPassword();
+				Encryption en = new Encryption();
+				String salt = en.createSalt();
 				innerUser.setSalt(salt);
-				password+=salt;
-				password=en.SHA512(password);
+				password += salt;
+				password = en.SHA512(password);
 				innerUser.setPassword(password);
 				result = innerUserService.changeInnerUserByNickname(innerUser);
 				if (result > 0) {
@@ -235,7 +287,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "deleteInnerUser", method = RequestMethod.GET)
 	@ResponseBody
-	@Permission(value={Permission.Type.ADMIN})
+	@Permission(value = { Permission.Type.ADMIN })
 	public String deleteInnerUser(@RequestParam("nickname") String nickname, HttpSession session) {
 		int result = 0;
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
@@ -267,7 +319,7 @@ public class InnerUserController {
 	 */
 	@RequestMapping(value = "selectInnerUser", method = RequestMethod.GET)
 	@ResponseBody
-	@Permission(value={Permission.Type.ADMIN})
+	@Permission(value = { Permission.Type.ADMIN })
 	public String selectInnerUser(HttpSession session) {
 		InnerUser admin = (InnerUser) session.getAttribute("innerUser");
 		List<InnerUser> list = new ArrayList<>();
@@ -290,62 +342,110 @@ public class InnerUserController {
 		String strInnerUser = new JSONObject(map).toString();
 		return strInnerUser;
 	}
-	
+
 	/**
 	 * manager修改停车场价格
+	 * 
 	 * @param parkingLot
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value="changeParkingLotPrice",method=RequestMethod.POST)
+	@RequestMapping(value = "changeParkingLotPrice", method = RequestMethod.POST)
 	@ResponseBody
-	@Permission(value={Permission.Type.MANAGER})
-	public String changeParkingLotPrice(ParkingLot parkingLot,HttpSession session) {
-		InnerUser manager=(InnerUser)session.getAttribute("innerUser");
-		int typeflag=manager.getTypeflag();
-		Map<String,Object> map=new HashMap<>();
-		if(setPriceOrNot()==false) {
+	@Permission(value = { Permission.Type.MANAGER })
+	public String changeParkingLotPrice(ParkingLot parkingLot, HttpSession session) {
+		InnerUser manager = (InnerUser) session.getAttribute("innerUser");
+		int typeflag = manager.getTypeflag();
+		Map<String, Object> map = new HashMap<>();
+		if (setPriceOrNot() == false) {
 			map.put("msg", "出账日不能修改价格");
 		}
-		if(typeflag==1&&setPriceOrNot()==true) {
+		if (typeflag == 1 && setPriceOrNot() == true) {
 			try {
 				parkingLotService.updateParkingLot(parkingLot);
 				map.put("msg", 1);
-			}catch(Exception e) {
+			} catch (Exception e) {
 				map.put("msg", "程序内部错误");
 			}
 		}
-		String strChangeParkingLotPrice=new JSONObject(map).toString();
+		String strChangeParkingLotPrice = new JSONObject(map).toString();
 		return strChangeParkingLotPrice;
 	}
-	
+
 	/**
 	 * 查看使用情况统计
+	 * 
 	 * @param lotId
 	 * @param startTime
 	 * @param endTime
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="sumUsage",method=RequestMethod.GET)
-	public Map<String,Object> sumUsage(@RequestParam("lotId")Integer lotId,@RequestParam("startTime")String startTime,@RequestParam("endTime")String endTime) {
-		List<ParkingRecord> list=new ArrayList<>();
-		SimpleDateFormat sdf=new SimpleDateFormat();
-		Map<String,Object> result=new HashMap<>();
-		Date startDate=null;
-		Date endDate=null;
+	@RequestMapping(value = "sumUsage", method = RequestMethod.GET)
+	@Permission(value = { Permission.Type.MANAGER })
+	public Map<String, Object> sumUsage(@RequestParam("lotId") Integer lotId, @RequestParam("time") String time) {
+		List<ParkingRecord> list = new ArrayList<>();
+		String time1=time;
+		String time2=time;
+		String year=splitYear(time1);
+		String month=splitMonth(time2);
+		String[] str= {"-31","-30","-28","-29"};
+		String strStartDate="-01";
+		String endTime=null;
+		String startTime=time+strStartDate;
+		if(month.equals("2")||month.equals("02")) {
+			if(isLeanYear(year)==true) {
+				endTime=time+str[3];
+			}else {
+				endTime=time+str[2]; 
+			}
+		}
+		if(month.equals("01")||month.equals("1")) {
+			endTime=time+str[0];
+		}
+		if(month.equals("03")||month.equals("3")) {
+			endTime=time+str[0];
+		}
+		if(month.equals("05")||month.equals("5")) {
+			endTime=time+str[0];
+		}
+		if(month.equals("07")||month.equals("7")) {
+			endTime=time+str[0];
+		}
+		if(month.equals("08")||month.equals("8")) {
+			endTime=time+str[0];
+		}
+		if(month.equals("10")||month.equals("12")) {
+			endTime=time+str[0];
+		}
+		if(month.equals("04")||month.equals("4")) {
+			endTime=time+str[1];
+		}
+		if(month.equals("06")||month.equals("6")) {
+			endTime=time+str[1];
+		}
+		if(month.equals("09")||month.equals("9")) {
+			endTime=time+str[1];
+		}
+		if(month.equals("11")) {
+			endTime=time+str[1];
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Map<String, Object> result = new HashMap<>();
+		Date startDate = null;
+		Date endDate = null;
 		try {
 			startDate = sdf.parse(startTime);
-			endDate=sdf.parse(endTime);
+			endDate = sdf.parse(endTime);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.put("error", "字符串转换失败");
 		}
-		list=parkingLotService.sumUsage(lotId, startDate, endDate);
-		if(!list.isEmpty()) {
+		list = parkingLotService.sumUsage(lotId, startDate, endDate);
+		if (!list.isEmpty()) {
 			result.put("list", list);
-		}else {
+		} else {
 			result.put("msg", 0);
 		}
 		return result;
