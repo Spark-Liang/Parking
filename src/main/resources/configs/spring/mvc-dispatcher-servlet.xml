@@ -21,11 +21,6 @@
     </context:component-scan>  
   	<!--激活spring的注解支持-->
     <context:annotation-config/>
-
-    <!--开启这个配置，spring才能识别@Scheduled注解   -->  
-    <task:annotation-driven scheduler="qbScheduler" mode="proxy"/>  
-    <!-- 配置（定时）多任务线程 -->
-    <task:scheduler id="qbScheduler" pool-size="10"/>  
   
   	<!--激活基于annotation的handlerMapping-->
     <mvc:annotation-driven/>
@@ -94,6 +89,62 @@
         <property name="maxInMemorySize" value="4096"/>  
     </bean> 
     
+    <!-- spring-quartz定时任务配置 -->
+    <!-- 使用MethodInvokingJobDetailFactoryBean，任务类可以不实现Job接口，通过targetMethod指定调用方法-->
+   <bean id="taskJob" class="com.park.ssm.controller.TaskJob"/>
+     <bean id="jobDetail1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <property name="targetObject">
+        <ref bean="taskJob"/>
+    </property>
+    <property name="targetMethod">
+        <value>creatBill</value>
+    </property>
+   </bean>
+   <bean id="jobDetail2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <property name="targetObject">
+        <ref bean="taskJob"/>
+    </property>
+    <property name="targetMethod">
+        <value>autoStopCard</value>
+    </property>
+   </bean>
+  
+    <!--  调度触发器 -->
+    <bean id="Trigger1"
+      class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="name" value="work_default_name"/>
+    <property name="group" value="work_default"/>
+    <property name="jobDetail">
+        <ref bean="jobDetail1" />
+    </property>
+    <property name="cronExpression">
+        <value>0/5 * * * * ?</value>
+       <!--  <value>0 0 0 L 1,4,7,10 ?</value> -->
+    </property>
+    </bean>
     
+     <!--  调度触发器 -->
+    <bean id="Trigger2"
+      class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="name" value="work_default_name"/>
+    <property name="group" value="work_default"/>
+    <property name="jobDetail">
+        <ref bean="jobDetail2" />
+    </property>
+    <property name="cronExpression">
+        <value>0/5 * * * * ?</value>
+        <!--  <value>0 0 0 L 1,4,7,10 ?</value> -->
+    </property>
+    </bean>
+
+    <!-- 调度工厂 -->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+        <list>
+           <ref bean="Trigger1"/>
+           <ref bean="Trigger2"/>
+        </list>
+    </property>
+         </bean>
    
 </beans>  
