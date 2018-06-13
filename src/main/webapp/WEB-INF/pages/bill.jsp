@@ -32,9 +32,10 @@
         display: none;
     }
     .bill{
-        width: 620px;
+        width: 800px;
         height: 70%;
         margin: 4% auto;
+ 
     }
     .mystyle{
         font-size: 120%;
@@ -57,7 +58,7 @@
     }
     /*table样式*/
     .tableStyle{
-        margin: 100px auto;
+        margin: 50px auto;
         border-collapse:collapse;
         text-align: center;
 
@@ -66,7 +67,7 @@
         border-top: 1px grey solid;
     }
     .tableStyle td{
-
+		width: 200px;
         padding: 5px 18px;
         
     }
@@ -74,14 +75,30 @@
         border-top-color: black
     }
     .tableStyle th{
+    	width: 200px;
         padding: 5px 18px;
         text-align: center;
+    }
+    .tableStyle thead{
+    	width: 800px;
+    	display: block;
+    }
+    .tableStyle tbody{
+    	display: block;
+    	width: 800px;
+    	height: 600px;
+    	overflow-x: auto;
+    	overflow-y: auto;
     }
     .nooutbill table{
         margin:100px 0;
     }
     .nooutbill th{
         padding: 5px 60px;
+        width: 250px;
+    }
+    .nooutbill td{
+    	width: 250px;
     }
 </style>
 <body>
@@ -117,14 +134,15 @@
                     </thead>
                     <tbody id = "outBillData">
                     <!-- 写死的静态数据 -->
-                    <!--
+                    
                     <tr>
                         <td>1</td>
                         <td>2017.1.1-2017.3.31</td>
-                        <td>2017.4.30</td>
+                        <td>2017.4.30<br>(已过期)</td>
                         <td>600</td>
                         <td>已付款</td>
                     </tr>
+                    <!--
                     <tr>
                         <td>2</td>
                         <td>2017.4.1-2017.6.30</td>
@@ -161,7 +179,7 @@
                 </tbody>
             </table> 
             </div>
-
+			
         </div>
         
     </div> 
@@ -183,7 +201,6 @@
     <!--点击查看帐单按钮显示帐单内容-->
     
 <script type="text/javascript">
-
     //点击检查帐单弹出帐单页面
     function showBill(a){
         //console.log(a);//保存卡号，用来请求账单信息
@@ -208,26 +225,31 @@
 			dataType:'json',
 			success: function(respon){
 				//先把旧数据删除
-				$("tbody").find("tr").remove();
-				//console.log(respon);
+				//$("tbody").find("tr").remove();
+				console.log("获取账单返回的数据：");
+				console.log(respon);
 				//console.log(respon.msg);
 				var length = respon.msg.length;
+				if(respon.msg == "您还没有账单"){
+					alert("没有账单");
+					return
+				}
 				for(var i = length-1; i >= 0; i--){
 					var id = respon.msg[i].id;//获取账单编号id
 					//日期通过getDate函数转换格式
+					
 					var startTime = getDate(respon.msg[i].timeQuantums[0].startTime);
 					var endTime = getDate(respon.msg[i].timeQuantums[0].endTime);
 					var lastPayDate = getDate(respon.msg[i].lastPayDate);//获取最后缴费日期
-					
+
 					//测试
-					var timeTest = respon.msg[i].lastPayDate;
+					var timeTest = respon.msg[i].lastPayDate+86400000;
 					var myDate = new Date().getTime();
-					console.log("最后付款时间："+timeTest+"现在时间："+myDate);
+					//console.log("最后付款时间："+timeTest+"现在时间："+myDate);
 					if(respon.msg[i].paid === false && myDate > timeTest){
-						lastPayDate = lastPayDate + "(已过期)";
-						
+						lastPayDate = lastPayDate + "<br>(已过期)";
 					}
-					console.log("lastPayDate:"+lastPayDate);
+					
 					//console.log(lastPayDate);
 					var price = respon.msg[i].price;//获取应付金额
 					//console.log("应付金额为："+price);
@@ -267,14 +289,64 @@
 							+"<td>"+price+"</td>"
 							+"<td>"+payState+"</td></tr>"
 						});
-					}					
+					}
 				}
+				//加载未出账账单信息
 				
+				
+				/*var dateFlag = new Date(respon.msg[length-1].lastPayDate);
+		    	var myMonthFlag = mydate.getMonth();
+		    	var myYearFlag = mydate.getFullYear();
+		    	*/
+		    	/*
+		    	var myDate = new Date();
+				var year = myDate.getFullYear();
+				var month = myDate.getMonth();
+		    	if(month < 4){
+		    		var nextBillDate = year +
+		    	}else if(month < 7){
+		    		
+		    	}else if(month < 10){
+		    		
+		    	}else{
+		    		
+		    	}
+		    	
+				$('#noOutBillData').append(function(){
+					return "<tr>"
+					+"<td>"+nextBillDate+"</td>"
+					+"<td>"+nextPrice+"</td></tr>"
+				});
+				*/
 			},
 			error: function(){
 				alert("数据请求发送失败");
 			}
 		});
+		
+		//未出账账单信息请求
+		$.ajax({
+			url: "user/predictPayment",
+			type: 'GET',
+			data:{
+				//userId: userId,
+				'id': accountId
+			},
+			dataType:'json',
+			success: function(respon){
+				console.log("下一季度：");
+				console.log(respon);
+				$('#noOutBillData').append(function(){
+					return "<tr>"
+					+"<td>"+"日期"+"</td>"
+				
+					+"<td>"+"预计付款金额"+"</td></tr>"
+			},
+			error: function(){
+				alert("数据请求发送失败");
+			}
+		});
+			
 		
     }
 
@@ -341,26 +413,32 @@
 				userId: userId,
 				isGetAll: 'true'
              },success: function(json){
-            	 //console.log(json);
+            	 console.log(json);
             	 var l = json.list.length;
             	 for(var i = 0; i < l; i++){
             		 
             		 //判断是否有未付款账单，如有就在卡上提示
             		 var tip = "有未付款账单";
+            		 var accountId = "";
             		 //console.log(json.list[i].currentBill.paid);
-            		 if(json.list[i].currentBill.paid === true){
-            			 tip = "";
+            		 if(json.list[i].currentBill){
+            			 if(json.list[i].currentBill.paid === true){
+                			 tip = "";
+                		 }
+            			 accountId = json.list[i].currentBill.accountId;//账户ID
             		 }
             		 
             		 var cardNum = json.list[i].cardId;//获取卡号
                 	 var startDate = getDate(json.list[i].stateStartDate);//转换日期格式
-                	 var accountId = json.list[i].currentBill.accountId;//账户ID
+                	 //var accountId = json.list[i].currentBill.accountId;//账户ID
                 	 var userId = json.list[i].userId;//用户ID
                 	 var cardState = json.list[i].state;//卡状态
                 	 //console.log("卡的状态:"+cardState);
                 	 var stateTip = "正常使用";
                 	 if(cardState === "STOP"){
-                		 stateTip = "<span style = 'color:red'>停用</span>";
+                		 stateTip = "<span style = 'color:#337ab7'>停用</span>";
+                	 }else if(cardState === "FREEZE"){
+                		 stateTip = "<span style = 'color:red'>欠费冻结</span>";
                 	 }
                 	 
                 	 //加载停车卡
