@@ -429,32 +429,37 @@
 		    显示用户的账单信息
 		*/
 		function checkBillData(json){
-			
-			if(json.list[0].currentBill!=null&&json.list[0].parking==true){
-				alert('存在没有支付的账单以及停车卡正在使用');
-				payBills();
-				return 0;
-			}else if(json.list[0].currentBill==null&&json.list[0].parking==true){
-				alert('需要先支付这个季度使用的费用并且此停车卡正在使用');
-				payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
-			}
-			else if(json.list[0].currentBill!=null){
-				alert('存在没有支付的账单');
-				payBills(0);//0是表示有上季度的账单没有支付
-				return 0;
+			accountId = json.list[0].id;
+			console.log(accountId)
+			if(json.list[0].currentBill!=null){
+				if(json.list[0].currentBill.paid==false&&json.list[0].parking==true){//存在账单但是没有支付,显示两个账单
+					alert('存在没有支付的账单以及停车卡正在使用');
+					payBills(0);
+					return 0;
+				}else if(json.list[0].currentBill.paid==true&&json.list[0].parking==true){
+					alert('需要先支付这个季度使用的费用并且此停车卡正在使用');
+					payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
+				}else if(json.list[0].currentBill.paid==false){
+					alert('存在没有支付的账单');
+					payBills(0);//0是表示有上季度的账单没有支付
+					return 0;
+				}else if(json.list[0].currentBill.paid==true){
+					alert('需要先支付这个季度使用的费用');
+					payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
+				}else if(json.list[0].parking==true){
+					alert('停车卡正在使用');
+					return 0;
+				}else{
+					return 1;
+				}
 			}else if(json.list[0].currentBill==null){
 				alert('需要先支付这个季度使用的费用');
 				payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
-			}else if(json.list[0].parking==true){
-				alert('停车卡正在使用');
-				return 0;
-			}else{
-				return 1;
 			}
 			//payBills函数中传过来的值是用于判断是存在账单还是不存在账单但是需要支付的状况
 			//用于显示用户的账单信息
 			function payBills(num){
-					$('.payBill').show();
+				$('.payBill').show();
 				if (num == 0 ){
 					var sDate = new Date(json.list[0].currentBill.timeQuantums[0].startTime);
 					var sDate1 = sDate.toLocaleString('chinese',{hour12:false});
@@ -469,28 +474,60 @@
 						+"<td>"+json.list[0].parkingLot.cost+" ￥/每月</td>"
 						+"<td>"+json.list[0].currentBill.price+"</td>"
 						+"</tr>"
-					})
+					});
+					currentBill();
 				}else if(num == 1){
-					var date = new Date();
-					var day = date.getDate();
-					var month = date.getMonth()+1;
-					var year = date.getFullYear();
-					var time1 = date.toLocaleString('chinese',{hour12:false});
-					var time = time1.substring(0,9);
-					var allDayNum = allDay(month);
-					var useDay = useMuchDay(day,month);
-					var price = (json.list[0].parkingLot.cost * 3)*(useDay/allDayNum[0]);
-					var price1 = Math.ceil(price);
-					$('.BillTable').append(function(){
-						return "<tr>"
-						+"<td>"+json.list[0].userId+"</td>"
-						+"<td>"+year+"-"+allDayNum[1]+"-1 ~"+time+"</td>"
-						+"<td>"+json.list[0].parkingLot.cost+" ￥/每月</td>"
-						+"<td>"+price1+"</td>"
-						+"</tr>"
-					})
+					
+					currentBill();
 				}
-				
+				function currentBill(){
+					console.log(accountId)
+					$.ajax({
+						url:'bill/newBillInfo',
+						type:'GET',
+						dataType:'json',
+						data:{
+							'accountId':accountId
+						},success:function(time){
+							console.log(time);
+							var data = new Date(time.timeQuantums[0].startTime);//获取账单的开始时间
+							var startTime = data.toLocaleString('chinese',{hour12:false});
+							var startTime = startTime.substring(0,9);
+							console.log(startTime);
+							var date = new Date();//获取账单的当前时间
+							var nowTime = date.toLocaleString('chinese',{hour12:false});
+							var nowTime = nowTime.substring(0,9);
+							var day = date.getDate();//获取开始时间到当前时间的天数
+							var days = getDayNum(startTime,nowTime);
+							var month = date.getMonth()+1;
+							var year = date.getFullYear();
+							var allDayNum = allDay(month);
+							/* var useDay = useMuchDay(day,month);*/
+							var price = (time.price * 3)*(days/allDayNum[0]);
+							var price = Math.ceil(price);
+							$('.BillTable').append(function(){
+								return "<tr>"
+								+"<td>"+json.list[0].userId+"</td>"
+								+"<td>"+startTime+" ~ "+nowTime+"</td>"
+								+"<td>"+time.price+" ￥/每月</td>"
+								+"<td>"+price+" 元</td>"
+								+"</tr>"
+							})
+						},error:function(){
+								
+						}
+					})
+					function getDayNum(startTime,nowTime){
+						startTime = new Date(startTime);
+						startTime = startTime.getTime()
+						nowTime = new Date(nowTime)	;
+						nowTime = nowTime.getTime();
+						console.log(nowTime-startTime);
+						var time = nowTime - startTime;
+						var days=Math.floor(time/(24*3600*1000));
+						return days+1;
+					}
+				}
 				
 			}
 		}
