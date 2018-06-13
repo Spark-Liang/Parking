@@ -186,9 +186,9 @@
 
     //点击检查帐单弹出帐单页面
     function showBill(a){
-        console.log(a);//保存卡号，用来请求账单信息
+        //console.log(a);//保存卡号，用来请求账单信息
         var accountId = $(a).data('accountid');
-        console.log("accountId:"+accountId);
+        //console.log("accountId:"+accountId);
         span1.classList.add("mystyle");
         span2.classList.remove("mystyle");
         var showBill = document.getElementsByClassName("showBill")[0];
@@ -209,8 +209,8 @@
 			success: function(respon){
 				//先把旧数据删除
 				$("tbody").find("tr").remove();
-				console.log(respon);
-				console.log(respon.msg);
+				//console.log(respon);
+				//console.log(respon.msg);
 				var length = respon.msg.length;
 				for(var i = length-1; i >= 0; i--){
 					var id = respon.msg[i].id;//获取账单编号id
@@ -218,6 +218,16 @@
 					var startTime = getDate(respon.msg[i].timeQuantums[0].startTime);
 					var endTime = getDate(respon.msg[i].timeQuantums[0].endTime);
 					var lastPayDate = getDate(respon.msg[i].lastPayDate);//获取最后缴费日期
+					
+					//测试
+					var timeTest = respon.msg[i].lastPayDate;
+					var myDate = new Date().getTime();
+					console.log("最后付款时间："+timeTest+"现在时间："+myDate);
+					if(respon.msg[i].paid === false && myDate > timeTest){
+						lastPayDate = lastPayDate + "(已过期)";
+						
+					}
+					console.log("lastPayDate:"+lastPayDate);
 					//console.log(lastPayDate);
 					var price = respon.msg[i].price;//获取应付金额
 					//console.log("应付金额为："+price);
@@ -276,7 +286,6 @@
 
     //查看已出账单和未出账单选项的样式变化
     var billMenu = document.getElementsByClassName("billMenu")[0];
-    console.log(billMenu);
     var span1 = billMenu.getElementsByTagName("span")[0];
     var span2 = billMenu.getElementsByTagName("span")[2];
     //console.log(span1);
@@ -332,22 +341,34 @@
 				userId: userId,
 				isGetAll: 'true'
              },success: function(json){
-            	 console.log(json);
+            	 //console.log(json);
             	 var l = json.list.length;
             	 for(var i = 0; i < l; i++){
+            		 
+            		 //判断是否有未付款账单，如有就在卡上提示
             		 var tip = "有未付款账单";
-            		 console.log(json.list[i].currentBill.paid);
+            		 //console.log(json.list[i].currentBill.paid);
             		 if(json.list[i].currentBill.paid === true){
             			 tip = "";
             		 }
-            		 var cardNum = json.list[i].cardId;
+            		 
+            		 var cardNum = json.list[i].cardId;//获取卡号
                 	 var startDate = getDate(json.list[i].stateStartDate);//转换日期格式
-                	 var accountId = json.list[i].currentBill.accountId;
-                	 var userId = json.list[i].userId;
+                	 var accountId = json.list[i].currentBill.accountId;//账户ID
+                	 var userId = json.list[i].userId;//用户ID
+                	 var cardState = json.list[i].state;//卡状态
+                	 //console.log("卡的状态:"+cardState);
+                	 var stateTip = "正常使用";
+                	 if(cardState === "STOP"){
+                		 stateTip = "<span style = 'color:red'>停用</span>";
+                	 }
+                	 
                 	 //加载停车卡
                 	 $('.moudle1').append(function(){
                          return "<div class='admin-block'>"
+                         +"<br>"
                          +"<p>卡号："+cardNum+"</p>"
+                         +"<p>卡状态："+stateTip+"</p>"
                          +"<p>开卡日期："+startDate+"</p>"
                          +"<p style = 'color: red'>"+tip+"</p>"
                          +'<button class="btn btn-md btn-block btn-primary" onclick = "showBill(this)" data-accountid="'+accountId+'">查看帐单</button>';
