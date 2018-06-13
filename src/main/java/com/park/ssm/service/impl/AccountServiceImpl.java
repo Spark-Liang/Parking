@@ -1,5 +1,6 @@
 package com.park.ssm.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.park.ssm.dao.AccountDao;
+import com.park.ssm.dao.AccountStateLogDao;
 import com.park.ssm.dao.BillDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
@@ -35,7 +37,9 @@ public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	private BillDao billdao;
-
+	
+	@Autowired
+	private AccountStateLogDao accountStateLogDao;
 	/*
 	 * @Autowired private ParkingLotDao parkinglotdao;
 	 */
@@ -199,5 +203,19 @@ public class AccountServiceImpl implements AccountService {
 			throw new RuntimeException(errorMessage.toString());
 		}
 		
+	}
+	/**
+	 * 获取开卡日期
+	 */
+	public Date getStartDate(Long id) {
+		StringBuilder errorMessage = new StringBuilder();
+		Account account = accountdao.loadAccountById(id);
+		Bill currentBillId = account.getCurrentBill();
+		Date startDate=null;
+		//SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		if(currentBillId==null) {
+			startDate=accountStateLogDao.selectStartDate(id);
+		}
+		return startDate;
 	}
 }

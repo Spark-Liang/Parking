@@ -389,6 +389,23 @@ public class UserController {
 		return "bill";
 	}
 	
+	@RequestMapping(value="predictPayment",method=RequestMethod.GET)
+	public Map<String,Object> predictPayment(@RequestParam("id")Long id){
+		Map<String,Object> map=new HashMap<>();
+		Double result=0.0;
+		Date startDate=accountService.getStartDate(id);
+		if(startDate==null) {
+			result=accountService.getPrice(id)*3;
+			map.put("payment", result);
+			map.put("startDate", startDate);
+		}else {
+			map.put("payment", result);
+			map.put("startDate", startDate);
+		}
+		
+		return map;
+		
+	}
 	
 	@RequestMapping("inputbillpage")
 	public String page() {
