@@ -82,28 +82,6 @@
                 <img src="img/manger-close2.svg">
                 <strong>关闭</strong>
             </div>
-            <!--<h2>停车场1</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>停车场名字</th>
-                        <th>地址</th>
-                        <th>车位数量</th>
-                        <th>售出</th>
-                        <th>收入</th>
-                        <th>总盈利</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>停车场名字</td>
-                        <td>地址</td>
-                        <td>车位数量</td>
-                        <td>售出</td>
-                        <td>总盈利</td>
-                    </tr>
-                </tbody>
-            </table>-->
             <br/>
             <h4>按月查询</h4>
             <div class="input-group manger-month">
@@ -113,7 +91,7 @@
                 </span>
             </div>
             <br/>
-            <h4>停车场1</h4>
+            <h3>停车场:&nbsp;<span id="parkname"></span></h3>
             
             <!--
             <br/>
@@ -144,7 +122,7 @@
             
             <!--使用情况-->
             <br>
-            <h4  style="color: #337ab7">使用情况如下</h4>
+            <h4  style="color: #337ab7"><span id="year"></span>年<span id="month"></span>月 使用情况如下</h4>
             <table class="tableStyle usageTable table">
                     <thead>
                         <tr>
@@ -311,7 +289,7 @@
                  +"<p>停车费：￥<span>"+json.res[i].currentPrice+"</span>元/月<img onclick='editmoney(this)' data-value='"+json.res[i].id+"' class='pull-right' src='img/manger-editor.svg'></p>"
                  +"</div>"
                 /*  +"<button class='btn btn-md btn-block btn-primary btn-use' onclick='usagecheck(this)'>查看使用情况</button>" */
-                 +"<button class='btn btn-md btn-block btn-primary' onclick='seeUsage(this)' data-lotid='"+json.res[i].id+"'>查看使用情况</button>"
+                 +"<button class='btn btn-md btn-block btn-primary' onclick='seeUsage(this)' data-lotid='"+json.res[i].id+"' data-park='"+json.res[i].name+"'>查看使用情况</button>"
                  +"</div>"
              })
              }
@@ -342,9 +320,14 @@
     //查看某一停车场的使用情况
     function seeUsage(a){
     	$('.showmoney').fadeIn();
-    	var mydate = new Date();
+    	var park = $(a).data("park");
+    	$('#parkname').text(park);
+    	console.log(park+"fd")
+    	var mydate = new Date();//获取当前日期
     	var time = mydate.toLocaleString('chinese',{hour12:false});
-    	var time = time.substring(0,6);
+    	var time = time.substring(0,6);//截取一定的长度
+    	var day = time.split("-");//把日期分开
+    	$('#year').text(day[0]);$('#month').text(day[1]);//把年份以及月份显示在页面上
     	console.log(time);
     	var lotId = $(a).data('lotid');
     	console.log(lotId);
