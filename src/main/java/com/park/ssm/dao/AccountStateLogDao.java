@@ -29,4 +29,6 @@ public interface AccountStateLogDao {
 															,@Param("endTime")Date endTime
 															,@Param("isLogWithBill")Boolean isLogWithBill
 															,@Param("pageNum")Integer pageNum,@Param("pageSize")Integer pageSize);
+	
+	public Date selectStartDate(@Param("accountId")Long accountId);
 }

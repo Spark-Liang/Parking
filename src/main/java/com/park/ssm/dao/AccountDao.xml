@@ -117,6 +117,16 @@
 			)
 		}]]>
 	</select>
+	<!-- 被停卡的账户成功续费之后，更新数据库状态 -->
+	<select id="resumeCard" statementType="CALLABLE" useCache="false">
+	<![CDATA[{
+		call resumeCard(
+			#{positionId,mode=IN}
+			,#{accountId,mode=IN}
+			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+		)
+	}]]>
+	</select>
 
 	<update id="setAccountState">
 		update Account
@@ -190,6 +200,7 @@
 		</where>
 	</update> -->
 	
+
 		<select id="updateAllAccountState" statementType="CALLABLE" useCache="false">
 		<![CDATA[{
 			call updateAllAccountState(

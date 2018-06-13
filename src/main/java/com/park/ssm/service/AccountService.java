@@ -1,5 +1,6 @@
 package com.park.ssm.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.park.ssm.entity.Account;
@@ -87,4 +88,11 @@ public interface AccountService {
 	 * @return
 	 */
 	public Double getPrice(Long id);
+	
+	/**
+	 * 获取开卡日期
+	 * @param accountId
+	 * @return
+	 */
+	public Date getStartDate(Long accountId);
 }

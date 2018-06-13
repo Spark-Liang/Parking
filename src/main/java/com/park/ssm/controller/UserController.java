@@ -388,46 +388,23 @@ public class UserController {
 	public String userBillPage() {
 		return "bill";
 	}
-	/**
-	 * 插入Bill
-	 * @param bill
-	 * @return
-	 */
-	@RequestMapping(value="insertBill",method=RequestMethod.POST)
-	@ResponseBody
-	public String insertBill(Bill bill) {
-		Map<String,Object> map=new HashMap<>();
-		int result=0;
-		try {
-			result=billService.insertBill(bill);
-			if(result>0) {
-				map.put("msg", 1);
-				map.put("bill", bill);
-			}else {
-				map.put("msg", 0);
-			}
-		}catch(Exception e) {
-			map.put("msg", "error");
-		}
-		String strInsertBill=new JSONObject(map).toString();
-		return strInsertBill;
-	}
 	
-
-	/**
-	 * operator支付账单
-	 * @param bill
-	 * @return
-	 */
-	@RequestMapping(value="paybill",method=RequestMethod.POST)
-	@ResponseBody
-	public String payBill(Bill bill) {
+	@RequestMapping(value="predictPayment",method=RequestMethod.GET)
+	public Map<String,Object> predictPayment(@RequestParam("id")Long id){
 		Map<String,Object> map=new HashMap<>();
-		int result=0;
-		result=billService.payBill(bill);
-		map.put("msg", result);
-		String strPayBill=new JSONObject(map).toString();
-		return strPayBill;
+		Double result=0.0;
+		Date startDate=accountService.getStartDate(id);
+		if(startDate==null) {
+			result=accountService.getPrice(id)*3;
+			map.put("payment", result);
+			map.put("startDate", startDate);
+		}else {
+			map.put("payment", result);
+			map.put("startDate", startDate);
+		}
+		
+		return map;
+		
 	}
 	
 	@RequestMapping("inputbillpage")

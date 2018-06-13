@@ -55,4 +55,11 @@
 		</if>
 	</select>
 	
+	<select id="selectStartDate" resultType="java.util.Date">
+	select min(startTime) from AccountStateLog
+	<where>
+	accountId=#{accountId} and state=0
+	</where>
+	group by accountId
+	</select>
 </mapper>
