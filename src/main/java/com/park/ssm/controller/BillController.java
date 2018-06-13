@@ -37,7 +37,7 @@ public class BillController {
 	 * 
 	 * @param accountId
 	 * @return
-	 *  ｛price： 账单的每月单价 ，timeQuantums: 时间段的数组，时间段包含startTime和endTime属性 ｝
+	 *  ｛price： 账单的每月单价 ，stateLogs:表示该账单相关的stateLog｝
 	 */	
 	@RequestMapping(value="newBillInfo",produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
