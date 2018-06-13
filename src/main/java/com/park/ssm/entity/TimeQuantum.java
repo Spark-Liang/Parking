@@ -18,6 +18,15 @@ public class TimeQuantum implements Comparable<TimeQuantum> {
 	@DateTimeFormat(pattern="YYYY-MM-DD")
 	private Date endTime;
 	
+	public TimeQuantum() {}
+	
+	public TimeQuantum(Date startTime, Date endTime) {
+		super();
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
+
+
 	public Date getStartTime() {
 		return startTime;
 	}

@@ -174,7 +174,6 @@ public class UserController {
 		Account account = new Account();
 		String message = "";
 		if (lotId != 0 && userId != 0 && cardId != 0) {
-			account.setState(AccountState.getValueByInd(0));
 			Long accountId = null;
 			try {
 				accountId = accountService.addNewCard(cardId, userId, lotId);

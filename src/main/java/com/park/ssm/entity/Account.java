@@ -24,163 +24,69 @@ public class Account implements Serializable {
 	private Long parkingPositionId;
 	private Long cardId;
 	
+	/**
+	 * 该账号对应新账单的每个月的单价
+	 */
+	private Double price;
 	private AccountState state=AccountState.NORMAL;
 	private Date stateStartDate;
 	private boolean isParking;
 	private Bill currentBill;
 	private List<Bill> bills;
-	/**
-	 * @return the id
-	 */
+	
 	public Long getId() {
 		return id;
 	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-	/**
-	 * @return the userId
-	 */
 	public Long getUserId() {
 		return userId;
 	}
-	/**
-	 * @param userId the userId to set
-	 */
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-	/**
-	 * @return the parkingLot
-	 */
 	public ParkingLot getParkingLot() {
 		return parkingLot;
 	}
-	/**
-	 * @param parkingLot the parkingLot to set
-	 */
-	public void setParkingLot(ParkingLot parkingLot) {
-		this.parkingLot = parkingLot;
-	}
-	/**
-	 * @return the parkingPositionId
-	 */
 	public Long getParkingPositionId() {
 		return parkingPositionId;
 	}
-	/**
-	 * @param parkingPositionId the parkingPositionId to set
-	 */
-	public void setParkingPositionId(Long parkingPositionId) {
-		this.parkingPositionId = parkingPositionId;
-	}
-	/**
-	 * @return the cardId
-	 */
 	public Long getCardId() {
 		return cardId;
 	}
-	/**
-	 * @param cardId the cardId to set
-	 */
 	public void setCardId(Long cardId) {
 		this.cardId = cardId;
 	}
-	/**
-	 * @return the state
-	 */
+	public Double getPrice() {
+		return price;
+	}
 	public AccountState getState() {
 		return state;
 	}
-	/**
-	 * @param state the state to set
-	 */
-	public void setState(AccountState state) {
-		this.state = state;
-	}
-	/**
-	 * @return the stateStartDate
-	 */
 	public Date getStateStartDate() {
 		return stateStartDate;
 	}
-	/**
-	 * @param stateStartDate the stateStartDate to set
-	 */
-	public void setStateStartDate(Date stateStartDate) {
-		this.stateStartDate = stateStartDate;
-	}
-	/**
-	 * @return the isParking
-	 */
 	public boolean isParking() {
 		return isParking;
 	}
-	/**
-	 * @param isParking the isParking to set
-	 */
-	public void setParking(boolean isParking) {
-		this.isParking = isParking;
-	}
-	/**
-	 * @return the currentBill
-	 */
 	public Bill getCurrentBill() {
 		return currentBill;
 	}
-	/**
-	 * @param currentBill the currentBill to set
-	 */
-	public void setCurrentBill(Bill currentBill) {
-		this.currentBill = currentBill;
-	}
-	/**
-	 * @return the bills
-	 */
 	public List<Bill> getBills() {
 		return bills;
 	}
-	/**
-	 * @param bills the bills to set
-	 */
-	public void setBills(List<Bill> bills) {
-		this.bills = bills;
-	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Account [id=" + id + ", userId=" + userId + ", parkingLot=" + parkingLot + ", parkingPositionId="
-				+ parkingPositionId + ", cardId=" + cardId + ", state=" + state + ", stateStartDate=" + stateStartDate
-				+ ", isParking=" + isParking + ", currentBill=" + currentBill + ", bills=" + bills + "]";
-	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((bills == null) ? 0 : bills.hashCode());
 		result = prime * result + ((cardId == null) ? 0 : cardId.hashCode());
 		result = prime * result + ((currentBill == null) ? 0 : currentBill.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + (isParking ? 1231 : 1237);
 		result = prime * result + ((parkingLot == null) ? 0 : parkingLot.hashCode());
 		result = prime * result + ((parkingPositionId == null) ? 0 : parkingPositionId.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
 		result = prime * result + ((stateStartDate == null) ? 0 : stateStartDate.hashCode());
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -189,11 +95,6 @@ public class Account implements Serializable {
 		if (!(obj instanceof Account))
 			return false;
 		Account other = (Account) obj;
-		if (bills == null) {
-			if (other.bills != null)
-				return false;
-		} else if (!bills.equals(other.bills))
-			return false;
 		if (cardId == null) {
 			if (other.cardId != null)
 				return false;
@@ -221,6 +122,11 @@ public class Account implements Serializable {
 				return false;
 		} else if (!parkingPositionId.equals(other.parkingPositionId))
 			return false;
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
+			return false;
 		if (state != other.state)
 			return false;
 		if (stateStartDate == null) {
@@ -235,6 +141,15 @@ public class Account implements Serializable {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return "Account [id=" + id + ", userId=" + userId + ", parkingLot=" + parkingLot + ", parkingPositionId="
+				+ parkingPositionId + ", cardId=" + cardId + ", price=" + price + ", state=" + state
+				+ ", stateStartDate=" + stateStartDate + ", isParking=" + isParking + ", currentBill=" + currentBill
+				+ ", bills=" + bills + "]";
+	}
+	
 	
 	
 }
