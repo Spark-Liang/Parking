@@ -1,5 +1,7 @@
 package com.park.ssm.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -326,10 +328,21 @@ public class InnerUserController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="sumUsage",method=RequestMethod.GET)
-	public Map<String,Object> sumUsage(@RequestParam("lotId")Integer lotId,@RequestParam("startTime")Date startTime,@RequestParam("endTime")Date endTime) {
+	public Map<String,Object> sumUsage(@RequestParam("lotId")Integer lotId,@RequestParam("startTime")String startTime,@RequestParam("endTime")String endTime) {
 		List<ParkingRecord> list=new ArrayList<>();
-		list=parkingLotService.sumUsage(lotId, startTime, endTime);
+		SimpleDateFormat sdf=new SimpleDateFormat();
 		Map<String,Object> result=new HashMap<>();
+		Date startDate=null;
+		Date endDate=null;
+		try {
+			startDate = sdf.parse(startTime);
+			endDate=sdf.parse(endTime);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result.put("error", "字符串转换失败");
+		}
+		list=parkingLotService.sumUsage(lotId, startDate, endDate);
 		if(!list.isEmpty()) {
 			result.put("list", list);
 		}else {

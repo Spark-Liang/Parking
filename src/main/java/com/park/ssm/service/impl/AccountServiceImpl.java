@@ -1,6 +1,7 @@
 package com.park.ssm.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import com.park.ssm.dao.BillDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
+import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.AccountService;
@@ -47,7 +49,7 @@ public class AccountServiceImpl implements AccountService {
 		List<Account> list = null;
 		List<Account> listDB = accountdao.findAccountrById(userId, parkingLotId, parkingPositionId, cardId, pageNum,
 				pageSize);
-		//System.out.println("---------------------------listDB=" + listDB);
+		// System.out.println("---------------------------listDB=" + listDB);
 		if (isFindAll == false) {
 			list = new ArrayList<Account>(listDB.size());
 			try {
@@ -178,17 +180,24 @@ public class AccountServiceImpl implements AccountService {
 			throw new RuntimeException(errorMessage.toString());
 		}
 	}
-	/**
-	 * 
-	 * @param account
-	 * @return
-	 * 
-	 * @Override
-	 * @Transactional public int payBill(Account account) { // TODO Auto-generated
-	 *                method stub StringBuilder errorMessage=new StringBuilder();
-	 *                int result=accountdao.updateCurrentBillId(account);
-	 *                if(result>0) { return result; }else {
-	 *                errorMessage.append("支付失败,请重试"); throw new
-	 *                RuntimeException(errorMessage.toString()); } }
-	 */
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public Double getPrice(Long id) {
+		// TODO Auto-generated method stub
+		StringBuilder errorMessage = new StringBuilder();
+		Account account = accountdao.loadAccountById(id);
+		Bill currentBillId = account.getCurrentBill();
+		AccountState state=account.getState();
+		if(state==AccountState.NORMAL) {
+			return account.getPrice();
+		}else  if(state==AccountState.FREEZE||state==AccountState.STOP){
+			errorMessage.append("由于该卡已经欠费或停卡，无法进行预测\n");
+			throw new RuntimeException(errorMessage.toString());
+		}else {
+			errorMessage.append("系统出错，请联系技术部门！\n");
+			throw new RuntimeException(errorMessage.toString());
+		}
+		
+	}
 }
