@@ -220,9 +220,7 @@ begin
 	commit;
     set flag=0;
     set autocommit=1;
-    #清理临时表
-    #truncate table tmpStateUpdateInfo;
-    #truncate table tmpBillStateLogMap;
+
 end
 $
 ################################################################################
@@ -299,6 +297,7 @@ begin
 		b.parkingPositionId=null
 		,b.state=-1
 		,b.isParking=0
+		,b.currentStateLogId=a.newAccStateLogId
 		,c.accountId=null
 		,d.endTime= execTime
         ,e.endTime= execTime
@@ -314,9 +313,7 @@ begin
 	;
 	set flag=0;
 	commit;
-    # 清理临时表
-    set autocommit=1;
-    truncate TABLE tmpUpdateInfo;
+    set autocommit=1;   
 end
 $
 ################################################################################
@@ -438,8 +435,86 @@ BEGIN
     set accountId=@tmpAccountId;
 END 
 $
-
-
+################################################################################
+#支付账单后继续使用的存储过程
+###############################################################################
+drop procedure if exists resumeCard$
+create procedure resumeCard(in position_id bigint,in account_id bigint,out flag int)
+begin
+	declare newAccountStateLogId bigint;
+	declare curBillId bigint;
+	declare curLogId bigint;
+	declare updateTime datetime; 
+	#定义检查变量
+    declare exit handler for sqlexception
+	begin
+		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
+        rollback;
+        set autocommit=1;
+		call logErr('resumeCard',@sql_state,@msg);
+		set flag=1;
+	end
+	;
+	
+	set @updateTime=
+	(select now()
+	from
+		(select 
+			@newAccountStateLogId:=(select max(id)+1 from AccountStateLog for update) newLogId
+			,@curBillId:=currentBillId curBillId
+			,@curLogId:=currentStateLogId curLogId
+		from Account
+		where id=account_id
+		for update
+		)init
+	)
+	;
+	
+	set autocommit=0;
+	start transaction;
+	
+	#更新stateLog
+	update AccountStateLog 
+	set
+		endTime=@updateTime	
+	where id=@curLogId
+	;
+	insert into AccountStateLog (id,accountId,state,startTime)
+	values
+    (
+		@newAccountStateLogId
+		,account_id
+		,0
+		,@updateTime
+	)
+	;
+	#更新账单状态
+	update Bill
+	set
+		isPaid=1
+	where id=@curBillId
+	;
+	#注册停车位
+	update ParkingPosition
+	set
+		state=1
+		,accountId=account_id
+	where id=position_id
+	;
+	#更新账号
+	update Account
+	set
+		currentStateLogId=@newAccountStateLogId
+		,parkingPositionId=position_id
+		,state=0
+	where id=account_id
+	;
+	commit;
+	set autocommit=1;
+	set flag=0;
+end
+$
+	
 
 ################################################################################
 #停车和提车相关的存储过程

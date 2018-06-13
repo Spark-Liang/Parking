@@ -45,6 +45,20 @@ public interface AccountDao {
 	 */
 	public abstract void addNewCard(Map<String, Object> map);
 	
+	/**执行添加新卡的过程，执行结果通过输入的map返回
+	 * 
+	 * result中
+	 * <p>flag是执行结果的标志位 
+	 * flag＝0表示执行成功
+	 * flag=1 表示执行失败
+	 * 
+	 * @param map
+	 * <li>positionId 停车位id
+	 * <li>accountId 账号的id
+	 */
+	public abstract void resumeCard(Map<String, Object> map);
+	
+	
 	public abstract int setAccountState(@Param("id") Long id,@Param("state")AccountState state); 
 	
 	/**
