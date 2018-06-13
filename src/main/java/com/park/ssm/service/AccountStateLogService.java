@@ -14,5 +14,5 @@ public interface AccountStateLogService {
 	 * @param accountId
 	 * @return
 	 */
-	public abstract Map<String, Object> getBillBeforeTerminated(Long accountId);
+	public abstract Map<String, Object> getBillPropBeforeTerminated(Long accountId);
 }

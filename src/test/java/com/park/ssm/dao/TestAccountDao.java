@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.Rollback;
 
 import com.park.AutoRollBackTest;
+
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import com.park.ssm.entity.Account;
 import com.park.ssm.entity.ParkingLot;
@@ -59,14 +61,18 @@ public class TestAccountDao extends AutoRollBackTest {
 	}
 	
 //	@Test
-	public void testUpdate() throws IllegalArgumentException, IllegalAccessException {
+	public void testUpdate() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 		//test data
 		Long id=1L;
 		
 		Account accountInDB=dao.loadAccountById(id);
 		Account account=new Account();
 		PersistentUtil.<Account>merge(account, accountInDB,Account.class);
-		account.setState(AccountState.STOP);
+		Field stateField=Account.class.getDeclaredField("state");
+		boolean accessible=stateField.isAccessible();
+		stateField.setAccessible(true);
+		stateField.set(account, AccountState.STOP);
+		stateField.setAccessible(accessible);
 		Map<String, Object> different=PersistentUtil.different(accountInDB, account,Account.class);
 		dao.modifyAccount(account.getId(),different);
 		Account newAccountInDB=dao.loadAccountById(account.getId());
