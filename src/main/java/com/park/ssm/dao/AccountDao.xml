@@ -189,4 +189,13 @@
 			id=#{id}
 		</where>
 	</update> -->
+	
+		<select id="updateAllAccountState" statementType="CALLABLE" useCache="false">
+		<![CDATA[{
+			call updateAllAccountState(
+			    #{date}
+			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+			)
+		}]]>
+	</select>
 </mapper>

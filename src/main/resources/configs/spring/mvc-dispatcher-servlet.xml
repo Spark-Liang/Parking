@@ -89,20 +89,22 @@
         <property name="maxInMemorySize" value="4096"/>  
     </bean> 
     
+     
     <!-- spring-quartz定时任务配置 -->
     <!-- 使用MethodInvokingJobDetailFactoryBean，任务类可以不实现Job接口，通过targetMethod指定调用方法-->
-   <bean id="taskJob" class="com.park.ssm.controller.TaskJob"/>
+   <bean id="TaskJobA" class="com.park.ssm.task.TaskJobA"/>
      <bean id="jobDetail1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
     <property name="targetObject">
-        <ref bean="taskJob"/>
+        <ref bean="TaskJobA"/>
     </property>
     <property name="targetMethod">
         <value>creatBill</value>
     </property>
    </bean>
+    <bean id="TaskJobB" class="com.park.ssm.task.TaskJobB"/>
    <bean id="jobDetail2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
     <property name="targetObject">
-        <ref bean="taskJob"/>
+        <ref bean="TaskJobB"/>
     </property>
     <property name="targetMethod">
         <value>autoStopCard</value>
@@ -112,28 +114,24 @@
     <!--  调度触发器 -->
     <bean id="Trigger1"
       class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-    <property name="name" value="work_default_name"/>
-    <property name="group" value="work_default"/>
     <property name="jobDetail">
         <ref bean="jobDetail1" />
     </property>
     <property name="cronExpression">
-        <value>0/5 * * * * ?</value>
-       <!--  <value>0 0 0 L 1,4,7,10 ?</value> -->
+       <!--  <value>0/5 * * * * ?</value> -->
+        <value>0 0 0 L 3,6,9,12 ?</value>
     </property>
     </bean>
     
      <!--  调度触发器 -->
     <bean id="Trigger2"
       class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-    <property name="name" value="work_default_name"/>
-    <property name="group" value="work_default"/>
     <property name="jobDetail">
         <ref bean="jobDetail2" />
     </property>
     <property name="cronExpression">
-        <value>0/5 * * * * ?</value>
-        <!--  <value>0 0 0 L 1,4,7,10 ?</value> -->
+       <!--  <value>0/5 * * * * ?</value> -->
+         <value>0 0 0 1 1,4,7,10 ?</value>
     </property>
     </bean>
 

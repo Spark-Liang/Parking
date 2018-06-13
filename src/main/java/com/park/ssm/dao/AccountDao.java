@@ -121,5 +121,10 @@ public interface AccountDao {
 	 */
 	public abstract int updateCardStatus(@Param("cardId")long cardId,@Param("state")AccountState state);
 	
+	/**
+	 * 当到每个季度的下一个月的第一天凌晨0点整 ，自动停止未支付帐单的停车卡与回收相应车位
+	 * @param map
+	 */
+	public abstract void updateAllAccountState(Map<String,Object>map);
 	
 }

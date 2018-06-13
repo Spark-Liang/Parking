@@ -1,6 +1,7 @@
 package com.park.ssm.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
@@ -69,4 +70,10 @@ public interface BillDao {
 	public int changeCurrentBillId(Account account);
 	
 	public int updateIsPaid(Bill bill);
+	
+	/**
+	 * 每季度最后一天凌晨0点整生成账单
+	 * @param map
+	 */
+	public abstract void generateBill(Map<String,Object>map);
 }

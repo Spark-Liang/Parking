@@ -138,4 +138,14 @@
 		update Bill set isPaid=true
 		where id=#{id}
 	</update>
+	
+	
+	<select id="generateBill" statementType="CALLABLE" useCache="false">
+		<![CDATA[{
+			call generateBill(
+			 #{date}
+			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+			)
+		}]]>
+	</select>
 </mapper>
