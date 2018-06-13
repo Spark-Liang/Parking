@@ -62,6 +62,7 @@
 	position:fixed;
 	display:none;
 	border:1px solid black;
+	background-color:white;
 }
 .pay-money h4{
 	text-align:center;
@@ -78,13 +79,13 @@
 	
 </script>
 <body>
-	<div class="pay-money alert alert-info">
+	<div class="pay-money alert">
 		<h4>确认支付帐单</h4>
 		<p>卡号：<span>gfd</span><p>
 		<p>停车场：<span></span><p>
-		<h3>支付金额：<span>fds</span></h3>
+		<h3>支付金额：<span>fds</span>元</h3>
 		<br/>
-		<a class="btn btn-block btn-primary" data-value="0" onclick="paybill(this)">支付</a>
+		<a class="btn btn-block btn-primary" data-value="0" data-state="0" onclick="paybill(this)">支付</a>
 		<a class="btn btn-block btn-primary">取消</a>
 	</div>
 	<!-- 导航条 -->
@@ -489,26 +490,7 @@
 						+"</tr>"
 					})
 				}
-				function allDay(month){
-					var allday = new Array();
-					if(month<3){
-						allday[0]=90;
-						allday[1]=1;
-						return allday;
-					}else if(3<month<7){
-						allday[0]=91;
-						allday[1]=4;
-						return allday;
-					}else if(6<month<10){
-						allday[0]=92;
-						allday[1]=7;
-						return allday;
-					}else if(9<month<=12){
-						allday[0]=91;
-						allday[1]=10;
-						return allday;
-					}
-				}
+				
 				
 			}
 		}
@@ -602,7 +584,7 @@
 								+"<td>"+json.list[i].state+"</td>"
 								+"<td>"
 								+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
-								+"<a class='btn btn-default btn-xs' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"'>支付帐单</a>"
+								+"<a class='btn btn-default btn-xs' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"' data-state='"+json.list[i].state+"'>支付帐单</a>"
 								+"</td>"
 							+"</tr>";
 							});
@@ -661,7 +643,7 @@
 		                }
 		           })
 		        }else{
-		        	alert('停车卡格式有问题！！')
+		        	alert('停车卡格式有问题！！');
 		        	$(a).parent().parent().find('input').parent().addClass('has-error');
 		        }  
 		}
@@ -669,24 +651,31 @@
 		//点击支付帐单的触发事件 
 		function paymoney(a){
 			var billId = $(a).data("billid");
+			var state = $(a).data("state");
+			console.log(billId);
 			if(billId == 0){
 				alert('当前停车卡没有需要支付的账单');
 			}
 			else{
 				var park = $(a).data("park");
 				var price = $(a).data("price");
+				var price1 = price.toString().substring(0,3)
 				var cardid = $(a).data("cardid");
 				$('.pay-money').fadeIn();
 				$('.pay-money span:eq(0)').text(cardid);
 				$('.pay-money span:eq(1)').text(park);
-				$('.pay-money span:eq(2)').text(price);
+				$('.pay-money span:eq(2)').text(price1);
 				$('.pay-money a:eq(0)').attr("data-value",billId);
+				$('.pay-money a:eq(0)').data("value",billId);
+				$('.pay-money a:eq(0)').attr("data-state",state);
+				$('.pay-money a:eq(0)').data("state",state);
 			}
 		}
 		//点击支付按钮触发事件
 		function paybill(a){
 			//a是元素自身
 			var billid = $(a).data("value");
+			console.log(billid)
 			var bill = new Object();
 			bill.id = billid;
 			console.log(bill)
@@ -700,7 +689,6 @@
 					console.log(json);
 					$('.tbody-add tr').remove();
 					var iphone = $('.input-userId').val();
-					console.log(iphone);
 					searchCard(iphone);
 				},error:function(){
 					

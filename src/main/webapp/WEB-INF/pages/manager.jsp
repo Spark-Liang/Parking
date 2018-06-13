@@ -27,6 +27,9 @@
         height: 34px;
         
     }
+    .showmoney{
+    	min-width: 900px;
+    }
     .showUsage{
         position: fixed;
         width: 100%;
@@ -142,12 +145,12 @@
             <!--使用情况-->
             <br>
             <h4  style="color: #337ab7">使用情况如下</h4>
-            <table class="tableStyle usageTable">
+            <table class="tableStyle usageTable table">
                     <thead>
                         <tr>
-                            <th>账户ID</th>
-                            <th>卡号</th>
-                            <th>使用次数</th>                  
+                            <th class="col-md-3">卡号</th>
+                            <th class="col-md-3">手机号</th>
+                            <th class="col-md-3">使用次数</th>                  
                         </tr>
                     </thead>
                     <tbody>
@@ -155,24 +158,12 @@
                             <td>1</td>
                             <td>1234567</td>
                             <td>52</td>
-                            
-                    </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                            <td>2</td>
-                            <td>3112352</td>
-                            <td>3</td>
-                            
-                    </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                            <td>3</td>
-                            <td>4444444</td>
-                            <td>12</td>
-                            
-                    </tr>
+                        </tr>
+                         <tr>
+                            <td>1</td>
+                            <td>1234567</td>
+                            <td>52</td>
+                        </tr>
                     </tbody>
                 </table>
         </div>
@@ -351,17 +342,21 @@
     //查看某一停车场的使用情况
     function seeUsage(a){
     	$('.showmoney').fadeIn();
-    	console.log(a);
+    	var mydate = new Date();
+    	var time = mydate.toLocaleString('chinese',{hour12:false});
+    	var time = time.substring(0,6);
+    	console.log(time);
     	var lotId = $(a).data('lotid');
     	console.log(lotId);
     	$.ajax({
-    		url:'',
+    		url:'inneruser/sumUsage',
     		dataType: 'json',
     		data: {
-    			lotId: lotId
+    			'lotId': lotId,
+    			'time': time,
     		},
-    		success: function(res){
-    			
+    		success: function(json){
+    			console.log(json)
     		},
     		error: function(){
     			alert("数据请求发送失败");

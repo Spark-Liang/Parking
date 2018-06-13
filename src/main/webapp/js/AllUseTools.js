@@ -36,3 +36,40 @@ function useMuchDay(day,month){
 		return day+61;
 	}
 }
+
+//根据第几个月返回第几季度
+function allDay(month){
+	var allday = new Array();
+	if(month<3){
+		allday[0]=90;
+		allday[1]=1;
+		return allday;
+	}else if(3<month<7){
+		allday[0]=91;
+		allday[1]=4;
+		return allday;
+	}else if(6<month<10){
+		allday[0]=92;
+		allday[1]=7;
+		return allday;
+	}else if(9<month<=12){
+		allday[0]=91;
+		allday[1]=10;
+		return allday;
+	}
+}
+
+//根据月份返回该月的天数
+function getMonth(month){
+	if(month == 1||month == 3|| month== 5 || month == 7 || month == 8 ||month == 10 ||month == 12){
+		return 31;
+	}else if(month ==2){
+		return 28;
+	}else if(month == 4 || month == 6|| month == 9 || month == 11){
+		return 30;
+	}
+}
+
+
+
+
