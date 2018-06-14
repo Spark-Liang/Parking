@@ -550,6 +550,125 @@ BEGIN
 END 
 $
 ################################################################################
+#停卡
+###############################################################################
+drop procedure if exists stopCard$
+create procedure stopCard(in card_id bigint,out flag int)
+begin
+	declare newAccountStateLogId bigint;
+	declare tmpAccountId bigint;
+	declare tmpPositionId bigint;
+	declare tmpUserId bigint;
+	declare curLogId bigint;
+	declare newBillId bigint;
+	declare updateTime datetime; 
+	#定义检查变量
+    declare exit handler for sqlexception
+	begin
+		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT;
+        rollback;
+        set autocommit=1;
+		call logErr('stopCard',@sql_state,@msg);
+		set flag=1;
+	end
+	;
+
+	set autocommit=0;
+	start transaction;
+	#初始化变量
+	set @updateTime=
+	(select now()
+	from
+		(select 
+			@tmpAccountId:=id
+			,@tmpUserId:=userId
+			,@tmpPositionId:=parkingPositionId
+			,@newAccountStateLogId:=(select max(id)+1 from AccountStateLog for update) newLogId
+			,@curLogId:=currentStateLogId curLogId
+		from Account
+		where cardId=card_id
+		for update
+		)init
+	)
+	;
+	#生成新账单
+	#对stateLog中没有billId且startTime在执行时间之前的生成对应bill
+	insert into Bill(id,userId,parkingLotId,accountId,price,lastPayDate)
+	select 
+		@newBillId:=ifnull((select max(id)+1 from Bill for update),1) id
+		,b.userId as userId
+		,b.parkingLotId as parkingLotId
+		,a.accountId as accountId
+		,cast(b.price*3 * totalDays/getSeasonTotalDays(@updateTime) as decimal(10,4))
+		as billPrice
+		,null
+	from 
+		(select accountId,sum(datediff(end_time,start_time)) totalDays
+        from
+        	(select accountId
+        		,startTime start_time
+        		,case
+        			when endTime is not null then endTime
+        			else @updateTime
+        		end end_time
+        	from AccountStateLog 
+	        where accountId=@tmpAccountId
+	          and state=0
+	          and startTime<=@updateTime
+	        )tmp
+	    group by 1
+        )a
+        inner join
+		Account b
+		on a.accountId=b.id
+	;
+	#把新生成的账单更新到对应的stateLog上
+	update AccountStateLog
+	set billId=@newBillId
+	where accountId=@tmpAccountId
+      and state=0
+      and startTime<=@updateTime
+	;
+	#更新stateLog
+	update AccountStateLog 
+	set
+		endTime=@updateTime	
+	where id=@curLogId
+	;
+	insert into AccountStateLog (id,accountId,state,startTime)
+	values
+    (
+		@newAccountStateLogId
+		,@tmpAccountId
+		,-2
+		,@updateTime
+	)
+	;
+	
+	#注销停车位
+	update ParkingPosition
+	set
+		state=0
+		,accountId=null
+	where id=@tmpPositionId
+	;
+	#更新账号
+	update Account
+	set
+		currentStateLogId=@newAccountStateLogId
+		,parkingPositionId=null
+		,state=-2
+		,cardId=null
+	where cardId=card_id
+	;
+	commit;
+	set autocommit=1;
+	set flag=0;
+end
+$
+
+
+################################################################################
 #支付账单后继续使用的存储过程
 ###############################################################################
 drop procedure if exists resumeCard$
@@ -569,6 +688,11 @@ begin
 	end
 	;
 	
+	
+	
+	set autocommit=0;
+	start transaction;
+	
 	set @updateTime=
 	(select now()
 	from
@@ -581,9 +705,6 @@ begin
 		)init
 	)
 	;
-	
-	set autocommit=0;
-	start transaction;
 	#更新账单状态
 	update 
 		(select currentBillId

@@ -135,6 +135,14 @@ public interface AccountDao {
 	public abstract int updateCardStatus(@Param("cardId")long cardId,@Param("state")AccountState state);
 	
 	/**
+	 * 调用停卡的存储过程
+	 * @param map
+	 * <li>cardId 需要停卡的id
+	 * <li>flag 存储过程的执行结果
+	 */
+	public abstract void stopCard(Map<String, Object> map);
+	
+	/**
 	 * 当到每个季度的下一个月的第一天凌晨0点整 ，自动停止未支付帐单的停车卡与回收相应车位
 	 * @param map
 	 */

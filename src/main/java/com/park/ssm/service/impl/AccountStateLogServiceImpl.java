@@ -1,9 +1,13 @@
 package com.park.ssm.service.impl;
 
+import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,7 @@ public class AccountStateLogServiceImpl implements AccountStateLogService {
 	@Autowired
 	private AccountDao accountDao;
 	
+	private Logger logger = LogManager.getLogger(this.getClass());
 	
 	/**
 	 * @throws 
@@ -40,6 +45,21 @@ public class AccountStateLogServiceImpl implements AccountStateLogService {
 													,null, null, false, null, null);
 		if(accountStateLogs == null || accountStateLogs.isEmpty()) {
 			throw new RuntimeException("系统内部错误：无法找到对应记录");
+		}
+		try {
+			Field field =AccountStateLog.class.getDeclaredField("endTime");
+			boolean accessible=field.isAccessible();
+			field.setAccessible(true);
+			for(AccountStateLog log:accountStateLogs) {
+				Date tmpEndTime=log.getEndTime();
+				if(tmpEndTime == null) {
+					field.set(log, new Date(System.currentTimeMillis()));
+				}
+			}
+			field.setAccessible(accessible);
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			logger.info(e);
 		}
 		Map<String, Object>billProperties=new HashMap<>();
 		
