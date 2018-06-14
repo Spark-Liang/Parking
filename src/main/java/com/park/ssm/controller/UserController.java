@@ -148,6 +148,7 @@ public class UserController {
 						}
 					}
 				} else {
+					//需要开新卡
 					falg=3;
 //					message = "请输入已存在的用户帐号！";
 				}

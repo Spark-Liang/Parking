@@ -329,6 +329,16 @@
 			)
 		}]]>
 	</select>
+	
+	<select id="stopCard" statementType="CALLABLE" useCache="false">
+		<![CDATA[{
+			call stopCard(
+			#{cardId}
+			,#{flag,mode=OUT,jdbcType=INTEGER,javaType=Integer}
+			)
+		}]]>
+	</select>
+	
 <!-- 
 	<update id="updateCurrentBillId">
 		update Account set currentBillId=null

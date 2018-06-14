@@ -1,6 +1,5 @@
 package com.park.ssm.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import com.park.ssm.dao.BillDao;
 import com.park.ssm.dao.ParkingPositionDao;
 import com.park.ssm.dao.UserDao;
 import com.park.ssm.entity.Account;
-import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.User;
 import com.park.ssm.entity.type.AccountState;
 import com.park.ssm.service.AccountService;
@@ -175,8 +173,10 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	public int stopCard(long cardId) {
 		StringBuilder errorMessage = new StringBuilder();
-		AccountState state = AccountState.getValueByInd(-2);
-		int status = accountdao.updateCardStatus(cardId, state);
+		Map<String, Object>result=new HashMap<>();
+		result.put("cardId", cardId);
+		accountdao.stopCard(result);
+		int status = (int) result.get("flag");
 		if (status > 0) {
 			return 1;
 		} else {
@@ -185,7 +185,6 @@ public class AccountServiceImpl implements AccountService {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public Double getPrice(Long id) {
 		// TODO Auto-generated method stub
@@ -208,8 +207,8 @@ public class AccountServiceImpl implements AccountService {
 	 * 获取开卡日期
 	 */
 	public Date getStartDate(Long id) {
-		StringBuilder errorMessage = new StringBuilder();
-		Account account = accountdao.loadAccountById(id);
+		new StringBuilder();
+		accountdao.loadAccountById(id);
 		//Bill currentBillId = account.getCurrentBill();
 		Date startDate=null;
 		//SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");

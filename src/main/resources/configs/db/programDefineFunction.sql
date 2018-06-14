@@ -1,24 +1,60 @@
 use train_db;
 DELIMITER $
-drop function if exists getTotalDate$
-create function getTotalDate(billDate date)
+##############################################################################
+##获取给定日期对应的季度的总天数
+##############################################################################
+drop function if exists getSeasonTotalDays$
+create function getSeasonTotalDays(calculateDate date)
 returns int
 begin
+	declare sessonStartDate date;
+	declare sessonEndDate date;
 	declare last_3_month_date date;
 	declare this_month_first_date date;
+	
+	set @sessonStartDate=
+		(select buildDate(tmpYear,tmpMonth-tmpMonth%3+1,1) 
+		from 
+			(select
+				year(calculateDate) tmpYear
+				,month(calculateDate) tmpMonth
+			)init
+		)
+	;
+	set @sessonEndDate=date_add(@sessonStartDate,interval 3 month);
 return(
+	
 select 
-	datediff(dateEnd,dateStart) 
-from 
-	(select 
-		#获取当前月份对应的上一季度开始天
-		@last_3_month_date:=date_sub(billdate,Interval 3 month) as last_3_month_date
-		,date_sub(@last_3_month_date,Interval day(@last_3_month_date) day) dateStart
-		#获取当前月份对应的上一季度结束天
-		,@this_month_first_date:=date_sub(billdate,Interval day(billdate) day)
-		 this_month_first_date
-		,date_sub(@this_month_first_date,Interval 1 day) dateEnd
-	)tmp
+	datediff(@sessonEndDate,@sessonStartDate) 
+);
+end
+$
+##############################################################################
+##获取给定日期对应的月份的总天数
+##############################################################################
+drop function if exists getMonthTotalDays$
+create function getMonthTotalDays(calculateDate date)
+returns int
+begin
+	declare monthStartDate date;
+	declare monthEndDate date;
+	declare last_3_month_date date;
+	declare this_month_first_date date;
+	
+	set @monthStartDate=
+		(select buildDate(tmpYear,tmpMonth,1) 
+		from 
+			(select
+				year(calculateDate) tmpYear
+				,month(calculateDate) tmpMonth
+			)init
+		)
+	;
+	set @monthEndDate=date_add(@monthStartDate,interval 1 month);
+return(
+	
+select 
+	datediff(@monthEndDate,@monthStartDate) 
 );
 end
 $

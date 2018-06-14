@@ -29,7 +29,7 @@ public class Account implements Serializable {
 	 */
 	private Double price;
 	private AccountState state=AccountState.NORMAL;
-	private Date stateStartDate;
+	
 	private boolean isParking;
 	private List<Bill> currentBill;
 	private List<Bill> bills;
@@ -57,9 +57,6 @@ public class Account implements Serializable {
 	public AccountState getState() {
 		return state;
 	}
-	public Date getStateStartDate() {
-		return stateStartDate;
-	}
 	public boolean isParking() {
 		return isParking;
 	}
@@ -69,13 +66,14 @@ public class Account implements Serializable {
 	public List<Bill> getBills() {
 		return bills;
 	}
+	
 	@Override
 	public String toString() {
 		return "Account [id=" + id + ", userId=" + userId + ", parkingLot=" + parkingLot + ", parkingPositionId="
-				+ parkingPositionId + ", cardId=" + cardId + ", price=" + price + ", state=" + state
-				+ ", stateStartDate=" + stateStartDate + ", isParking=" + isParking + ", currentBill=" + currentBill
-				+ ", bills=" + bills + "]";
+				+ parkingPositionId + ", cardId=" + cardId + ", price=" + price + ", state=" + state + ", isParking="
+				+ isParking + ", currentBill=" + currentBill + ", bills=" + bills + "]";
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -87,7 +85,6 @@ public class Account implements Serializable {
 		result = prime * result + ((parkingPositionId == null) ? 0 : parkingPositionId.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
-		result = prime * result + ((stateStartDate == null) ? 0 : stateStartDate.hashCode());
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
@@ -129,11 +126,6 @@ public class Account implements Serializable {
 			return false;
 		if (state != other.state)
 			return false;
-		if (stateStartDate == null) {
-			if (other.stateStartDate != null)
-				return false;
-		} else if (!stateStartDate.equals(other.stateStartDate))
-			return false;
 		if (userId == null) {
 			if (other.userId != null)
 				return false;
@@ -141,7 +133,6 @@ public class Account implements Serializable {
 			return false;
 		return true;
 	}
-	
 	
 	
 }

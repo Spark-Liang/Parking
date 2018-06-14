@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -18,6 +19,7 @@ public class PasswordGenerator {
 	@SuppressWarnings({ "unchecked", "serial", "rawtypes" })
 	@Parameters
 	public static Collection<Object[]> data(){
+		System.out.println("insert into User(userId,password,salt) values \n");
 		return new LinkedList() {
 			{
 				add(new Object[] {"13745678910","123456"});
@@ -33,6 +35,12 @@ public class PasswordGenerator {
 				add(new Object[] {"13745678920","123456"});
 				add(new Object[] {"13719326102","123456"});
 				add(new Object[] {"13775119722","123456"});
+				add(new Object[] {"13745678920","123456"});
+				add(new Object[] {"13745678921","123456"});
+				add(new Object[] {"13745678922","123456"});
+				add(new Object[] {"13745678923","123456"});
+
+
 			}
 		};
 	}
@@ -54,8 +62,8 @@ public class PasswordGenerator {
 	@Test
 	public void tmp() {
 		String realPassword=encryption.SHA512(password+salt);
-		valuesArr.add("(\'"+userId+"\',\'"+realPassword+"\',\'"+salt+"\')\n");
-
+		valuesArr.add("(\'"+userId+"\',\'"+realPassword+"\',\'"+salt+"\'),\n");
+		System.out.println("(\'"+userId+"\',\'"+realPassword+"\',\'"+salt+"\'),");
 	}
 
 }
