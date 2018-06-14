@@ -9,16 +9,32 @@
 		<result property="userId" column="userId" />
 		<result property="parkingPositionId" column="parkingPositionId" />
 		<result property="cardId" column="cardId" />
+		
+		<result property="price" column="price"/>
 		<result property="state" column="state"
 			typeHandler="com.park.ssm.entity.type.AccountStateHandler" />
 		<result property="isParking" column="isParking" />
-		<association property="parkingLot" column="{id=parkingLotId}"
+		
+		<association property="parkingLot" column="parkingLotId"
 			javaType="ParkingLot" fetchType="eager"
-			select="com.park.ssm.dao.ParkingLotDao.loadPrkingLotForId"
+			select="com.park.ssm.dao.ParkingLotDao.loadParkingLotById"
 			autoMapping="true" />
-		<association property="currentBill" column="currentBillId"
-			fetchType="eager" select="com.park.ssm.dao.BillDao.loadBillById" />
-
+		<collection property="currentBill" ofType="Bill" javaType="List">
+			<id property="id" column="billId"/>
+	
+			<result property="userId" column="bill_userId" />
+			<result property="parkingLotId" column="bill_parkingLotId" />
+			<result property="accountId" column="bill_accountId" />
+	
+			<result property="price" column="billPrice" />
+			<result property="isPaid" column="isPaid" />
+			<result property="lastPayDate" column="lastPayDate" />
+	
+			<collection property="timeQuantums" javaType="List" ofType="TimeQuantum">
+				<result property="startTime" column="startTime" />
+				<result property="endTime" column="endTime" />
+			</collection>
+		</collection>
 		<collection property="bills" column="{accountId=id}"
 			ofType="Bill" fetchType="lazy" select="com.park.ssm.dao.BillDao.listBillById"
 			autoMapping="true" />
@@ -26,56 +42,130 @@
 	</resultMap>
 
 	<!-- dao相关sql -->
-	<sql id="sqlField">
-		id
-		,userId
+	<sql id="accountField">
+		userId
 		,parkingLotId
 		,parkingPositionId
 		,cardId
-
+		
+		,price
 		,state
 		,isParking
-		,currentBillId
 	</sql>
 
 
 	<select id="loadAccountById" parameterType="long" resultMap="accountRoughResult">
 		select
-		*
-		from Account
+			a.id id
+			,a.userId userId
+			,a.parkingLotId parkingLotId
+			,parkingPositionId,cardId
+			,a.price price
+			,a.state state
+			,isParking
+			,c.id billId
+			,c.userId bill_userId
+			,c.parkingLotId bill_parkingLotId
+			,c.accountId bill_accountId
+			,c.price billPrice
+			,isPaid,lastPayDate
+			,startTime,endTime
+		from
+		(select * 
+		from Account 
 		where id=#{_parameter}
+		)a
+		left join
+		currentBillMap b
+		on a.id=b.accountId
+		left join
+		Bill c
+		on b.currentBillId=c.id
+		left join
+		AccountStateLog d
+		on c.id=d.billId
 	</select>
 	<select id="loadAccountByIdForUpdate" parameterType="long"
 		resultMap="accountRoughResult">
 		select
-		*
-		from Account
+			a.id id
+			,a.userId userId
+			,a.parkingLotId parkingLotId
+			,parkingPositionId,cardId
+			,a.price price
+			,a.state state
+			,isParking
+			,c.id billId
+			,c.userId bill_userId
+			,c.parkingLotId bill_parkingLotId
+			,c.accountId bill_accountId
+			,c.price billPrice
+			,isPaid,lastPayDate
+			,startTime,endTime
+		from
+		(select *
+		from Account 
 		where id=#{_parameter}
+		)a
+		left join
+		currentBillMap b
+		on a.id=b.accountId
+		left join
+		Bill c
+		on b.currentBillId=c.id
+		left join
+		AccountStateLog d
+		on c.id=d.billId
 		for update
 	</select>
 
 	<!-- 通过不同id组合查找account -->
 	<select id="findAccountrById" resultMap="accountRoughResult">
 		select
-		*
+			a.id id
+			,a.userId userId
+			,a.parkingLotId parkingLotId
+			,parkingPositionId,cardId
+			,a.price price
+			,a.state state
+			,isParking
+			,c.id billId
+			,c.userId bill_userId
+			,c.parkingLotId bill_parkingLotId
+			,c.accountId bill_accountId
+			,c.price billPrice
+			,isPaid,lastPayDate
+			,startTime,endTime
+		from 
+		(select *
 		from Account
-		<where>
-			<if test="userId != null">
-				and userId=#{userId}
+			<where>
+				<if test="userId != null">
+					and userId=#{userId}
+				</if>
+				<if test="parkingLotId != null">
+					and parkingLotId=#{parkingLotId}
+				</if>
+				<if test="parkingPositionId != null">
+					and parkingPositionId=#{parkingPositionId}
+				</if>
+				<if test="cardId != null">
+					and cardId=#{cardId}
+				</if>
+			</where>
+			<if test="pageNum != null and pageSize != null">
+				limit ${(pageNum-1)*pageSize},#{pageSize}
 			</if>
-			<if test="parkingLotId != null">
-				and parkingLotId=#{parkingLotId}
-			</if>
-			<if test="parkingPositionId != null">
-				and parkingPositionId=#{parkingPositionId}
-			</if>
-			<if test="cardId != null">
-				and cardId=#{cardId}
-			</if>
-		</where>
-		<if test="pageNum != null and pageSize != null">
-			limit ${(pageNum-1)*pageSize},#{pageSize}
-		</if>
+		)a
+		left join
+		currentBillMap b
+		on a.id=b.accountId
+		left join
+		Bill c
+		on b.currentBillId=c.id
+		left join
+		AccountStateLog d
+		on c.id=d.billId
 	</select>
 	<select id="countAccountrById" resultType="Integer">
 		select
@@ -99,9 +189,34 @@
 
 	<select id="isNotExistCard" parameterType="long" resultMap="accountRoughResult">
 		select
-		*
+			a.id id
+			,a.userId userId
+			,a.parkingLotId parkingLotId
+			,parkingPositionId,cardId
+			,a.price price
+			,a.state state
+			,isParking
+			,c.id billId
+			,c.userId bill_userId
+			,c.parkingLotId bill_parkingLotId
+			,c.accountId bill_accountId
+			,c.price billPrice
+			,isPaid,lastPayDate
+			,startTime,endTime
+		from 
+		(select *
 		from Account
 		where cardId=#{_paramter}
+		)a
+		left join
+		currentBillMap b
+		on a.id=b.accountId
+		left join
+		Bill c
+		on b.currentBillId=c.id
+		left join
+		AccountStateLog d
+		on c.id=d.billId
 	</select>
 
 	<!-- 添加新卡，通过数据库调用存储过程实现 -->
@@ -159,10 +274,34 @@
 
 	<select id="getCardMessage" resultMap="accountRoughResult">
 		select
-		*
+			a.id id
+			,a.userId userId
+			,a.parkingLotId parkingLotId
+			,parkingPositionId,cardId
+			,a.price price
+			,a.state state
+			,isParking
+			,c.id billId
+			,c.userId bill_userId
+			,c.parkingLotId bill_parkingLotId
+			,c.accountId bill_accountId
+			,c.price billPrice
+			,isPaid,lastPayDate
+			,startTime,endTime
+		from 
+		(select *
 		from Account
 		where cardId=#{_paramter}
-		for update
+		)a
+		left join
+		currentBillMap b
+		on a.id=b.accountId
+		left join
+		Bill c
+		on b.currentBillId=c.id
+		left join
+		AccountStateLog d
+		on c.id=d.billId
 	</select>
 
 	<select id="getAccountNum" resultType="Integer">

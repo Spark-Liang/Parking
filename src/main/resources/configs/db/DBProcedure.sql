@@ -63,7 +63,7 @@ begin
 	end
 	;
     #执行日的前三个月的第一天
-    set @logRangeStart=(select date_sub(tmp,interval 1-day(tmp) day) from (select date_sub(execTime,interval 3 month) tmp) init);
+    set @logRangeStart=(select date(date_sub(tmp,interval 1-day(tmp) day)) from (select date_sub(execTime,interval 3 month) tmp) init);
     #计算用户最后交款日期
     set @logRangeEnd=execTime;
     #执行日的当天
@@ -94,8 +94,10 @@ begin
     
 	set autocommit=0;
     start transaction;
-    
-    #筛选状态是正常的Account才能生成bill
+    ##############################################################################
+    ##对出bill时为正常状态的Account生成bill
+    ##############################################################################
+    #筛选状态是正常状态的Account，生成与之对应的新的stateLogId
     insert into tmpStateUpdateInfo
     select 
         a.id
@@ -108,15 +110,7 @@ begin
         )a
         ,(select 
 			@tmpStateLogId:=
-				ifnull(
-					(select id+1
-					from AccountStateLog
-					where id>=ifnull((select max(id) from AccountStateLog),1)
-					order by id desc
-                    limit 1 for update
-					)
-					,1
-				)
+				ifnull((select max(id) from AccountStateLog),1)
 		)init
 	;
     #更新StateLog中的旧state结束时间，把Account中更新成新的stateLogId
@@ -142,7 +136,7 @@ begin
 	from tmpStateUpdateInfo
     ;
     ##生成账单
-    #每个bill对应的stateLog条件是：时间范围在执行时间之前，且stateLog的state是正常，且billId为null
+    #每个bill对应的stateLog条件是：时间范围是季度开始到执行时间之前，且stateLog的state是正常，且billId为null
     insert into tmpBillStateLogMap
     select 
         a.accountId
@@ -170,7 +164,7 @@ begin
         ,endTime,startTime
 	from AccountStateLog
     where state=0
-      and startTime <= @logRangeEnd
+      and startTime >= @logRangeStart
       and endTime <= @logRangeEnd
       and billId is null
     )b
@@ -183,7 +177,7 @@ begin
 		,b.userid as userId
 		,b.parkingLotId as parkingLotId
 		,a.accountId as accountId
-		,cast(b.price * totalDays/@globalTotalDays as decimal(10,4))
+		,cast(b.price*3 * totalDays/@globalTotalDays as decimal(10,4))
 		as billPrice
 		,@globalLastPayDate
 	from 
@@ -195,19 +189,12 @@ begin
 		Account b
 		on a.accountId=b.id
 	;
-	# 更新Account表中,Bill表中最新的bill即是account新的currentBill
-	# 同时更新最新的ParkingLot的价格到Account上
-	update 
-		Account a 
-		inner join
-		tmpBillStateLogMap b
-		on a.id=b.accountId
-		inner join
-		ParkingLot c
-		on a.parkingLotId=c.id
-	set 
-		a.currentBillId=b.newBillId
-		,a.price=c.currentPrice
+	# 更新currentBillMap表,即更新该账号当前需要支付的账单
+	insert into CurrentBillMap(accountId,currentBillId)
+	select
+		accountId
+		,newBillId
+	from tmpBillStateLogMap
 	;
     # 更新AccountStateLog中的billId
     update 
@@ -217,6 +204,91 @@ begin
 		on a.id=b.stateLogId
 	set a.billId=b.newBillId
     ;
+    ##############################################################################
+    ##对出bill时为非常状态的Account生成bill
+    ##############################################################################
+    ##生成账单
+    #筛选欠费状态的用户
+    #每个bill对应的stateLog条件是：时间范围是季度开始到执行时间之前，且stateLog的state是正常，且billId为null
+    delete from tmpBillStateLogMap;
+    insert into tmpBillStateLogMap
+    select 
+        a.accountId
+        ,a.newBillId
+        ,b.id 
+        ,datediff(endTime,startTime) Days
+	from 
+	(select 
+		@tmpNewBillId:=@tmpNewBillId+1 newBillId
+        ,acc.id accountId
+	from 
+		(select *
+		from Account
+		where state=-1
+		)acc
+        ,(select @tmpNewBillId:=ifnull((select max(id) from Bill for update),1)
+		)init
+    )a
+    inner join
+    #筛选出新生成bill对应的stateLog
+    (select 
+		id
+        ,accountId
+        ,endTime,startTime
+	from AccountStateLog
+    where state=0
+      and startTime >= @logRangeStart
+      and endTime <= @logRangeEnd
+      and billId is null
+    )b
+    on a.accountId=b.accountId
+    ;
+    # 计算账单价格插入账单表
+	insert into Bill(id,userId,parkingLotId,accountId,price,lastPayDate)
+	select 
+		a.newBillId
+		,b.userid as userId
+		,b.parkingLotId as parkingLotId
+		,a.accountId as accountId
+		,cast(b.price*3 * totalDays/@globalTotalDays as decimal(10,4))
+		as billPrice
+		,null
+	from 
+		(select accountId,newBillId,sum(Days) totalDays
+        from tmpBillStateLogMap 
+        group by 1,2
+        )a
+        inner join
+		Account b
+		on a.accountId=b.id
+	;
+	# 更新currentBillMap表,即更新该账号当前需要支付的账单
+	insert into CurrentBillMap(accountId,currentBillId)
+	select
+		accountId
+		,newBillId
+	from tmpBillStateLogMap
+	;
+
+    # 更新AccountStateLog中的billId
+    update 
+		AccountStateLog a
+        inner join
+        tmpBillStateLogMap b
+		on a.id=b.stateLogId
+	set a.billId=b.newBillId
+    ;
+    
+    
+    # 同时更新最新的ParkingLot的价格到Account上
+	update 
+		Account a 
+		inner join
+		ParkingLot b
+		on a.parkingLotId=b.id
+	set 
+		a.price=b.currentPrice
+	;
 	commit;
     set flag=0;
     set autocommit=1;
@@ -255,29 +327,38 @@ begin
 	start transaction;
 	set autocommit=0;
     #筛选出所有正常状态中Bill还未支付的账号
-	insert into tmpUpdateInfo (billId,accountId,curAccStateLogId,newAccStateLogId)
+	#未支付账单定义为：currentBillMap中lastPayDate小于execTime的账单
+    insert into tmpUpdateInfo (billId,accountId,curAccStateLogId,newAccStateLogId)
 	select 
 		a.id
 		,b.id
 		,b.currentStateLogId
 		,@tmpNewId:=@tmpNewId+1
 	from 
-		(select id
-		from Bill
-		where isPaid = 0 and lastPayDate < execTime
-		)a 
+		(select bill.id id,curBill.accountId accountId
+		from 
+			(select * 
+			from CurrentBillMap
+			)curBill
+			inner join
+			(select * 
+			from Bill
+			where lastPayDate<execTime
+			  and isPaid=0
+			)bill
+			on curBill.currentBillId=bill.id
+		)a
 		inner join
-		(select id,currentBillId,currentStateLogId
+		(select id,currentStateLogId
 		from Account 
 		where state=0
 		)b
-		on a.id=b.currentBillId
+		on a.accountId=b.id
 		inner join
 		(select @tmpNewId:=ifnull((select max(id) from AccountStateLog for update),1)
 		)init
 	;	
 	
-	#找到所有lastPayDate在execTime之前的未支付的账单
 	#找到关联的Account并更新状态同时更新到stateLog中，并且从停车位中移除该账号，并且更新停车记录
     update 
 		tmpUpdateInfo a 
@@ -311,11 +392,44 @@ begin
 		,execTime
 	from tmpUpdateInfo
 	;
+	
 	set flag=0;
 	commit;
     set autocommit=1;   
 end
 $
+
+################################################################################
+#支付账单的存储过程
+###############################################################################
+drop procedure if exists payBill$
+create procedure payBill(in bill_id bigint,out flag int)
+begin
+	declare step int;
+	declare exit handler for sqlexception
+	begin
+		get diagnostics condition 1 @sql_state=RETURNED_SQLSTATE,@msg=MESSAGE_TEXT,@table_name=TABLE_NAME;
+		rollback;
+		set autocommit=1;
+		call logErr('payBill',@sql_state,@msg);
+		set flag=1;
+	end
+	;
+	
+	set autocommit=0;
+	start transaction;
+	delete from CurrentBillMap where currentBillId=bill_id;
+	update Bill
+	set isPaid=1
+	where id=bill_id
+	;
+	commit;
+	set flag=0;
+	set autocommit=1;
+end
+$
+
+
 ################################################################################
 #开卡的存储过程
 ###############################################################################
@@ -442,7 +556,6 @@ drop procedure if exists resumeCard$
 create procedure resumeCard(in position_id bigint,in account_id bigint,out flag int)
 begin
 	declare newAccountStateLogId bigint;
-	declare curBillId bigint;
 	declare curLogId bigint;
 	declare updateTime datetime; 
 	#定义检查变量
@@ -461,7 +574,6 @@ begin
 	from
 		(select 
 			@newAccountStateLogId:=(select max(id)+1 from AccountStateLog for update) newLogId
-			,@curBillId:=currentBillId curBillId
 			,@curLogId:=currentStateLogId curLogId
 		from Account
 		where id=account_id
@@ -472,6 +584,19 @@ begin
 	
 	set autocommit=0;
 	start transaction;
+	#更新账单状态
+	update 
+		(select currentBillId
+		from CurrentBillMap
+		where accountId=account_id
+		)a
+		inner join
+		Bill b
+		on a.currentBillId=b.id
+	set
+		isPaid=1
+	;
+	delete from CurrentBillMap where accountId=account_id;
 	
 	#更新stateLog
 	update AccountStateLog 
@@ -488,12 +613,7 @@ begin
 		,@updateTime
 	)
 	;
-	#更新账单状态
-	update Bill
-	set
-		isPaid=1
-	where id=@curBillId
-	;
+	
 	#注册停车位
 	update ParkingPosition
 	set

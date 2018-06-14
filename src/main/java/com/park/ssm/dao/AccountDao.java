@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.annotation.MapperScan;
 
 import com.park.ssm.entity.Account;
-import com.park.ssm.entity.Bill;
 import com.park.ssm.entity.type.AccountState;
 
 /**AccountDao功能：

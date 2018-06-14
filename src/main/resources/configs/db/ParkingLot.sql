@@ -32,12 +32,10 @@ create table Account
 	
 	,price decimal(10,4)
 	,state tinyint default 0
-	#,stateStartDate datetime not null
 	,isParking bit not null default 0
 	
-	,currentBillId bigint
 	,currentParkingRecId bigint  #此字段只用于实现统计停车次数功能
-	,currentStateLogId  #此字段只用于记录Account的State状态变化
+	,currentStateLogId bigint  #此字段只用于记录Account的State状态变化
 	
 	,index userId_idx(userId)
 	,index parkingLotId_idx(parkingLotId)
@@ -55,6 +53,7 @@ create table AccountStateLog
 	,index billId_idx(billId)
 )engine=innodb auto_increment=1 charset='utf8';
 
+
 create table Bill
 (
 	id bigint primary key auto_increment
@@ -63,8 +62,7 @@ create table Bill
 	,accountId bigint 
 	
 	,price decimal(10,4)
-	#,billStartDate datetime
-	#,billEndDate datetime
+
 	,lastPayDate date not null  #用户最后的支付的截止日期
 	,isPaid bit not null default 0
 
@@ -72,6 +70,15 @@ create table Bill
 	,index accountId_idx(accountId)
 )engine=innodb auto_increment=1 charset='utf8';
 
+create table currentBillMap
+(
+	id bigint primary key auto_increment
+	,accountId bigint not null
+	,currentBillId bigint not null
+	
+	,index accountId_idx(accountId)
+)engine=innodb auto_increment=1 charset='utf8'
+;
 
 create table ParkingRecord
 (

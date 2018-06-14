@@ -31,9 +31,8 @@ public class Account implements Serializable {
 	private AccountState state=AccountState.NORMAL;
 	private Date stateStartDate;
 	private boolean isParking;
-	private Bill currentBill;
+	private List<Bill> currentBill;
 	private List<Bill> bills;
-	
 	public Long getId() {
 		return id;
 	}
@@ -64,19 +63,24 @@ public class Account implements Serializable {
 	public boolean isParking() {
 		return isParking;
 	}
-	public Bill getCurrentBill() {
+	public List<Bill> getCurrentBill() {
 		return currentBill;
 	}
 	public List<Bill> getBills() {
 		return bills;
 	}
-	
+	@Override
+	public String toString() {
+		return "Account [id=" + id + ", userId=" + userId + ", parkingLot=" + parkingLot + ", parkingPositionId="
+				+ parkingPositionId + ", cardId=" + cardId + ", price=" + price + ", state=" + state
+				+ ", stateStartDate=" + stateStartDate + ", isParking=" + isParking + ", currentBill=" + currentBill
+				+ ", bills=" + bills + "]";
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((cardId == null) ? 0 : cardId.hashCode());
-		result = prime * result + ((currentBill == null) ? 0 : currentBill.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + (isParking ? 1231 : 1237);
 		result = prime * result + ((parkingLot == null) ? 0 : parkingLot.hashCode());
@@ -87,6 +91,7 @@ public class Account implements Serializable {
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -99,11 +104,6 @@ public class Account implements Serializable {
 			if (other.cardId != null)
 				return false;
 		} else if (!cardId.equals(other.cardId))
-			return false;
-		if (currentBill == null) {
-			if (other.currentBill != null)
-				return false;
-		} else if (!currentBill.equals(other.currentBill))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -140,14 +140,6 @@ public class Account implements Serializable {
 		} else if (!userId.equals(other.userId))
 			return false;
 		return true;
-	}
-	
-	@Override
-	public String toString() {
-		return "Account [id=" + id + ", userId=" + userId + ", parkingLot=" + parkingLot + ", parkingPositionId="
-				+ parkingPositionId + ", cardId=" + cardId + ", price=" + price + ", state=" + state
-				+ ", stateStartDate=" + stateStartDate + ", isParking=" + isParking + ", currentBill=" + currentBill
-				+ ", bills=" + bills + "]";
 	}
 	
 	

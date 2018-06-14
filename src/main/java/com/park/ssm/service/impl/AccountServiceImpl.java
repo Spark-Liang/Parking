@@ -191,7 +191,7 @@ public class AccountServiceImpl implements AccountService {
 		// TODO Auto-generated method stub
 		StringBuilder errorMessage = new StringBuilder();
 		Account account = accountdao.loadAccountById(id);
-		Bill currentBillId = account.getCurrentBill();
+		//Bill currentBillId = account.getCurrentBill();
 		AccountState state=account.getState();
 		if(state==AccountState.NORMAL) {
 			return account.getPrice();
@@ -210,12 +210,13 @@ public class AccountServiceImpl implements AccountService {
 	public Date getStartDate(Long id) {
 		StringBuilder errorMessage = new StringBuilder();
 		Account account = accountdao.loadAccountById(id);
-		Bill currentBillId = account.getCurrentBill();
+		//Bill currentBillId = account.getCurrentBill();
 		Date startDate=null;
 		//SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		if(currentBillId==null) {
+		/*if(currentBillId==null) {
 			startDate=accountStateLogDao.selectStartDate(id);
-		}
+		}*/
+		startDate=accountStateLogDao.selectStartDate(id);
 		return startDate;
 	}
 }

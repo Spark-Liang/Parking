@@ -2,6 +2,8 @@ package com.park;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,11 +11,14 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -28,9 +33,12 @@ import com.park.ssm.entity.ParkingPosition;
 public class BaseTest implements ApplicationContextAware{
 	
 	private ApplicationContext context;
-	//@Test
+	
+	@Test
 	public void test() {
-		System.out.println("hello");
+		Date date=new Date(System.currentTimeMillis());
+		String dateString=new SimpleDateFormat("YYYYMMDD HH:mm:ss-SSS").format(date);
+		System.out.println(dateString);
 	}
 
 	@Override
@@ -53,7 +61,7 @@ public class BaseTest implements ApplicationContextAware{
 	}
 	
 
-	@Test
+	//@Test
 	public void testObjectToMap() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		ParkingLotDao dao=context.getBean(ParkingLotDao.class);
 		List<ParkingLot> parkingLots=dao.listParkingLot(null, null, null);
@@ -68,4 +76,6 @@ public class BaseTest implements ApplicationContextAware{
 		
 		System.out.println(resultList);
 	}
+	
+	
 }
