@@ -427,27 +427,29 @@
 		  return 0是不允许提交 1是可以提交
 		     在没有支付账单的情况下 
 		    显示用户的账单信息
+		    返回0表示不可以支付账单 1表示可以支付账单
 		*/
 		function checkBillData(json){
 			accountId = json.list[0].id;
 			console.log(accountId)
 			if(json.list[0].currentBill!=null){
 				if(json.list[0].currentBill.paid==false&&json.list[0].parking==true){//存在账单但是没有支付,显示两个账单
-					alert('存在没有支付的账单以及停车卡正在使用');
+					alert('需要支付上一季度的账单以及这一季度的费用');
+				    alert('此卡在停车场中已经被使用需要先进行提车')
 					payBills(0);
 					return 0;
 				}else if(json.list[0].currentBill.paid==true&&json.list[0].parking==true){
-					alert('需要先支付这个季度使用的费用并且此停车卡正在使用');
+					alert('需要先支付这个季度使用的费用并且此卡在停车场中已经被使用需要先进行提车');
 					payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
 				}else if(json.list[0].currentBill.paid==false){
-					alert('存在没有支付的账单');
+					alert('需要支付上一季度的账单以及这一季度的费用');
 					payBills(0);//0是表示有上季度的账单没有支付
 					return 0;
 				}else if(json.list[0].currentBill.paid==true){
 					alert('需要先支付这个季度使用的费用');
 					payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
 				}else if(json.list[0].parking==true){
-					alert('停车卡正在使用');
+					alert('此卡在停车场中已经被使用需要先进行提车');
 					return 0;
 				}else{
 					return 1;
@@ -477,7 +479,6 @@
 					});
 					currentBill();
 				}else if(num == 1){
-					
 					currentBill();
 				}
 				function currentBill(){
@@ -517,6 +518,7 @@
 								
 						}
 					})
+					/* 用于判断两个日期之间有多少天并返回天数 */
 					function getDayNum(startTime,nowTime){
 						startTime = new Date(startTime);
 						startTime = startTime.getTime()
