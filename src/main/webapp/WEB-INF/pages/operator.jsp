@@ -74,6 +74,9 @@
 .tbody-add tr{
 	height:47px;
 }
+.payBill-btn{
+	margin-right: 5px;
+}
 </style>
 <script type="text/javascript">
 	
@@ -143,7 +146,7 @@
 					</div>
 					<div class="form-group">
 						<label for="exampleInputName2">卡号</label>
-						<input type="text" class="form-control input-sm" id="exampleInputName2" placeholder="请输入7位卡号">
+						<input type="text" class="form-control input-sm stop-card" id="exampleInputName2" placeholder="请输入7位卡号">
 					</div>
 					<button type="submit" class="btn btn-primary btn-sm deletecard">停卡</button>
 				</div>
@@ -163,7 +166,7 @@
 						</tbody>
 					</table>
 					<button class="btn btn-primary btn-sm pull-right payBill-close">关闭</button>
-					<button class="btn btn-primary btn-sm pull-right payBill-btn">支付账单</button>
+					<button class="btn btn-primary btn-sm pull-right payBill-btn">支付账单并停卡</button>
 				</div>
 			</div>
 		</div>
@@ -428,60 +431,91 @@
 		     在没有支付账单的情况下 
 		    显示用户的账单信息
 		    返回0表示不可以支付账单 1表示可以支付账单
+		    currentBill是数组
 		*/
 		function checkBillData(json){
 			accountId = json.list[0].id;
+			var currentBill = json.list[0].currentBill;
 			console.log(accountId)
-			if(json.list[0].currentBill!=null){
-				if(json.list[0].currentBill.paid==false&&json.list[0].parking==true){//存在账单但是没有支付,显示两个账单
-					alert('需要支付上一季度的账单以及这一季度的费用');
-				    alert('此卡在停车场中已经被使用需要先进行提车')
-					payBills(0);
-					return 0;
-				}else if(json.list[0].currentBill.paid==true&&json.list[0].parking==true){
-					alert('需要先支付这个季度使用的费用并且此卡在停车场中已经被使用需要先进行提车');
-					payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
-				}else if(json.list[0].currentBill.paid==false){
-					alert('需要支付上一季度的账单以及这一季度的费用');
-					payBills(0);//0是表示有上季度的账单没有支付
-					return 0;
-				}else if(json.list[0].currentBill.paid==true){
-					alert('需要先支付这个季度使用的费用');
-					payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
-				}else if(json.list[0].parking==true){
-					alert('此卡在停车场中已经被使用需要先进行提车');
-					return 0;
-				}else{
-					return 1;
+			console.log(currentBill.length)
+			if(currentBill.length!=0&&json.list[0].parking==true){//存在账单但是没有支付,显示两个账单
+				if(currentBill.length==1){//长度为1表示只有一张账单
+					/* alert('需要支付上一季度的账单以及这一季度的费用') */
+				}else if(currentBill.length==2){
+					/* alert('需要支付之前季度的账单') */
 				}
-			}else if(json.list[0].currentBill==null){
-				alert('需要先支付这个季度使用的费用');
-				payBills(1);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
+			    alert('此卡在停车场中已经被使用需要先进行提车')
+				payBills(0,currentBill.length);
+				return 0;
+			}else if(currentBill.length!=0&&json.list[0].parking==false){
+				if(json.list[0].currentBill.length==1){
+					/* alert('需要支付上一季度的账单以及这一季度的费用') */
+				}else if(json.list[0].currentBill.length==2){
+					/* alert('需要支付之前季度的账单') */
+				}
+				payBills(0,currentBill.length);
+				return 0;
+			}else if (currentBill.length==0&&json.list[0].parking==true) {//currentBill长度不为0的时候表示只有当前季度的费用
+				alert('此卡在停车场中已经被使用需要先进行提车');
+				return 0;
+			}else if(currentBill.length==0){
+				/* alert('需要先支付这个季度使用的费用'); */
+				payBills(1,currentBill.length);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
+			}else{
+				var con = confirm('是否进行停卡?')
+				if(con){//没有账单以及没有停车的情况下直接进行停卡
+					var billid = $('.stop-card').val();
+					console.log(billid)
+					$.ajax({
+							url:'user/stopCard',
+							dataType:'json',
+							type:'POST',
+							data:{
+								'cardId':billid
+							},success:function(json){
+								if(json.flag==1){
+									alert('停卡成功')
+								}
+							},error:function(){
+								
+							}
+						})
+				}else{
+					alert('取消停卡')
+				}
 			}
 			//payBills函数中传过来的值是用于判断是存在账单还是不存在账单但是需要支付的状况
 			//用于显示用户的账单信息
-			function payBills(num){
+			//payBIlls函数用于显示账单信息
+			function payBills(num,l){
 				$('.payBill').show();
+				console.log(l)
 				if (num == 0 ){
-					var sDate = new Date(json.list[0].currentBill.timeQuantums[0].startTime);
-					var sDate1 = sDate.toLocaleString('chinese',{hour12:false});
-					var startDate = sDate1.substring(0,9);
-					var eDate = new Date(json.list[0].currentBill.timeQuantums[0].endTime);
-					var eDate1 = eDate.toLocaleString('chinese',{hour12:false});
-					var endDate = eDate1.substring(0,9);
-					$('.BillTable').append(function(){
-						return "<tr>"
-						+"<td>"+json.list[0].userId+"</td>"
-						+"<td>"+startDate+"~"+endDate+"</td>"
-						+"<td>"+json.list[0].parkingLot.cost+" ￥/每月</td>"
-						+"<td>"+json.list[0].currentBill.price+"</td>"
-						+"</tr>"
-					});
-					currentBill();
+					for (var i = 0;i<l;i++){//循环用于显示多少张账单
+						var sDate = new Date(json.list[0].currentBill[i].timeQuantums[0].startTime);
+						var sDate1 = sDate.toLocaleString('chinese',{hour12:false});
+						var startDate = sDate1.substring(0,9);
+						var eDate = new Date(json.list[0].currentBill[i].timeQuantums[0].endTime);
+						var eDate1 = eDate.toLocaleString('chinese',{hour12:false});
+						var endDate = eDate1.substring(0,9);
+						$('.BillTable').append(function(){
+							return "<tr data-value='"+json.list[0].cardId+"'>"
+							+"<td>"+json.list[0].userId+"</td>"
+							+"<td>"+startDate+"~"+endDate+"</td>"
+							+"<td>"+json.list[0].price+" ￥/每月</td>"
+							+"<td>"+json.list[0].currentBill[i].price+"</td>"
+							+"</tr>"
+						});
+					}
+					if(l==1){//当长度为1的时候显示当前季度的账单
+						currentBill(l);
+					}
 				}else if(num == 1){
-					currentBill();
+					currentBill(l);
 				}
-				function currentBill(){
+				
+				//currentBill函数用于显示当前季度的费用
+				function currentBill(l){
 					console.log(accountId)
 					$.ajax({
 						url:'bill/newBillInfo',
@@ -491,23 +525,38 @@
 							'accountId':accountId
 						},success:function(time){
 							console.log(time);
-							var data = new Date(time.timeQuantums[0].startTime);//获取账单的开始时间
+							var data = new Date(time.stateLogs[0].startTime);//获取账单的开始时间
 							var startTime = data.toLocaleString('chinese',{hour12:false});
-							var startTime = startTime.substring(0,9);
+							var startTime = startTime.substring(0,9);//获取结束时间
 							console.log(startTime);
 							var date = new Date();//获取账单的当前时间
 							var nowTime = date.toLocaleString('chinese',{hour12:false});
-							var nowTime = nowTime.substring(0,9);
-							var day = date.getDate();//获取开始时间到当前时间的天数
-							var days = getDayNum(startTime,nowTime);
-							var month = date.getMonth()+1;
-							var year = date.getFullYear();
-							var allDayNum = allDay(month);
+							var nowTime = nowTime.substring(0,9);//获得当前时间
+							var day = date.getDate();
+							var days = getDayNum(startTime,nowTime);//getDayNum方法用于获取开始时间到当前时间的天数
+							var month = date.getMonth()+1;//获取当前月份
+							var year = date.getFullYear();//获取当前年份
+							var allDayNum = allDay(month);//allDay方法用于获取当前月的季度以及季度的总天数  方法写在AllUseTool.js中
 							/* var useDay = useMuchDay(day,month);*/
-							var price = (time.price * 3)*(days/allDayNum[0]);
-							var price = Math.ceil(price);
+							if(l==0){
+								var price = (time.price * 3)*(days/allDayNum[0]);//allDayNum[0]是表示总天数 [1]是表示第几季度
+								var price = Math.ceil(price);//把价格向上取整
+							}else if(l==1){//l 等于1 的时候表示存在一张账单 并且此季度有可能存在费用
+								if(month!=1&&month!=4&&month!=7&&month!=10){
+									if(month == 5||month==6){//如果是5 6 月 那此季度第一个月一定是四月
+										days==30;
+									}else{//否则就是1 7 10 月
+										days==31;
+									}
+									var price = (time.price * 3)*(days/allDayNum[0]);//allDayNum[0]是表示总天数 [1]是表示第几季度
+									var price = Math.ceil(price);//把价格向上取整
+								}else{
+									var price = (time.price * 3)*(days/allDayNum[0]);//allDayNum[0]是表示总天数 [1]是表示第几季度
+									var price = Math.ceil(price);//把价格向上取整
+								}
+							}
 							$('.BillTable').append(function(){
-								return "<tr>"
+								return "<tr data-value='"+json.list[0].cardId+"'>"
 								+"<td>"+json.list[0].userId+"</td>"
 								+"<td>"+startTime+" ~ "+nowTime+"</td>"
 								+"<td>"+time.price+" ￥/每月</td>"
@@ -564,7 +613,28 @@
 		}
 		//停卡时候有未支付账单的时候点击支付账单触发的方法
 		$('.payBill-btn').click(function (){
-			alert('fff');
+			var con = confirm('确认已经收取客户现金');
+			if(con){
+				var billid = $('.BillTable tr').data("value");
+				console.log(billid)
+				$.ajax({
+						url:'user/stopCard',
+						dataType:'json',
+						type:'POST',
+						data:{
+							'cardId':billid
+						},success:function(json){
+							if(json.flag==1){
+								alert('支付成功以及停卡成功')
+							}
+						},error:function(){
+							
+						}
+					})
+			}else{
+				alert('取消支付账单以及停卡')
+			}
+			
 		});
 		//点击关闭的按钮
 		$('.payBill-close').click(function (){
