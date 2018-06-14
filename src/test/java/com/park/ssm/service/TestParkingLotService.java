@@ -172,9 +172,9 @@ public class TestParkingLotService extends AutoRollBackTest {
 		Date startTime,endTime;
 		List<ParkingRecord> list=new ArrayList<>();
 		try {
-			startTime = sdf.parse("2018-04-01");
-			endTime=sdf.parse("2018-04-30");
-			list=parkingRecordDao.countUsage(1, startTime, endTime);
+			startTime = sdf.parse("2018-06-01");
+			endTime=sdf.parse("2018-06-30");
+			list=parkingRecordDao.countUsage(4, startTime, endTime);
 			System.out.println(list);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
