@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="js/jquery-3.3.1.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    
+    <script src="js/AllUseTools.js"></script>
 
 </head>
 
@@ -108,13 +108,13 @@
     <div class = "showBill">
         <div class = "bill">
             <!--账单关闭按钮-->
-            <div id="usageClose" onclick = closeBill()>
+            <div id="usageClose" onclick = "closeBill()">
                 <img src="img/manger-close2.svg"  style = "cursor: pointer">
                               <strong>关闭</strong>
             </div>
-            <div class = showBill_1>
+            <div class = "showBill_1" data-value="">
                 <br/>
-                <p class = "billMenu"><a ><span class = "mystyle">查看已出帐单</span></a>&nbsp<span style="font-size: 200%">|</span>&nbsp<a ><span>查看未出帐单</span></a></p>
+                <p class = "billMenu"><a ><span class = "mystyle">查看已出帐单</span></a>&nbsp;<span style="font-size: 200%">|</span>&nbsp<a id="#checkNextBill" onclick="checkNextBill(this)" data-value=""><span >查看未出帐单</span></a></p>
 
             </div>
             
@@ -133,31 +133,8 @@
                     </tr>
                     </thead>
                     <tbody id = "outBillData">
-                    <!-- 写死的静态数据 -->
-                    
-                    <tr>
-                        <td>1</td>
-                        <td>2017.1.1-2017.3.31</td>
-                        <td>2017.4.30<br>(已过期)</td>
-                        <td>600</td>
-                        <td>已付款</td>
-                    </tr>
-                    <!--
-                    <tr>
-                        <td>2</td>
-                        <td>2017.4.1-2017.6.30</td>
-                        <td>2017.7.31</td>
-                        <td>600</td>
-                        <td>已付款</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>2017.7.1-2017.7.31<br>2017.9.1-2017.9.30</td>
-                        <td>2017.10.31</td>
-                        <td>400</td>
-                        <td>未付款</td>
-                    </tr>
-                     -->
+                    <!-- 数据显示 -->
+                   
                     </tbody>
                 </table> 
             </div>
@@ -172,10 +149,7 @@
                     </tr>
                 </thead>
                 <tbody id = "noOutBillData">
-                    <tr>                  
-                        <td>2018.4.1-2018.6.30</td>
-                        <td>250</td>
-                    </tr>
+                  <!-- 显示未出账账单 -->
                 </tbody>
             </table> 
             </div>
@@ -205,6 +179,7 @@
     function showBill(a){
         //console.log(a);//保存卡号，用来请求账单信息
         var accountId = $(a).data('accountid');
+        $('.showBill_1').attr("data-value",accountId);
         //console.log("accountId:"+accountId);
         span1.classList.add("mystyle");
         span2.classList.remove("mystyle");
@@ -212,7 +187,6 @@
         showBill.style.display = 'block';
         outbill.style.display = "block";
         nooutbill.style.display = "none";
-        
 		//ajax发送账户ID给后台拿账单数据
 		var userId = GetUrlParam("id");
 		$.ajax({
@@ -225,10 +199,8 @@
 			dataType:'json',
 			success: function(respon){
 				//先把旧数据删除
-				//$("tbody").find("tr").remove();
-				console.log("获取账单返回的数据：");
+				$('#outBillData tr').remove();
 				console.log(respon);
-				//console.log(respon.msg);
 				var length = respon.msg.length;
 				if(respon.msg == "您还没有账单"){
 					alert("没有账单");
@@ -320,37 +292,78 @@
 				*/
 			},
 			error: function(){
-				alert("数据请求发送失败");
+				/* alert("数据请求发送失败"); */
 			}
 		});
 		
 		//未出账账单信息请求
-		$.ajax({
-			url: "user/predictPayment",
-			type: 'GET',
-			data:{
-				//userId: userId,
-				'id': accountId
-			},
+		console.log(accountId);
+    }
+    function checkNextBill(a){
+    	var accountId = $('.showBill_1').data("value");
+    	console.log(accountId);
+    	$.ajax({
+			url:'bill/newBillInfo',
+			type:'GET',
 			dataType:'json',
-			success: function(respon){
-				console.log("下一季度：");
-				console.log(respon);
+			data:{
+				'accountId':accountId
+			},success:function(json){
+				console.log(json);
+				var date = new Date(json.stateLogs[0].startTime);//获取开始时间
+				var month = date.getMonth();//获取当前时间的月份
+				var year = date.getYear()+1900; //获取当前时间的年份
+				var howDate = GetMonth(month,year); //获取当前季度的结束时间
+				var endTime = new Date(howDate[0]);//格式化当前季度结束时间
+				var startTime = new Date(howDate[1]);
+				var allDays = getDayNum(startTime,endTime);
+				var useDays = getDayNum(date,endTime);
+				var price = (json.price*3)*(useDays/allDays);
+				var endTime = getDate(endTime);
+				var date = getDate(date);
 				$('#noOutBillData').append(function(){
 					return "<tr>"
-					+"<td>"+"日期"+"</td>"
-				
-					+"<td>"+"预计付款金额"+"</td></tr>"
+					+"<td>"+date+" - "+endTime+"</td>"
+					+"<td>"+price+"元</td>"
+					+"</tr>"
 				})
-			},
-			error: function(){
-				alert("数据请求发送失败");
-			}
-		});
+			},error:function(){
 			
-		
+			}
+		})
     }
-
+    function GetMonth(month,year){
+    	var date = new Array();
+    	if(month<4){
+    		date[0]=year+'-03-31';
+    		date[1]=year+'-01-01';
+    		return date;
+    	}else if(3<month<7){
+    		date[0]=year+'-06-30';
+    		date[1]=year+'-04-01';
+    		return date;
+    	}
+    	else if(6<month<10){
+    		date[0]=year+'-09-30';
+    		date[1]=year+'-07-01';
+    		return date;
+    	}
+    	else if(10<month<13){
+    		date[0]=year+'-12-31';
+    		date[1]=year+'-10-01';
+    		return date;
+    	}
+    }
+    /* 用于判断两个日期之间有多少天并返回天数 */
+	function getDayNum(startTime,nowTime){
+		startTime = new Date(startTime);
+		startTime = startTime.getTime()
+		nowTime = new Date(nowTime)	;
+		nowTime = nowTime.getTime();
+		var time = nowTime - startTime;
+		var days=Math.floor(time/(24*3600*1000));
+		return days+1;
+	}
     //点击关闭，关闭帐单页面
     function closeBill(){
         var showBill = document.getElementsByClassName("showBill")[0];
@@ -417,20 +430,16 @@
             	 console.log(json);
             	 var l = json.list.length;
             	 for(var i = 0; i < l; i++){
-            		 
-            		 //判断是否有未付款账单，如有就在卡上提示
-            		 var tip = "有未付款账单";
-            		 var accountId = "";
+            		 var accountId = json.list[i].id;
             		 //console.log(json.list[i].currentBill.paid);
-            		 if(json.list[i].currentBill){
-            			 if(json.list[i].currentBill.paid === true){
-                			 tip = "";
-                		 }
-            			 accountId = json.list[i].currentBill.accountId;//账户ID
+            		 if(json.list[i].currentBill.length==0){
+            			 //判断是否有未付款账单，如有就在卡上提示
+                		 var tip = "";
+            		 }else{
+            			 var tip = "有未付款账单";
             		 }
             		 
             		 var cardNum = json.list[i].cardId;//获取卡号
-                	 var startDate = getDate(json.list[i].stateStartDate);//转换日期格式
                 	 //var accountId = json.list[i].currentBill.accountId;//账户ID
                 	 var userId = json.list[i].userId;//用户ID
                 	 var cardState = json.list[i].state;//卡状态
@@ -441,20 +450,27 @@
                 	 }else if(cardState === "FREEZE"){
                 		 stateTip = "<span style = 'color:red'>欠费冻结</span>";
                 	 }
-                	 
+                	 //判断状态
+                	 if(json.list[i].state== 'NORMAL'){
+                		 state = 0;
+                	 }else if(json.list[i].state == 'STOP'){
+                		 state = 1;
+                	 }else{
+                		 state = 2
+                	 }
                 	 //加载停车卡
                 	 $('.moudle1').append(function(){
                          return "<div class='admin-block'>"
                          +"<br>"
                          +"<p>卡号："+cardNum+"</p>"
                          +"<p>卡状态："+stateTip+"</p>"
-                         +"<p>开卡日期："+startDate+"</p>"
+                         /* +"<p>开卡日期："+startDate+"</p>" */
                          +"<p style = 'color: red'>"+tip+"</p>"
-                         +'<button class="btn btn-md btn-block btn-primary" onclick = "showBill(this)" data-accountid="'+accountId+'">查看帐单</button>';
+                         +"<button class='btn btn-md btn-block btn-primary' onclick = 'showBill(this)' data-accountid='"+accountId+"' data-value='"+state+"'>查看帐单</button>";
                 	 });
             	 }
              },error: function(){
-				alert("数据请求发送失败");
+			/* 	alert("数据请求发送失败"); */
              }
          });
     });

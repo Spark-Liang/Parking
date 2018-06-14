@@ -616,7 +616,7 @@
 			var con = confirm('确认已经收取客户现金');
 			if(con){
 				var billid = $('.BillTable tr').data("value");
-				console.log(billid)
+				console.log(billid);
 				$.ajax({
 						url:'user/stopCard',
 						dataType:'json',
