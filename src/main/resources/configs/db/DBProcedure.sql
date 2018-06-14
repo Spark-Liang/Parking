@@ -108,10 +108,10 @@ begin
         )a
         ,(select 
 			@tmpStateLogId:=
-				nullif(
+				ifnull(
 					(select id+1
 					from AccountStateLog
-					where id>=nullif((select max(id) from AccountStateLog),1)
+					where id>=ifnull((select max(id) from AccountStateLog),1)
 					order by id desc
                     limit 1 for update
 					)
@@ -159,7 +159,7 @@ begin
         inner join
         Account acc
         on acc.id=tmp.accountId
-        ,(select @tmpNewBillId:=nullif((select max(id) from Bill for update),1)
+        ,(select @tmpNewBillId:=ifnull((select max(id) from Bill for update),1)
 		)init
     )a
     inner join
@@ -273,7 +273,7 @@ begin
 		)b
 		on a.id=b.currentBillId
 		inner join
-		(select @tmpNewId:=nullif((select max(id) from AccountStateLog for update),1)
+		(select @tmpNewId:=ifnull((select max(id) from AccountStateLog for update),1)
 		)init
 	;	
 	
@@ -364,7 +364,7 @@ BEGIN
 	insert into Account(id,userId,parkingLotId,parkingPositionId,cardId,price)
 	select
 		@tmpAccountId:=
-			nullif((select max(id)+1 from Account for update),1)
+			ifnull((select max(id)+1 from Account for update),1)
 		,a.tmp_user_id
 		,lot_id
 		,@positionId:=b.id parkingPositionId
@@ -398,7 +398,7 @@ BEGIN
 	;
 	#在AccountStateLog添加新账号的StateLog
 	set @tmpAccountStateLogId:=
-			nullif((select max(id)+1 from AccountStateLog for update)
+			ifnull((select max(id)+1 from AccountStateLog for update)
 				,1)
 	;
 	insert into AccountStateLog (id,accountId,state,startTime)
@@ -542,7 +542,7 @@ begin
 	if iscurParking = 0 then
 		begin
 			set @parkingRecordId:=
-					nullif((select max(id)+1 from ParkingRecord for update),1)
+					ifnull((select max(id)+1 from ParkingRecord for update),1)
 			;
 			update Account
 				set currentParkingRecId = @parkingRecordId

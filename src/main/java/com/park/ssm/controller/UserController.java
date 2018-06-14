@@ -389,6 +389,11 @@ public class UserController {
 		return "bill";
 	}
 	
+	/**
+	 * 预计下季度收费价格
+	 * @param id
+	 * @return
+	 */
 	@RequestMapping(value="predictPayment",method=RequestMethod.GET)
 	public Map<String,Object> predictPayment(@RequestParam("id")Long id){
 		Map<String,Object> map=new HashMap<>();

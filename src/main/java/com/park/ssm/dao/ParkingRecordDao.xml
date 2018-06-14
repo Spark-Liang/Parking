@@ -2,19 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--客户映射 指定到dao接口 -->
 <mapper namespace="com.park.ssm.dao.ParkingRecordDao">
-	<resultMap type="com.park.ssm.dao.ParkingRecordDao" id="countUsageMap">
+	<resultMap type="com.park.ssm.entity.ParkingRecord" id="countUsageMap">
 		<id property="id" column="id"></id>
 		<result property="accountId" column="accountId"></result>
 		<result property="NUM" column="NUM" jdbcType="NUMERIC"></result>
-		<association property="account" javaType="Account">
-			<id property="id" column="id"></id>
-			<result property="cardId" column="cardId"></result>
+		<association property="account" column="accountId" javaType="Account"
+		fetchType="eager" select="com.park.ssm.dao.AccountDao.loadAccountById">
+			
 		</association>
 	</resultMap>
 
 	<!-- manager查看停车场使用情况 -->
 	<select id="countUsage" resultMap="countUsageMap">
-		select p.accountId,a.cardId,count(p.accountId) from ParkingRecord
+		select p.accountId,a.userId,a.cardId,count(p.accountId) as usageTimes from ParkingRecord
 		p,Account a
 		<where>
 			p.accountId=a.id and
@@ -22,6 +22,6 @@
 			and startTime&gt;=#{startTime}
 			and endTime&lt;=#{endTime}
 		</where>
-		group by p.accountId,a.cardId
+		group by p.accountId,a.cardId,a.userId
 	</select>
 </mapper>

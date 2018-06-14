@@ -41,7 +41,7 @@ public class TestBillService extends AutoRollBackTest {
 		Bill bill = new Bill();
 		bill.setPaid(true);
 		bill.setId(Long.valueOf(6l));
-		result = billService.payBill(bill);
+		result = billService.normalPayBill(bill);
 		Assert.assertEquals(1, result);
 	}
 }

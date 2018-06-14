@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 停车记录
+ * 
  * @author ASNPHX4
  *
  */
@@ -20,34 +21,43 @@ public class ParkingRecord implements Serializable {
 	 * 主键
 	 */
 	private Long id;
-	
+
 	/**
 	 * 停车场id
 	 */
 	private Integer parkingLotId;
-	
+
 	/**
 	 * 账户id
 	 */
-	
+
 	private Long accountId;
+
+	private Account account;
 	
+	private Long userId;
 	/**
 	 * 开始时间
 	 */
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date startTime;
-	
+
 	/**
 	 * 结束时间
 	 */
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date endTime;
 	
-	public ParkingRecord() {
-		
-	}
+	private Integer usageTimes;
 	
+	public Integer getUsageTimes() {
+		return usageTimes;
+	}
+
+	public ParkingRecord() {
+
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -68,10 +78,22 @@ public class ParkingRecord implements Serializable {
 		return endTime;
 	}
 
-	@Override
-	public String toString() {
-		return "ParkingRecord [id=" + id + ", parkingLotId=" + parkingLotId + ", accountId=" + accountId
-				+ ", startTime=" + startTime + ", endTime=" + endTime + "]";
+	public Account getAccount() {
+		return account;
 	}
 	
+	
+	public Long getUserId() {
+		return userId;
+	}
+
+	@Override
+	public String toString() {
+		return "ParkingRecord [id=" + id + ", parkingLotId=" + parkingLotId + ", accountId=" + accountId + ", account="
+				+ account + ", userId=" + userId + ", startTime=" + startTime + ", endTime=" + endTime + ", usageTimes="
+				+ usageTimes + "]";
+	}
+
+	
+
 }
