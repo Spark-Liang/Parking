@@ -22,6 +22,8 @@ public class PasswordGenerator {
 		System.out.println("insert into User(userId,password,salt) values \n");
 		return new LinkedList() {
 			{
+				add(new Object[] {"13719326102","123456"});
+				add(new Object[] {"13775119722","123456"});
 				add(new Object[] {"13745678910","123456"});
 				add(new Object[] {"13745678911","123456"});
 				add(new Object[] {"13745678912","123456"});
@@ -32,9 +34,6 @@ public class PasswordGenerator {
 				add(new Object[] {"13745678917","123456"});
 				add(new Object[] {"13745678918","123456"});
 				add(new Object[] {"13745678919","123456"});
-				add(new Object[] {"13745678920","123456"});
-				add(new Object[] {"13719326102","123456"});
-				add(new Object[] {"13775119722","123456"});
 				add(new Object[] {"13745678920","123456"});
 				add(new Object[] {"13745678921","123456"});
 				add(new Object[] {"13745678922","123456"});

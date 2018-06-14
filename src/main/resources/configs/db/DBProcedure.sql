@@ -591,9 +591,14 @@ begin
 		)init
 	)
 	;
+	#设置旧账单为已支付
+	update Bill
+	set isPaid=1
+	where accountId=@tmpAccountId;
+	delete from CurrentBillMap where accountId=@tmpAccountId;
 	#生成新账单
 	#对stateLog中没有billId且startTime在执行时间之前的生成对应bill
-	insert into Bill(id,userId,parkingLotId,accountId,price,lastPayDate)
+	insert into Bill(id,userId,parkingLotId,accountId,price,lastPayDate,isPaid)
 	select 
 		@newBillId:=ifnull((select max(id)+1 from Bill for update),1) id
 		,b.userId as userId
@@ -602,6 +607,7 @@ begin
 		,cast(b.price*3 * totalDays/getSeasonTotalDays(@updateTime) as decimal(10,4))
 		as billPrice
 		,null
+		,1
 	from 
 		(select accountId,sum(datediff(end_time,start_time)) totalDays
         from
@@ -687,8 +693,6 @@ begin
 		set flag=1;
 	end
 	;
-	
-	
 	
 	set autocommit=0;
 	start transaction;

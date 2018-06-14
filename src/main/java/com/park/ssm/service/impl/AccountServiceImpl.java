@@ -124,6 +124,7 @@ public class AccountServiceImpl implements AccountService {
 		Map<String, Object> different = null;
 		try {
 			different = PersistentUtil.different(accountInDB, account, Account.class);
+			logger.info(different);
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			logger.info(e);
 		}
@@ -177,7 +178,7 @@ public class AccountServiceImpl implements AccountService {
 		result.put("cardId", cardId);
 		accountdao.stopCard(result);
 		int status = (int) result.get("flag");
-		if (status > 0) {
+		if (status == 0) {
 			return 1;
 		} else {
 			errorMessage.append("无法停卡！系统出错，请联系技术部门！\n");
