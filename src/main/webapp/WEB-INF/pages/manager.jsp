@@ -88,7 +88,7 @@
             <div class="input-group manger-month">
                 <input type="text" class="demo-input form-control" placeholder="年月选择器" id="test3">
                 <span class="input-group-btn">
-                    <button class="btn btn-primary lookBtn">查询</button>
+                    <button class="btn btn-primary lookBtn" data-value="">查询</button>
                 </span>
             </div>
             <br/>
@@ -132,17 +132,8 @@
                             <th class="col-md-3">使用次数</th>                  
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>1234567</td>
-                            <td>52</td>
-                        </tr>
-                         <tr>
-                            <td>1</td>
-                            <td>1234567</td>
-                            <td>52</td>
-                        </tr>
+                    <tbody id="park-body">
+                     <!-- 用于显示停车卡使用情况 -->
                     </tbody>
                 </table>
         </div>
@@ -306,7 +297,13 @@
     var lookBtn = document.getElementsByClassName("lookBtn")[0];
     lookBtn.addEventListener("click",function(){
     	var test3 = $('#test3').val();
-    	alert(test3);
+    	console.log(test3.length)
+    	if(test3.length==0){
+    		alert('请选择日期');
+    	}else{
+    		var lotId = $('.lookBtn').data("value");
+    		showParkUse(lotId,test3);
+    	}
         var newDate = new Date();
         if(dateChoose){
             if(dateChoose.year == newDate.getFullYear() && dateChoose.month == (newDate.getMonth() + 1)){
@@ -331,7 +328,12 @@
     	$('#year').text(day[0]);$('#month').text(day[1]);//把年份以及月份显示在页面上
     	console.log(time);
     	var lotId = $(a).data('lotid');
+    	$('.lookBtn').data("value",lotId);
     	console.log(lotId);
+    	showParkUse(lotId,time);
+    }
+    function showParkUse(lotId,time){
+    	$('#park-body tr').remove();
     	$.ajax({
     		url:'inneruser/sumUsage',
     		dataType: 'json',
@@ -340,7 +342,21 @@
     			'time': time
     		},
     		success: function(json){
-    			console.log(json)
+    			console.log(json);
+    			if(json.msg==0){
+    				
+    			}else{
+    				var l = json.list.length;
+        			for(var i = 0;i<l;i++){
+        				$('#park-body').append(function(){
+            				return " <tr>"
+                           		 +"<td>"+json.list[i].account.cardId+"</td>"
+                           		 +"<td>"+json.list[i].userId+"</td>"
+                           		 +"<td>"+json.list[i].usageTimes+"</td>"
+                       			 +"</tr>";
+            			})
+        			}
+    			}
     		},
     		error: function(){
     			alert("数据请求发送失败");
