@@ -604,12 +604,12 @@ begin
 		,b.userId as userId
 		,b.parkingLotId as parkingLotId
 		,a.accountId as accountId
-		,cast(b.price*3 * totalDays/getSeasonTotalDays(@updateTime) as decimal(10,4))
+		,cast(b.price * 3 * totalDays/getSeasonTotalDays(@updateTime) as decimal(10,4))
 		as billPrice
 		,null
 		,1
 	from 
-		(select accountId,sum(datediff(end_time,start_time)) totalDays
+		(select accountId,sum(datediff(end_time,start_time) + 1) totalDays
         from
         	(select accountId
         		,startTime start_time
