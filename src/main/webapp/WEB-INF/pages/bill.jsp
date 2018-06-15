@@ -213,15 +213,16 @@
 					var startTime = getDate(respon.msg[i].timeQuantums[0].startTime);
 					var endTime = getDate(respon.msg[i].timeQuantums[0].endTime);
 					var lastPayDate = getDate(respon.msg[i].lastPayDate);//获取最后缴费日期
-
 					//测试
 					var timeTest = respon.msg[i].lastPayDate+86400000;
 					var myDate = new Date().getTime();
 					//console.log("最后付款时间："+timeTest+"现在时间："+myDate);
 					if(respon.msg[i].paid === false && myDate > timeTest){
-						lastPayDate = lastPayDate + "<br>(已过期)";
+							lastPayDate = lastPayDate + "<br>(已过期)";
 					}
-					
+					if(!respon.msg[i].lastPayDate){
+						lastPayDate = '还未缴费'
+					}
 					//console.log(lastPayDate);
 					var price = respon.msg[i].price;//获取应付金额
 					price = Math.ceil(price);
@@ -311,24 +312,29 @@
 				'accountId':accountId
 			},success:function(json){
 				console.log(json);
-				var date = new Date(json.stateLogs[0].startTime);//获取开始时间
-				var month = date.getMonth();//获取当前时间的月份
-				var year = date.getYear()+1900; //获取当前时间的年份
-				var howDate = GetMonth(month,year); //获取当前季度的结束时间
-				var endTime = new Date(howDate[0]);//格式化当前季度结束时间
-				var startTime = new Date(howDate[1]);
-				var allDays = getDayNum(startTime,endTime);
-				var useDays = getDayNum(date,endTime);
-				var price = (json.price*3)*(useDays/allDays);
-				price = Math.ceil(price);
-				var endTime = getDate(endTime);
-				var date = getDate(date);
-				$('#noOutBillData').append(function(){
-					return "<tr>"
-					+"<td>"+date+" - "+endTime+"</td>"
-					+"<td>"+price+"元</td>"
-					+"</tr>"
-				})
+				if(!json.error){
+					var date = new Date(json.stateLogs[0].startTime);//获取开始时间
+					var month = date.getMonth();//获取当前时间的月份
+					var year = date.getYear()+1900; //获取当前时间的年份
+					var howDate = GetMonth(month,year); //获取当前季度的结束时间
+					var endTime = new Date(howDate[0]);//格式化当前季度结束时间
+					var startTime = new Date(howDate[1]);
+					var allDays = getDayNum(startTime,endTime);
+					var useDays = getDayNum(date,endTime);
+					var price = (json.price*3)*(useDays/allDays);
+					price = Math.ceil(price);
+					var endTime = getDate(endTime);
+					var date = getDate(date);
+					$('#noOutBillData').append(function(){
+						return "<tr>"
+						+"<td>"+date+" - "+endTime+"</td>"
+						+"<td>"+price+"元</td>"
+						+"</tr>"
+					})
+				}else{
+					alert('此卡处于停用状态,不能进行查看')
+				}
+				
 			},error:function(){
 			
 			}
