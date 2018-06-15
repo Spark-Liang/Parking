@@ -95,4 +95,7 @@ public interface AccountService {
 	 * @return
 	 */
 	public Date getStartDate(Long accountId);
+	
+	
+	public int getNumForPosition(long userId,int lotId);
 }

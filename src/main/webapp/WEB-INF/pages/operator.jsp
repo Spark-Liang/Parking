@@ -667,6 +667,7 @@
 				$(this).parent().find('input:eq(0)').parent().addClass('has-error');
 			}
 		})
+		//根据用户id 搜索用户信息
 		function searchCard(iphone){
 			$.ajax({
 				url:'user/getAllAccount',
@@ -697,7 +698,9 @@
 							if (json.list[i].cardId==null){//判断卡号是否存在 方便显示
 								var cardId = '已停卡';
 							}
+							//获取用户账户的状态
 							var state = json.list[i].state;
+							//终止使用的情况下隐藏两个按钮 欠费停卡隐藏换卡按钮 正常使用不隐藏按钮
 							if(state == 'FREEZE'){
 								state = '<p class="text-danger">终止使用</p>';
 								var state1 = 'hidden';

@@ -83,4 +83,6 @@ public interface ParkingPositionDao {
 	 */
 	public abstract int getPositionNumByUser(@Param("accountId")long accountId,@Param("parkingLotId")int parkingLotId);
 	
+	
+	public abstract int getNumforPosition(@Param("userId")long userId,@Param("parkingLotId")int parkingLotId);
 }

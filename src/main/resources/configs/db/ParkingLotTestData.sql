@@ -223,6 +223,7 @@ create table ParkingRecord
 	,endTime datetime
 )engine=innodb auto_increment=1 charset='utf8';
 
+--select count(b.id) from Account a left join ParkingPosition b on a.id=b.accountId and a.parkingLotId=b.parkingLotId and  b.accountId is not null where a.userId='13745678912' and a.parkingLotId=4;
 
 call updateAllAccountState('2018-2-1 0:20:0',@tmp);
 call generateBill('2018-4-1 0:20:0',@tmp);select @tmp;

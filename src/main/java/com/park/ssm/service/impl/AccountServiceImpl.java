@@ -219,4 +219,10 @@ public class AccountServiceImpl implements AccountService {
 		startDate=accountStateLogDao.selectStartDate(id);
 		return startDate;
 	}
+
+	@Override
+	public int getNumForPosition(long userId, int lotId) {
+		// TODO Auto-generated method stub
+		return parkingpositiondao.getNumforPosition(userId, lotId);
+	}
 }
