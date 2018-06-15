@@ -314,24 +314,41 @@
 			},success:function(json){
 				console.log(json);
 				if(!json.error){
-					var date = new Date(json.stateLogs[0].startTime);//获取开始时间
-					var month = date.getMonth();//获取当前时间的月份
-					var year = date.getYear()+1900; //获取当前时间的年份
-					var howDate = GetMonth(month,year); //获取当前季度的结束时间
-					var endTime = new Date(howDate[0]);//格式化当前季度结束时间
-					var startTime = new Date(howDate[1]);
-					var allDays = getDayNum(startTime,endTime);
-					var useDays = getDayNum(date,endTime);
-					var price = (json.price*3)*(useDays/allDays);
-					price = Math.ceil(price);
-					var endTime = getDate(endTime);
-					var date = getDate(date);
-					$('#noOutBillData').append(function(){
-						return "<tr>"
-						+"<td>"+date+" - "+endTime+"</td>"
-						+"<td>"+price+"元</td>"
-						+"</tr>"
-					})
+					if(json.stateLogs.length==1){
+						getMonthDay(0);
+					}else{
+						var startTime = new Date(json.stateLogs[0].startTime);
+						startTime = getDate(startTime);
+						var endTime = new Date(json.stateLogs[0].endTime);
+						endTime = getDate(endTime);
+						$('#noOutBillData').append(function(){
+							return "<tr>"
+							+"<td>"+startTime+" - "+endTime+"</td>"
+							+"<td>"+json.price+"元</td>"
+							+"</tr>"
+						});
+						getMonthDay(1);
+					}
+					function getMonthDay(i){
+						var date = new Date(json.stateLogs[i].startTime);//获取开始时间
+						var month = date.getMonth()+1;//获取当前时间的月份
+						var year = date.getYear()+1900; //获取当前时间的年份
+						var howDate = GetMonth(month,year); //获取当前季度的结束时间
+						var endTime = new Date(howDate[0]);//格式化当前季度结束时间
+						var startTime = new Date(howDate[1]);
+						var allDays = getDayNum(startTime,endTime);
+						var useDays = getDayNum(date,endTime);
+						var price = (json.price*3)*(useDays/allDays);
+						price = Math.ceil(price);
+						var endTime = getDate(endTime);
+						var date = getDate(date);
+						$('#noOutBillData').append(function(){
+							return "<tr>"
+							+"<td>"+date+" - "+endTime+"</td>"
+							+"<td>"+price+"元</td>"
+							+"</tr>"
+						})
+					}
 				}else{
 					
 				}

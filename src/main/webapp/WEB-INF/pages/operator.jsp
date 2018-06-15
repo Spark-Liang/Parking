@@ -371,24 +371,7 @@
 			var check = checkinf(this,inf);
 			if( check == 1){
 				 var a = checkBill(inf); //a用与接收返回值 并用于判断能否进行停卡 checkBill 查未支付账单
-				if(a==1){
-					
-				}else{
-					
-				}
-			/* 	$.ajax({
-					url:'user/stopCard',
-					dataType:'json',
-					type:'POST',
-					data:{
-						'cardId':inf[1]
-					},success:function(json){
-						console.log(json)
-					},error:function(){
-						
-					}
-				})
- */			}
+			}
 			else{
 				
 			}
@@ -438,28 +421,28 @@
 			var currentBill = json.list[0].currentBill;
 			console.log(accountId)
 			console.log(currentBill.length)
-			if(currentBill.length!=0&&json.list[0].parking==true){//存在账单但是没有支付,显示两个账单
-				if(currentBill.length==1){//长度为1表示只有一张账单
-					/* alert('需要支付上一季度的账单以及这一季度的费用') */
-				}else if(currentBill.length==2){
-					/* alert('需要支付之前季度的账单') */
+			//////////////////////////////////////////////
+			if(json.list[0].parking==true){
+				alert('此卡在停车场中已经被使用需要先进行提车')
+			}else{
+				if(currentBill.length!=0){//currentBill长度不为0的时候表示有未支付的账单
+					payBills(0,currentBill.length);
+				}else{
+					payBills(1,currentBill.length);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
 				}
+			}
+			///////////////////////////////////////
+			/* if(currentBill.length!=0&&json.list[0].parking==true){//存在账单但是没有支付,显示两个账单
 			    alert('此卡在停车场中已经被使用需要先进行提车')
 				payBills(0,currentBill.length);
 				return 0;
 			}else if(currentBill.length!=0&&json.list[0].parking==false){
-				if(json.list[0].currentBill.length==1){
-					/* alert('需要支付上一季度的账单以及这一季度的费用') */
-				}else if(json.list[0].currentBill.length==2){
-					/* alert('需要支付之前季度的账单') */
-				}
 				payBills(0,currentBill.length);
 				return 0;
 			}else if (currentBill.length==0&&json.list[0].parking==true) {//currentBill长度不为0的时候表示只有当前季度的费用
 				alert('此卡在停车场中已经被使用需要先进行提车');
 				return 0;
 			}else if(currentBill.length==0){
-				/* alert('需要先支付这个季度使用的费用'); */
 				payBills(1,currentBill.length);//1表示没有上个月未支付的账单，但是需要支付这个月的账单。
 			}else{
 				var con = confirm('是否进行停卡?')
@@ -483,7 +466,8 @@
 				}else{
 					alert('取消停卡')
 				}
-			}
+			} */
+			/////////////////////////////////////////
 			//payBills函数中传过来的值是用于判断是存在账单还是不存在账单但是需要支付的状况
 			//用于显示用户的账单信息
 			//payBIlls函数用于显示账单信息
@@ -526,7 +510,29 @@
 							'accountId':accountId
 						},success:function(time){
 							console.log(time);
-							var data = new Date(time.stateLogs[0].startTime);//获取账单的开始时间
+							var length = time.stateLogs.length;
+							if(length == 2){
+									var startTime = new Date(time.stateLogs[0].startTime);//获取账单的开始时间
+								 	startTime = startTime.toLocaleString('chinese',{hour12:false});
+								 	startTime = startTime.substring(0,9);//获取结束时间
+								 	var endTime = new Date(time.stateLogs[0].endTime);//获取账单的开始时间
+								 	endTime = endTime.toLocaleString('chinese',{hour12:false});
+								 	endTime = endTime.substring(0,9);//获取结束时间
+								 	$('.BillTable').append(function(){
+										return "<tr data-value='"+json.list[0].cardId+"'>"
+										+"<td>"+json.list[0].userId+"</td>"
+										+"<td>"+startTime+" ~ "+endTime+"</td>"
+										+"<td>"+time.price+" ￥/每月</td>"
+										+"<td>"+time.price+" 元</td>"
+										+"</tr>"
+									});
+								 	getMonthDays(json,1);
+								 	
+							}else{
+								getMonthDays(json,0);
+							}
+						function getMonthDays(json,i){
+							var data = new Date(time.stateLogs[i].startTime);//获取账单的开始时间
 							var startTime = data.toLocaleString('chinese',{hour12:false});
 							var startTime = startTime.substring(0,9);//获取结束时间
 							console.log(startTime);
@@ -563,6 +569,8 @@
 								+"<td>"+price+" 元</td>"
 								+"</tr>"
 							})
+						}
+							
 						},error:function(){
 								
 						}
@@ -692,10 +700,13 @@
 							var state = json.list[i].state;
 							if(state == 'FREEZE'){
 								state = '<p class="text-danger">终止使用</p>';
+								var state1 = 'hidden';
 							}else if(state == 'STOP'){
-								state = '<p class= "text-warning">欠费停卡</p>'
+								state = '<p class= "text-warning">欠费停卡</p>';
+								var state1 = 'hidden';
 							}else if(state == 'NORMAL'){
 								state = '正常使用'
+									var state1 = '';
 							}
 							$('.tbody-add').append(function (arr){
 								return "<tr>"
@@ -705,8 +716,8 @@
 								+"<td>"+json.list[i].userId+"</td>"
 								+"<td>"+state+"</td>"
 								+"<td>"
-								+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
-								+"<a class='btn btn-default btn-xs' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"' data-state='"+json.list[i].state+"'>支付帐单</a>"
+								+"<a class='btn btn-default btn-xs "+state1+"'  data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
+								+"<a class='btn btn-default btn-xs "+state1+"' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"' data-state='"+json.list[i].state+"'>支付帐单</a>"
 								+"</td>"
 							+"</tr>";
 							});
