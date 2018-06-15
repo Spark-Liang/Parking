@@ -221,7 +221,7 @@
 							lastPayDate = lastPayDate + "<br>(已过期)";
 					}
 					if(!respon.msg[i].lastPayDate){
-						lastPayDate = '还未缴费'
+						lastPayDate = ''
 					}
 					//console.log(lastPayDate);
 					var price = respon.msg[i].price;//获取应付金额
