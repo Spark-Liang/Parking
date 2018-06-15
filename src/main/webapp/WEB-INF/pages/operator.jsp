@@ -504,7 +504,7 @@
 							+"<td>"+json.list[0].userId+"</td>"
 							+"<td>"+startDate+"~"+endDate+"</td>"
 							+"<td>"+json.list[0].price+" ￥/每月</td>"
-							+"<td>"+json.list[0].currentBill[i].price+"</td>"
+							+"<td>"+price+"</td>"
 							+"</tr>"
 						});
 					}
