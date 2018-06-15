@@ -298,11 +298,13 @@
     lookBtn.addEventListener("click",function(){
     	var test3 = $('#test3').val();
     	console.log(test3.length);
+    	var month = test3.split('-')[1];
+    	$('#month').text(month);
     	if(test3.length==0){
     		alert('请选择日期');
     	}else{
     		//正则用于判断是是否YYYY-MM格式
-    		var object = /^2{1}[0-5]{1}[0-9]{2}-[0-1]{1}[0-9]{1}$/g;
+    		var object = /^2{1}[0-5]{1}[0-9]{2}-(([0][1-9])|([1][0-2]))$/g;
         	if(object.test(test3)){
         		var lotId = $('.lookBtn').data("value");
         		showParkUse(lotId,test3);

@@ -303,6 +303,7 @@
     }
     function checkNextBill(a){
     	var accountId = $('.showBill_1').data("value");
+    	$('#noOutBillData tr').remove();
     	console.log(accountId);
     	$.ajax({
 			url:'bill/newBillInfo',
