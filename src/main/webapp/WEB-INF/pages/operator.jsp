@@ -10,7 +10,7 @@
 <head>
 <base href="<%=basePath%>">
 <meta charset="UTF-8">
-<title>管理员管理页面</title>
+<title>操作员操作页面</title>
 <link rel="stylesheet" href="css/admin.css">
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <script src="js/jquery-3.3.1.js"></script>
