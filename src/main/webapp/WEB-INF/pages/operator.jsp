@@ -541,7 +541,6 @@
 							/* var useDay = useMuchDay(day,month);*/
 							if(l==0){
 								var price = (time.price * 3)*(days/allDayNum[0]);//allDayNum[0]是表示总天数 [1]是表示第几季度
-								var price = Math.ceil(price);//把价格向上取整
 							}else if(l==1){//l 等于1 的时候表示存在一张账单 并且此季度有可能存在费用
 								if(month!=1&&month!=4&&month!=7&&month!=10){
 									if(month == 5||month==6){//如果是5 6 月 那此季度第一个月一定是四月
@@ -550,12 +549,12 @@
 										days==31;
 									}
 									var price = (time.price * 3)*(days/allDayNum[0]);//allDayNum[0]是表示总天数 [1]是表示第几季度
-									var price = Math.ceil(price);//把价格向上取整
 								}else{
 									var price = (time.price * 3)*(days/allDayNum[0]);//allDayNum[0]是表示总天数 [1]是表示第几季度
-									var price = Math.ceil(price);//把价格向上取整
+									
 								}
 							}
+							var price = Math.ceil(price);//把价格向上取整
 							$('.BillTable').append(function(){
 								return "<tr data-value='"+json.list[0].cardId+"'>"
 								+"<td>"+json.list[0].userId+"</td>"
@@ -686,14 +685,15 @@
 								billid = 0;
 								price = 0;
 							}
-							if (json.list[0].cardId==null){//判断卡号是否存在 方便显示
-								cardId = '已停卡';
+							var cardId = json.list[i].cardId;
+							if (json.list[i].cardId==null){//判断卡号是否存在 方便显示
+								var cardId = '已停卡';
 							}
-							state = json.list[0].state;
+							var state = json.list[i].state;
 							if(state == 'FREEZE'){
-								state = '终止使用';
+								state = '<p class="text-danger">终止使用</p>';
 							}else if(state == 'STOP'){
-								state = '欠费停卡'
+								state = '<p class= "text-warning">欠费停卡</p>'
 							}else if(state == 'NORMAL'){
 								state = '正常使用'
 							}
