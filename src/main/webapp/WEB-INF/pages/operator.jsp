@@ -701,12 +701,15 @@
 							if(state == 'FREEZE'){
 								state = '<p class="text-danger">终止使用</p>';
 								var state1 = 'hidden';
+								var state2 = state1;
 							}else if(state == 'STOP'){
 								state = '<p class= "text-warning">欠费停卡</p>';
 								var state1 = 'hidden';
+								var state2 = '';
 							}else if(state == 'NORMAL'){
 								state = '正常使用'
-									var state1 = '';
+								var state1 = '';
+								var state2 = '';
 							}
 							$('.tbody-add').append(function (arr){
 								return "<tr>"
@@ -717,7 +720,7 @@
 								+"<td>"+state+"</td>"
 								+"<td>"
 								+"<a class='btn btn-default btn-xs "+state1+"'  data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
-								+"<a class='btn btn-default btn-xs "+state1+"' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"' data-state='"+json.list[i].state+"'>支付帐单</a>"
+								+"<a class='btn btn-default btn-xs "+state2+"' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"' data-state='"+json.list[i].state+"'>支付帐单</a>"
 								+"</td>"
 							+"</tr>";
 							});
