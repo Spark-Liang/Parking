@@ -299,7 +299,9 @@
     	var test3 = $('#test3').val();
     	console.log(test3.length);
     	var month = test3.split('-')[1];
+    	var year = test3.split('-')[0];
     	$('#month').text(month);
+    	$('#year').text(year);
     	if(test3.length==0){
     		alert('请选择日期');
     	}else{

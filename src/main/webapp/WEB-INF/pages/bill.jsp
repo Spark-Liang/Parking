@@ -302,7 +302,7 @@
 		console.log(accountId);
     }
     function checkNextBill(a){
-    	var accountId = $('.showBill_1').data("value");
+    	var accountId = $('.showBill_1').attr("data-value");
     	$('#noOutBillData tr').remove();
     	console.log(accountId);
     	$.ajax({
@@ -333,7 +333,7 @@
 						+"</tr>"
 					})
 				}else{
-					alert('此卡处于停用状态,不能进行查看')
+					
 				}
 				
 			},error:function(){
@@ -377,6 +377,7 @@
     function closeBill(){
         var showBill = document.getElementsByClassName("showBill")[0];
         showBill.style.display = 'none';
+    	$('#outBillData tr').remove();
     }
 
     //查看已出账单和未出账单选项的样式变化
