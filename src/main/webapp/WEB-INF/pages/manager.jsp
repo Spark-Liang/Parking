@@ -297,12 +297,18 @@
     var lookBtn = document.getElementsByClassName("lookBtn")[0];
     lookBtn.addEventListener("click",function(){
     	var test3 = $('#test3').val();
-    	console.log(test3.length)
+    	console.log(test3.length);
     	if(test3.length==0){
     		alert('请选择日期');
     	}else{
-    		var lotId = $('.lookBtn').data("value");
-    		showParkUse(lotId,test3);
+    		//正则用于判断是是否YYYY-MM格式
+    		var object = /^2{1}[0-5]{1}[0-9]{2}-[0-1]{1}[0-9]{1}$/g;
+        	if(object.test(test3)){
+        		var lotId = $('.lookBtn').data("value");
+        		showParkUse(lotId,test3);
+        	}else {
+        		alert('请输入正确的日期格式yyyy-mm')
+        	}
     	}
         var newDate = new Date();
         if(dateChoose){

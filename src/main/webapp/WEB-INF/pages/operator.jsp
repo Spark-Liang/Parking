@@ -498,6 +498,7 @@
 						var eDate = new Date(json.list[0].currentBill[i].timeQuantums[0].endTime);
 						var eDate1 = eDate.toLocaleString('chinese',{hour12:false});
 						var endDate = eDate1.substring(0,9);
+						var price = Math.ceil(json.list[0].currentBill[i].price);
 						$('.BillTable').append(function(){
 							return "<tr data-value='"+json.list[0].cardId+"'>"
 							+"<td>"+json.list[0].userId+"</td>"
@@ -625,7 +626,8 @@
 							'cardId':billid
 						},success:function(json){
 							if(json.flag==1){
-								alert('支付成功以及停卡成功')
+								alert('支付成功以及停卡成功');
+								$('.payBill').hide();
 							}
 						},error:function(){
 							
@@ -684,13 +686,24 @@
 								billid = 0;
 								price = 0;
 							}
+							if (json.list[0].cardId==null){//判断卡号是否存在 方便显示
+								cardId = '已停卡';
+							}
+							state = json.list[0].state;
+							if(state == 'FREEZE'){
+								state = '终止使用';
+							}else if(state == 'STOP'){
+								state = '欠费停卡'
+							}else if(state == 'NORMAL'){
+								state = '正常使用'
+							}
 							$('.tbody-add').append(function (arr){
 								return "<tr>"
-								+"<td>"+json.list[i].cardId+"</td>"
+								+"<td>"+cardId+"</td>"
 								+"<td></td>"
 								+"<td>"+json.list[i].parkingLot.name+"</td>"
 								+"<td>"+json.list[i].userId+"</td>"
-								+"<td>"+json.list[i].state+"</td>"
+								+"<td>"+state+"</td>"
 								+"<td>"
 								+"<a class='btn btn-default btn-xs' data-value='"+json.list[i].cardId+"' onclick='updateCard(this)'>更换停车卡</a>"
 								+"<a class='btn btn-default btn-xs' onclick='paymoney(this)' data-billid='"+billid+"' data-cardid='"+json.list[i].cardId+"' data-park='"+json.list[i].parkingLot.name+"' data-price='"+price+"' data-state='"+json.list[i].state+"'>支付帐单</a>"

@@ -224,6 +224,7 @@
 					
 					//console.log(lastPayDate);
 					var price = respon.msg[i].price;//获取应付金额
+					price = Math.ceil(price);
 					//console.log("应付金额为："+price);
 					
 					//根据paid的布尔值来判断账单是否已经付款
@@ -319,6 +320,7 @@
 				var allDays = getDayNum(startTime,endTime);
 				var useDays = getDayNum(date,endTime);
 				var price = (json.price*3)*(useDays/allDays);
+				price = Math.ceil(price);
 				var endTime = getDate(endTime);
 				var date = getDate(date);
 				$('#noOutBillData').append(function(){
@@ -446,9 +448,9 @@
                 	 //console.log("卡的状态:"+cardState);
                 	 var stateTip = "正常使用";
                 	 if(cardState === "STOP"){
-                		 stateTip = "<span style = 'color:#337ab7'>停用</span>";
+                		 stateTip = "<span style = 'color:#337ab7'>欠费停用</span>";
                 	 }else if(cardState === "FREEZE"){
-                		 stateTip = "<span style = 'color:red'>欠费冻结</span>";
+                		 stateTip = "<span style = 'color:red'>终止使用</span>";
                 	 }
                 	 //判断状态
                 	 if(json.list[i].state== 'NORMAL'){
